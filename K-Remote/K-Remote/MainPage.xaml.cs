@@ -16,7 +16,9 @@ using Windows.UI.Xaml.Navigation;
 //Debug
 using System.Data;
 using System.Diagnostics;
+
 using K_Remote.Utils;
+using K_Remote.Wrapper;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -27,19 +29,14 @@ namespace K_Remote
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private ConnectionHandler connectionHandler;
         public MainPage()
         {
-            //Debug           
-            Debug.WriteLine("Entering Main");
-            connectionHandler = ConnectionHandler.getInstance();
-            connectionHandler.sendHttpRequest(JsonFactory.playPause());
+            ApplicationRPC.checkHttpConnection();
             this.InitializeComponent();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Button Clicked");
             var buttonName = ((Button)sender).Name;
             switch (buttonName)
             {

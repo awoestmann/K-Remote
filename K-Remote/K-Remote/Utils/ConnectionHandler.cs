@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking;
-using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 
@@ -21,11 +15,6 @@ namespace K_Remote.Utils
     {
         private string hostString = "192.168.0.18";
         private string httpPortString = "44556";
-        private string tcpPortString = "9090";
-
-        private HostName host;
-        private StreamSocket tcpSocket;
-        private bool tcpConnected;
 
         //http
         private HttpClient httpClient;
@@ -49,47 +38,33 @@ namespace K_Remote.Utils
         {
             //Init http
             httpClient = new HttpClient();
-
-            //Init tcp
-            host = new HostName(hostString);
-            tcpSocket = new StreamSocket();
-            tcpConnected = false;
         }
 
-        public async void sendHttpRequest(string jsonString)
+        public async Task<String> sendHttpRequest(string jsonString)
         {
+            Uri requestUri = new Uri("http://" + hostString + ":" + httpPortString + "/jsonrpc");
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri);
+
+            requestMessage.Headers.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
+            requestMessage.Headers.Authorization = new HttpCredentialsHeaderValue("Basic", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "xbmc", "xbmc"))));
+            requestMessage.Content = new HttpStringContent(jsonString);
+            requestMessage.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+
+            HttpResponseMessage httpResponse = new HttpResponseMessage();
+            string httpResponseBody = "";
+
             try
             {
-                //httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", Convert.ToBase64String( System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "xbmc", "xbmc"))));
-               
-                Uri requestUri = new Uri("http://" + host + ":" + httpPortString + "/jsonrpc");
-                //Send the GET request asynchronously and retrieve the response as a string.
-                HttpResponseMessage httpResponse = new HttpResponseMessage();
-                string httpResponseBody = "";
-
-                try
-                {
-                    
-                    httpResponse = await httpClient.PostAsync(requestUri, new HttpStringContent(jsonString));
-                    
-                    Debug.WriteLine(httpResponse);
-                    httpResponse.EnsureSuccessStatusCode();
-                    
-                    httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
-                }
-                catch (Exception ex)
-                {
-                    httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
-                }
-
+                httpResponse = await httpClient.SendRequestAsync(requestMessage);
+                httpResponse.EnsureSuccessStatusCode();                    
+                httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
+                return httpResponseBody;
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine(e);
-            }
-            
+                httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
+                return httpResponseBody;
+            }           
 
         }
     }
