@@ -1,4 +1,5 @@
-﻿using System;
+﻿using K_Remote.Wrapper;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Networking;
@@ -63,9 +64,21 @@ namespace K_Remote.Utils
             catch (Exception ex)
             {
                 httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
-                return httpResponseBody;
+                return null;
             }           
 
+        }
+
+        public async Task<bool> checkHttpConnection()
+        {
+            if(await ApplicationRPC.getActivePlayers() == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

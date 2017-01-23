@@ -31,7 +31,7 @@ namespace K_Remote
     {
         public MainPage()
         {
-            ApplicationRPC.checkHttpConnection();
+            ConnectionHandler.getInstance().checkHttpConnection();
             this.InitializeComponent();
         }
 

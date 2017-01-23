@@ -10,18 +10,15 @@ namespace K_Remote.Wrapper
 {
     static class ApplicationRPC
     {
-        public static bool checkHttpConnection()
-        {
-            getActivePlayers();
-            return false;
-        }
-
+        
+        /**
+         * Returns an int array with id's of active players
+         */
         public static async Task<int[]> getActivePlayers()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
             var playersJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.GetActivePlayers\", \"id\": 1}");
             Debug.WriteLine(playersJson);
-
             return new int[1];
         }
     }
