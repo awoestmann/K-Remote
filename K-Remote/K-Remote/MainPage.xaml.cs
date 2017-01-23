@@ -13,6 +13,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+//Debug
+using System.Data;
+using System.Diagnostics;
+
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
 namespace K_Remote
@@ -24,7 +28,24 @@ namespace K_Remote
     {
         public MainPage()
         {
+            //Debug           
+            Debug.WriteLine("Entering Main");           
+           
             this.InitializeComponent();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Button Clicked");
+            var buttonName = ((Button)sender).Name;
+            switch (buttonName)
+            {
+                case "button_connections":
+                    this.Frame.Navigate(typeof(Connections));
+                    break;
+
+                default: Debug.WriteLine("Button switch: default case"); break;
+            }                  
         }
     }
 }
