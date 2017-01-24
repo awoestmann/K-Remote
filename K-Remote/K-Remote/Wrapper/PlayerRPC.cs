@@ -33,15 +33,17 @@ namespace K_Remote.Wrapper
             {
                 return null;
             }
-            string responseJson;
-            //Music
+            string responseJson;            
             switch (players[0].playerId)
             {
+                //Music
                 case 0: return null;
+                //Video
                 case 1:
                         responseJson = await handler.sendHttpRequest("{ \"jsonrpc\": \"2.0\", \"method\": \"Player.GetItem\", \"params\": { \"properties\": [\"title\", \"album\", \"artist\", \"season\", \"episode\", \"duration\", \"showtitle\", \"tvshowid\", \"thumbnail\", \"file\", \"fanart\", \"streamdetails\"], \"playerid\": 1 }, \"id\": \"VideoGetItem\"}");
                         PlayerItemResponse responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
                         return responseItem.result.item;
+                //Pictures
                 case 2: return null;
                 default: return null;
             }                      
