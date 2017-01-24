@@ -35,6 +35,11 @@ namespace K_Remote.Utils
             }
         }
 
+        public string getConnectionString()
+        {
+            return hostString+ ":" + httpPortString;
+        }
+
         public ConnectionHandler()
         {
             //Init http

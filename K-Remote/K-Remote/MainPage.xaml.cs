@@ -19,6 +19,8 @@ using System.Diagnostics;
 
 using K_Remote.Utils;
 using K_Remote.Pages;
+using K_Remote.Wrapper;
+using K_Remote.Models;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -31,8 +33,24 @@ namespace K_Remote
     {
         public MainPage()
         {
-            ConnectionHandler.getInstance().checkHttpConnection();
+            test();
             this.InitializeComponent();
+        }
+
+        public async void test()
+        {
+            bool connected = await ConnectionHandler.getInstance().checkHttpConnection();
+            Debug.WriteLine("Connected: " + connected);
+            Debug.WriteLine("Connected to: " + ConnectionHandler.getInstance().getConnectionString());
+            PlayerItem now = await PlayerRPC.getItem();
+            if(now != null)
+            {
+                Debug.WriteLine("Now played: " + now.title);
+            }
+            else
+            {
+                Debug.WriteLine("Nothing played");
+            }            
         }
 
         private void main_button_connections_Click(object sender, RoutedEventArgs e)

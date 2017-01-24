@@ -9,6 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button x:Name="remote_button_playPause" Content="Play/Pause" HorizontalAlignment="Left" Margin="129,102,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click"/>
+        <Button x:Name="remote_button_stop" Content="Stop" HorizontalAlignment="Left" Margin="129,139,0,0" VerticalAlignment="Top" Click="remote_button_stop_Click"/>
 
     </Grid>
 </Page>

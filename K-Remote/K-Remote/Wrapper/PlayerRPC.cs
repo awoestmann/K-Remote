@@ -67,5 +67,20 @@ namespace K_Remote.Wrapper
             return false;
             
         }
+
+        public static async void stop()
+        {
+            ConnectionHandler handler = ConnectionHandler.getInstance();
+            Player[] players = await getActivePlayers();
+            if(players == null)
+            {
+                return;
+            }
+            foreach (Player i in players)
+            {
+                var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.Stop\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
+                Debug.WriteLine(JsonConvert.DeserializeObject(responseJson));
+            }
+        }
     }
 }
