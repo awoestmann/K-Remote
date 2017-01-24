@@ -8,8 +8,15 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="remote_button_playPause" Content="Play/Pause" HorizontalAlignment="Left" Margin="129,102,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click"/>
-        <Button x:Name="remote_button_stop" Content="Stop" HorizontalAlignment="Left" Margin="129,139,0,0" VerticalAlignment="Top" Click="remote_button_stop_Click"/>
+        <Button x:Name="remote_button_playPause" Content="Play/Pause" HorizontalAlignment="Left" Margin="175,358,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click"/>
+        <Button x:Name="remote_button_stop" Content="Stop" HorizontalAlignment="Left" Margin="71,358,0,0" VerticalAlignment="Top" Click="remote_button_stop_Click"/>
+        <Button x:Name="remote_button_up" Content="Up" HorizontalAlignment="Left" Margin="121,178,0,0" VerticalAlignment="Top" Click="remote_button_up_Click"/>
+        <Button x:Name="remote_button_left" Content="Left" HorizontalAlignment="Left" Margin="51,215,0,0" VerticalAlignment="Top" Click="remote_button_left_Click"/>
+        <Button x:Name="remote_button_enter" Content="Enter" HorizontalAlignment="Left" Margin="121,215,0,0" VerticalAlignment="Top" Click="remote_button_enter_Click"/>
+        <Button x:Name="remote_button_right" Content="Right" HorizontalAlignment="Left" Margin="201,215,0,0" VerticalAlignment="Top" Click="remote_button_right_Click"/>
+        <Button x:Name="remote_button_down" Content="Down" HorizontalAlignment="Left" Margin="121,252,0,0" VerticalAlignment="Top" Click="remote_button_down_Click"/>
+        <Button x:Name="remote_button_back" Content="Back" HorizontalAlignment="Left" Margin="31,262,0,0" VerticalAlignment="Top" Click="remote_button_back_Click"/>
+        <Button x:Name="remote_button_toggle_gui" Content="Toggle GUI" HorizontalAlignment="Left" Margin="256,133,0,0" VerticalAlignment="Top" Click="remote_button_toggle_gui_Click"/>
 
     </Grid>
 </Page>

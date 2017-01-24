@@ -13,14 +13,14 @@ namespace K_Remote.Wrapper
 {
     static class PlayerRPC
     {
-        
-        /**
-         * Returns an int array with id's of active players
-         */
+        /// <summary>
+        /// Sends Player.GetActivePlayers JSON to get active Players
+        /// </summary>
+        /// <returns>Array of Player instances</returns>
         public static async Task<Player[]> getActivePlayers()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.GetActivePlayers\", \"id\": 1}");
+            var responseJson = await handler.sendHttpRequest("Player.GetActivePlayers", null);
             ActivePlayers players = JsonConvert.DeserializeObject<ActivePlayers>(responseJson);        
             return players.result;
         }
@@ -49,10 +49,10 @@ namespace K_Remote.Wrapper
             }                      
         }
 
-        /**
-         * Toggles play pause and returns new state.
-         * True for playing, false for pause
-         */
+        /// <summary>
+        /// Sends Player.PlayPause JSON 
+        /// </summary>
+        /// <returns>true if Kodi is currently playing, false if not</returns>
         public static async Task<bool> playPause()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();            
@@ -61,7 +61,6 @@ namespace K_Remote.Wrapper
             {
                 var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.PlayPause\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
                 PlayerState state = JsonConvert.DeserializeObject<PlayerState>(responseJson);
-                Debug.WriteLine("player " + state.playerSpeed);
                 return state.playerSpeed != 0;
             }
             return false;
@@ -79,7 +78,6 @@ namespace K_Remote.Wrapper
             foreach (Player i in players)
             {
                 var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.Stop\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
-                Debug.WriteLine(JsonConvert.DeserializeObject(responseJson));
             }
         }
     }

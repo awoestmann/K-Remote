@@ -42,9 +42,12 @@ namespace K_Remote
             bool connected = await ConnectionHandler.getInstance().checkHttpConnection();
             Debug.WriteLine("Connected: " + connected);
             Debug.WriteLine("Connected to: " + ConnectionHandler.getInstance().getConnectionString());
+            Player[] active = await PlayerRPC.getActivePlayers();
             PlayerItem now = await PlayerRPC.getItem();
+
             if(now != null)
             {
+                Debug.WriteLine("Active player: " + active[0].playerId + " - " + active[0].type);
                 Debug.WriteLine("Now played: " + now.title);
             }
             else

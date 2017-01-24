@@ -74,6 +74,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -107,6 +108,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ConnectionHandler.cs" />
+    <Compile Include="Wrapper\GuiRPC.cs" />
+    <Compile Include="Wrapper\InputRPC.cs" />
     <Compile Include="Wrapper\PlayerRPC.cs" />
   </ItemGroup>
   <ItemGroup>

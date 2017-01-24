@@ -37,5 +37,40 @@ namespace K_Remote.Pages
         {
             PlayerRPC.stop();
         }
+
+        private void remote_button_left_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.left();
+        }
+
+        private void remote_button_right_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.right();
+        }
+
+        private void remote_button_enter_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.select();
+        }
+
+        private void remote_button_up_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.up();
+        }
+
+        private void remote_button_down_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.down();
+        }
+
+        private void remote_button_back_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.back();
+        }
+
+        private void remote_button_toggle_gui_Click(object sender, RoutedEventArgs e)
+        {
+            GuiRPC.toggleGui();
+        }
     }
 }
