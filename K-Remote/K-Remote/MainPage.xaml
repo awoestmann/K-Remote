@@ -8,7 +8,8 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="button_connections" Content="Connections" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="218" Click="button_Click"/>
+        <Button x:Name="main_button_connections" Content="Connections" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="208" Click="main_button_connections_Click"/>
+        <Button x:Name="main_button_remote" Content="Remote" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="208" Click="main_button_remote_Click"/>
 
     </Grid>
 </Page>

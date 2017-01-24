@@ -1,4 +1,5 @@
-﻿using System;
+﻿using K_Remote.Wrapper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace K_Remote.Pages
         public Remote()
         {
             this.InitializeComponent();
+            PlayerRPC.getItem();
+        }
+
+        private void remote_button_playPause_Click(object sender, RoutedEventArgs e)
+        {
+            PlayerRPC.playPause();
         }
     }
 }

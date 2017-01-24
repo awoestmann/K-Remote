@@ -18,7 +18,7 @@ using System.Data;
 using System.Diagnostics;
 
 using K_Remote.Utils;
-using K_Remote.Wrapper;
+using K_Remote.Pages;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -35,17 +35,14 @@ namespace K_Remote
             this.InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            var buttonName = ((Button)sender).Name;
-            switch (buttonName)
-            {
-                case "button_connections":
-                    this.Frame.Navigate(typeof(Connections));
-                    break;
+        private void main_button_connections_Click(object sender, RoutedEventArgs e)
+        {            
+            this.Frame.Navigate(typeof(Connections));                  
+        }
 
-                default: Debug.WriteLine("Button switch: default case"); break;
-            }                  
+        private void main_button_remote_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(Remote));
         }
     }
 }

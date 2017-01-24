@@ -71,7 +71,7 @@ namespace K_Remote.Utils
 
         public async Task<bool> checkHttpConnection()
         {
-            if(await ApplicationRPC.getActivePlayers() == null)
+            if(await PlayerRPC.getActivePlayers() == null)
             {
                 return false;
             }
