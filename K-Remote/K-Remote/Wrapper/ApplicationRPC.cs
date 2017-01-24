@@ -1,4 +1,7 @@
-﻿using K_Remote.Utils;
+﻿using K_Remote.Models;
+using K_Remote.Utils;
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,12 +17,13 @@ namespace K_Remote.Wrapper
         /**
          * Returns an int array with id's of active players
          */
-        public static async Task<int[]> getActivePlayers()
+        public static async Task<Player[]> getActivePlayers()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
             var playersJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.GetActivePlayers\", \"id\": 1}");
             Debug.WriteLine(playersJson);
-            return new int[1];
+            ActivePlayers players = JsonConvert.DeserializeObject<ActivePlayers>(playersJson);        
+            return players.result;
         }
     }
 }
