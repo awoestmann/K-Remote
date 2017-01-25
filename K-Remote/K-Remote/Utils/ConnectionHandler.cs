@@ -2,8 +2,10 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Networking;
+using Windows.Networking.Sockets;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 
@@ -15,14 +17,17 @@ namespace K_Remote.Utils
      */
     class ConnectionHandler
     {
+        private bool tcpConnected = false;
 
         private readonly string RELATIVE_PATH = "/jsonrpc";
         private readonly string MEDIA_TYPE = "application/json";
 
         private string hostString = "192.168.0.18";
         private string httpPortString = "44556";
+        private string tcpPortString = "9090";
         
         private HttpClient httpClient;
+        private StreamWebSocket webSocket;
 
         private static ConnectionHandler instance = null;
 
@@ -46,7 +51,12 @@ namespace K_Remote.Utils
 
         public ConnectionHandler()
         {
+            //http
             httpClient = new HttpClient();
+            
+            //websocket           
+            webSocket = new StreamWebSocket();
+            webSocket.Closed += webSocketClosed;
         }
 
         public async Task<String> sendHttpRequest(string jsonString)
@@ -106,16 +116,72 @@ namespace K_Remote.Utils
             {
                 throw new ArgumentException("Empty method not allowed");
             }
-            JObject jObject = new JObject(
+            JObject requestObject = new JObject(
                 new JProperty("jsonrpc", "2.0"),
                 new JProperty("method", method),
                 new JProperty("id", 1)
             );
             if (param != null)
             {
-                jObject.Add(new JProperty("params", param));
+                requestObject.Add(new JProperty("params", param));
             }
-            return jObject;
+            return requestObject;
         }
+
+        public async void connectTcp()
+        {
+            Uri uri = new Uri("ws://" + hostString + ":" + tcpPortString + "/jsonrpc");
+            try
+            {
+                await webSocket.ConnectAsync(uri);  
+                                
+                Task receiving = receiveWebSocketMessage(webSocket);
+                tcpConnected = true;
+            }
+            catch(Exception e)
+            {
+                tcpConnected = false;
+                Debug.WriteLine("Connection failed: " + e);
+            }
+        }
+
+        public bool checkTcpConnection()
+        {
+            return tcpConnected;
+        }
+
+        private async Task receiveWebSocketMessage(StreamWebSocket sender)
+        {
+            Debug.WriteLine("Message received");
+            Stream readStream = webSocket.InputStream.AsStreamForRead();
+            try
+            {
+                byte[] readBuffer = new byte[1000];
+                while (true)
+                {
+                    readBuffer = new byte[1000];
+                    if (webSocket != sender)
+                    {
+                        Debug.WriteLine("Socket no longer active");
+                        return;
+                    }
+                    int read = await readStream.ReadAsync(readBuffer, 0, readBuffer.Length);
+                    if(read > 0)
+                    {
+                        NotificationRPC.processNotification(System.Text.Encoding.UTF8.GetString(readBuffer));
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Error in receive: " + e);
+            }
+        }
+        
+        private void webSocketClosed(IWebSocket sender, WebSocketClosedEventArgs args)
+        {
+            this.tcpConnected = false;
+        }
+
     }
 }

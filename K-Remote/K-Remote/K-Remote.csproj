@@ -110,6 +110,7 @@
     <Compile Include="Utils\ConnectionHandler.cs" />
     <Compile Include="Wrapper\GuiRPC.cs" />
     <Compile Include="Wrapper\InputRPC.cs" />
+    <Compile Include="Wrapper\NotificationRPC.cs" />
     <Compile Include="Wrapper\PlayerRPC.cs" />
   </ItemGroup>
   <ItemGroup>
