@@ -1,4 +1,6 @@
-﻿using K_Remote.Wrapper;
+﻿using K_Remote.Models;
+using K_Remote.Utils;
+using K_Remote.Wrapper;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
@@ -11,10 +13,6 @@ using Windows.Web.Http.Headers;
 
 namespace K_Remote.Utils
 {
-    /**
-     *  Utility class to handle tcp/http connections
-     *  Implemented as a singleton
-     */
     class ConnectionHandler
     {
         private bool tcpConnected = false;
@@ -22,12 +20,16 @@ namespace K_Remote.Utils
         private readonly string RELATIVE_PATH = "/jsonrpc";
         private readonly string MEDIA_TYPE = "application/json";
 
-        private string hostString = "192.168.0.18";
-        private string httpPortString = "44556";
+        private string hostString;
+        private string httpPortString;
         private string tcpPortString = "9090";
+        private string loginBase64;
+        private string conName;
         
         private HttpClient httpClient;
         private StreamWebSocket webSocket;
+
+        public event EventHandler<connectionStateChangedEventArgs> ConnectionStateChanged;
 
         private static ConnectionHandler instance = null;
 
@@ -51,12 +53,24 @@ namespace K_Remote.Utils
 
         public ConnectionHandler()
         {
+            Connection current = SettingsManager.getCurrentConnection();
+            if(current == null)
+            {
+                //TODO handle no conection
+            }
+            else
+            {
+                this.hostString = current.host;
+                this.httpPortString = current.port.ToString();
+                this.loginBase64 = current.loginBase64;
+                this.conName = current.name;
+            }
             //http
             httpClient = new HttpClient();
             
             //websocket           
             webSocket = new StreamWebSocket();
-            webSocket.Closed += webSocketClosed;
+            //webSocket.Closed += webSocketClosed;
         }
 
         public async Task<String> sendHttpRequest(string jsonString)
@@ -65,7 +79,7 @@ namespace K_Remote.Utils
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri);
 
             requestMessage.Headers.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(MEDIA_TYPE));
-            requestMessage.Headers.Authorization = new HttpCredentialsHeaderValue("Basic", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "xbmc", "xbmc"))));
+            requestMessage.Headers.Authorization = new HttpCredentialsHeaderValue("Basic", loginBase64);
             requestMessage.Content = new HttpStringContent(jsonString);
             requestMessage.Content.Headers.ContentType = new HttpMediaTypeHeaderValue(MEDIA_TYPE);
 
@@ -102,10 +116,12 @@ namespace K_Remote.Utils
         {
             if(await PlayerRPC.getActivePlayers() == null)
             {
+                OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 0, false));
                 return false;
             }
             else
             {
+                OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 0, true));
                 return true;
             }
         }
@@ -130,16 +146,32 @@ namespace K_Remote.Utils
 
         public async void connectTcp()
         {
+            Debug.WriteLine("Connecting TCP to " + hostString + ":" + tcpPortString);
+            if (tcpConnected)
+            {
+                try
+                {
+                    webSocket.Close(1000, "");
+                    webSocket.Dispose();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+            }
             Uri uri = new Uri("ws://" + hostString + ":" + tcpPortString + "/jsonrpc");
             try
             {
-                await webSocket.ConnectAsync(uri);  
-                                
-                Task receiving = receiveWebSocketMessage(webSocket);
+                await webSocket.ConnectAsync(uri);
                 tcpConnected = true;
+                Task receiving = receiveWebSocketMessage(webSocket);
+                //TODO: fireevent 
+                OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, true));
+                
             }
             catch(Exception e)
             {
+                OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, false));
                 tcpConnected = false;
                 Debug.WriteLine("Connection failed: " + e);
             }
@@ -180,8 +212,14 @@ namespace K_Remote.Utils
         
         private void webSocketClosed(IWebSocket sender, WebSocketClosedEventArgs args)
         {
+            Debug.WriteLine("Close called");
+            //TODO: Event if closed
             this.tcpConnected = false;
         }
 
+        protected virtual void OnConnectionStateChanged(connectionStateChangedEventArgs args)
+        {
+            ConnectionStateChanged?.Invoke(this, args);
+        }
     }
 }

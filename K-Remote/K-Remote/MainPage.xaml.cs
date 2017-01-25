@@ -21,6 +21,7 @@ using K_Remote.Utils;
 using K_Remote.Pages;
 using K_Remote.Wrapper;
 using K_Remote.Models;
+using System.Text;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -39,6 +40,9 @@ namespace K_Remote
 
         public async void test()
         {
+            Debug.WriteLine(SettingsManager.getCurrentConnection());
+            SettingsManager.setCurrentConnection(new Connection("Asgard", 44556, "AsgardName", Convert.ToBase64String(Encoding.ASCII.GetBytes("xbmc:xbmc"))));
+            Debug.WriteLine(SettingsManager.getCurrentConnection());
             bool connected = await ConnectionHandler.getInstance().checkHttpConnection();
             Debug.WriteLine("Connected: " + connected);
             Debug.WriteLine("Connected to: " + ConnectionHandler.getInstance().getConnectionString());
@@ -58,7 +62,7 @@ namespace K_Remote
             {
                 Debug.WriteLine("Nothing played");
             }
-
+            
             //Event test
             NotificationRPC.getInstance().PlayerStateChangedEvent += eventTest;         
         }

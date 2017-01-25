@@ -15,7 +15,9 @@
                     Width="50" Height="50" Background="Transparent" Click="main_button_menu_Click" />
                 <Button x:Name="main_button_connections" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_connections_Click">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Padding="0,0,0,0">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE8AF;" TextAlignment="Center" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Grid Background="Blue" x:Name="main_button_connection_icon">
+                            <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE8AF;" TextAlignment="Center" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Grid>
                         <TextBlock x:Name="main_button_connections_text" Text="Connections" FontSize="18" VerticalAlignment="Center" Visibility="Visible"/>
                     </StackPanel>
                 </Button>
