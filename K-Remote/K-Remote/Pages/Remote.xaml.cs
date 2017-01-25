@@ -1,6 +1,7 @@
 ﻿using K_Remote.Wrapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,7 +26,14 @@ namespace K_Remote.Pages
     {
         public Remote()
         {
+            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
+
             this.InitializeComponent();
+        }
+
+        static void volumeChanged(object sender, NotificationEventArgs args)
+        {
+            Debug.WriteLine("New Volume " + args.playerState.@params.data.volume);
         }
 
         private void remote_button_playPause_Click(object sender, RoutedEventArgs e)

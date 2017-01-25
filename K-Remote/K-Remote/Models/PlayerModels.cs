@@ -31,12 +31,7 @@ namespace K_Remote.Models
     {
         public int playerId;
         public string type;
-
-        public Player(int playerId, string type)
-        {
-            this.playerId = playerId;
-            this.type = type;
-        }
+        public int speed;
     }
 
     class PlayerItemResponse

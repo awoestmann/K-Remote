@@ -168,7 +168,7 @@ namespace K_Remote.Utils
                     int read = await readStream.ReadAsync(readBuffer, 0, readBuffer.Length);
                     if(read > 0)
                     {
-                        NotificationRPC.processNotification(System.Text.Encoding.UTF8.GetString(readBuffer));
+                        NotificationRPC.getInstance().processNotification(System.Text.Encoding.UTF8.GetString(readBuffer));
                     }
                 }
             }

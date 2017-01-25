@@ -96,6 +96,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\NotificationModels.cs" />
     <Compile Include="Models\PlayerModels.cs" />
     <Compile Include="Pages\Connections.xaml.cs">
       <DependentUpon>Connections.xaml</DependentUpon>
@@ -105,6 +106,9 @@
     </Compile>
     <Compile Include="Pages\Remote.xaml.cs">
       <DependentUpon>Remote.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ConnectionHandler.cs" />
@@ -143,6 +147,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Remote.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

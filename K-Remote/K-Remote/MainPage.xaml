@@ -5,11 +5,5 @@
     xmlns:local="using:K_Remote"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="main_button_connections" Content="Connections" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="208" Click="main_button_connections_Click"/>
-        <Button x:Name="main_button_remote" Content="Remote" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="208" Click="main_button_remote_Click"/>
-
-    </Grid>
+    mc:Ignorable="d">    
 </Page>

@@ -57,17 +57,15 @@ namespace K_Remote
             else
             {
                 Debug.WriteLine("Nothing played");
-            }            
+            }
+
+            //Event test
+            NotificationRPC.getInstance().PlayerStateChangedEvent += eventTest;         
         }
 
-        private void main_button_connections_Click(object sender, RoutedEventArgs e)
-        {            
-            this.Frame.Navigate(typeof(Connections));                  
-        }
-
-        private void main_button_remote_Click(object sender, RoutedEventArgs e)
+        static void eventTest(object sender, NotificationEventArgs args)
         {
-            this.Frame.Navigate(typeof(Remote));
-        }
+            Debug.WriteLine(args.playerState.method);
+        }       
     }
 }

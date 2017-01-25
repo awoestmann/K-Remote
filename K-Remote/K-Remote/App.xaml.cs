@@ -1,4 +1,5 @@
-﻿using System;
+﻿using K_Remote.Pages;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace K_Remote
                 }
 
                 // Den Frame im aktuellen Fenster platzieren
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = new Shell(rootFrame);
             }
 
             if (e.PrelaunchActivated == false)
