@@ -48,7 +48,7 @@ namespace K_Remote.Utils
 
         public string getConnectionString()
         {
-            return hostString+ ":" + httpPortString;
+            return conName + "@" + hostString+ ":" + httpPortString;
         }
 
         public ConnectionHandler()
@@ -165,7 +165,6 @@ namespace K_Remote.Utils
                 await webSocket.ConnectAsync(uri);
                 tcpConnected = true;
                 Task receiving = receiveWebSocketMessage(webSocket);
-                //TODO: fireevent 
                 OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, true));
                 
             }
@@ -213,10 +212,10 @@ namespace K_Remote.Utils
         private void webSocketClosed(IWebSocket sender, WebSocketClosedEventArgs args)
         {
             Debug.WriteLine("Close called");
-            //TODO: Event if closed
+            OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, false));
             this.tcpConnected = false;
         }
-
+        
         protected virtual void OnConnectionStateChanged(connectionStateChangedEventArgs args)
         {
             ConnectionStateChanged?.Invoke(this, args);

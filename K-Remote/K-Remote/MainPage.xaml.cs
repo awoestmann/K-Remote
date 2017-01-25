@@ -41,7 +41,7 @@ namespace K_Remote
         public async void test()
         {
             Debug.WriteLine(SettingsManager.getCurrentConnection());
-            SettingsManager.setCurrentConnection(new Connection("Asgard", 44556, "AsgardName", Convert.ToBase64String(Encoding.ASCII.GetBytes("xbmc:xbmc"))));
+            SettingsManager.setCurrentConnection(new Connection("Asgard", 44556, "Asgard", Convert.ToBase64String(Encoding.ASCII.GetBytes("xbmc:xbmc"))));
             Debug.WriteLine(SettingsManager.getCurrentConnection());
             bool connected = await ConnectionHandler.getInstance().checkHttpConnection();
             Debug.WriteLine("Connected: " + connected);

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace K_Remote.Utils
 {
+
+    /// <summary>
+    /// Eventargs to handle connection state changes
+    /// </summary>
     public class connectionStateChangedEventArgs
     {
         /// <summary>

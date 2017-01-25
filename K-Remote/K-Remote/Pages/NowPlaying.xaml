@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="K_Remote.Pages.NowPlaying"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:K_Remote.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Background="Gray" Height="50" VerticalAlignment="Top">
+            <TextBlock x:Name="nowPlaying_page_title" Text="Now Playing" TextAlignment="Left" FontSize="30"/>
+        </Grid>
+        <TextBox x:Name="nowPlaying_title" HorizontalAlignment="Left" Margin="0,141,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="26" Width="350"/>
+        <Image x:Name="nowPlaying_image" HorizontalAlignment="Left" Height="240" Width="320" Margin="0,178,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Page>

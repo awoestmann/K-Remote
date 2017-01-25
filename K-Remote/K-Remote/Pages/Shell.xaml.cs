@@ -52,18 +52,31 @@ namespace K_Remote.Pages
 
         private void main_button_connections_Click(object sender, RoutedEventArgs e)
         {
+            unfocusButtons();
             main_button_connections.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
-            main_button_remote.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             frame.Navigate(typeof(Connections));
         }
 
         private void main_button_remote_Click(object sender, RoutedEventArgs e)
         {
+            unfocusButtons();
             main_button_remote.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
-            main_button_connections.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             frame.Navigate(typeof(Remote));
         }
 
+        private void main_button_nowPlaying_Click(object sender, RoutedEventArgs e)
+        {
+            unfocusButtons();
+            main_button_nowPlaying.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
+            frame.Navigate(typeof(NowPlaying));
+        }
+
+        private void unfocusButtons()
+        {
+            main_button_connections.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            main_button_nowPlaying.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            main_button_remote.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+        }
         private void handleConnectionStateChanged(object sender, connectionStateChangedEventArgs args)
         {
             switch (args.conType)
@@ -76,6 +89,7 @@ namespace K_Remote.Pages
             if (args.state)
             {
                 main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(125, 0, 125, 0));
+                main_button_connections_text.Text = args.conName;
             }
             else
             {
@@ -83,5 +97,6 @@ namespace K_Remote.Pages
             }
             Debug.WriteLine("Connection-Name: " + args.conName + ", Type: " + args.conType + ", state: " + args.state);
         }
+
     }
 }
