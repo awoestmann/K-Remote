@@ -71,6 +71,8 @@ namespace K_Remote.Utils
             //websocket           
             webSocket = new StreamWebSocket();
             //webSocket.Closed += webSocketClosed;
+
+            App.Current.Resuming += new EventHandler<Object>(resume);
         }
 
         public async Task<String> sendHttpRequest(string jsonString)
@@ -219,6 +221,15 @@ namespace K_Remote.Utils
         protected virtual void OnConnectionStateChanged(connectionStateChangedEventArgs args)
         {
             ConnectionStateChanged?.Invoke(this, args);
+        }
+
+        private void resume(object sender, object args)
+        {
+            Debug.WriteLine("Connection Handler resuming");
+            if (tcpConnected)
+            {
+                OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, true));
+            }
         }
     }
 }
