@@ -31,25 +31,25 @@ namespace K_Remote.Wrapper
         public static async void left()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Input.Left\", \"params\": {}, \"id\": 1}");
+            await handler.sendHttpRequest("Input.Left", null);
         }
 
         public static async void right()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Input.Right\", \"params\": {}, \"id\": 1}");
+            await handler.sendHttpRequest("Input.Right", null);
         }
 
         public static async void select()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Input.Select\", \"params\": {}, \"id\": 1}");
+            await handler.sendHttpRequest("Input.Select", null);
         }
 
         public static async void up()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Input.Up\", \"params\": {}, \"id\": 1}");
+            await handler.sendHttpRequest("Input.Up", null);
         }
     }
 }

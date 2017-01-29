@@ -1,7 +1,7 @@
 ﻿using K_Remote.Models;
 using K_Remote.Utils;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,18 +53,15 @@ namespace K_Remote.Wrapper
         /// Sends Player.PlayPause JSON 
         /// </summary>
         /// <returns>true if Kodi is currently playing, false if not</returns>
-        public static async Task<bool> playPause()
+        public static async void playPause()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();            
             Player[] players = await getActivePlayers();
             foreach (Player i in players)
             {
-                var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.PlayPause\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
-                PlayerState state = JsonConvert.DeserializeObject<PlayerState>(responseJson);
-                return state.playerSpeed != 0;
-            }
-            return false;
-            
+                var responseJson = await handler.sendHttpRequest("Player.PlayPause", new JObject(new JProperty("playerid", i.playerId)));
+
+            }             
         }
 
         public static async void stop()
@@ -77,7 +74,7 @@ namespace K_Remote.Wrapper
             }
             foreach (Player i in players)
             {
-                var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.Stop\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
+                var responseJson = await handler.sendHttpRequest("Player.Stop", new JObject(new JProperty("playerid", i.playerId)));
             }
         }
     }
