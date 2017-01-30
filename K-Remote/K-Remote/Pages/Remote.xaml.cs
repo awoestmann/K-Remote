@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -27,7 +28,7 @@ namespace K_Remote.Pages
         public Remote()
         {
             NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-           
+            setVolume(ApplicationRPC.getVolume());
             this.InitializeComponent();
         }
 
@@ -84,6 +85,17 @@ namespace K_Remote.Pages
         private void remote_button_toggle_gui_Click(object sender, RoutedEventArgs e)
         {
             GuiRPC.toggleGui();
+        }
+
+        private async void setVolume(Task<int> volumeTask)
+        {
+            int volume = await volumeTask;
+            Debug.WriteLine("Volume: " + volume);            
+        }
+
+        private void remote_volume_slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Debug.WriteLine(e.NewValue);
         }
     }
 }

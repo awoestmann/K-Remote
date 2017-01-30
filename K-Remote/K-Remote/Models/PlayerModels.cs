@@ -34,6 +34,11 @@ namespace K_Remote.Models
         public int speed;
     }
 
+    class PlayerProperties
+    {
+
+    }
+
     class PlayerItemResponse
     {
         public string id;
@@ -160,4 +165,5 @@ namespace K_Remote.Models
             this.playerSpeed = playerSpeed;
         }
     }
+
 }

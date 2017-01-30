@@ -77,5 +77,18 @@ namespace K_Remote.Wrapper
                 var responseJson = await handler.sendHttpRequest("Player.Stop", new JObject(new JProperty("playerid", i.playerId)));
             }
         }
+
+        public static async void getProperties()
+        {
+            Player[] players = await getActivePlayers();
+            if(players.Length > 0)
+            {
+            }
+            else
+            {
+                Debug.WriteLine("No active player");
+            }
+            
+        }
     }
 }

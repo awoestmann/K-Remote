@@ -36,17 +36,25 @@ namespace K_Remote.Pages
         private async void updateItem(Task<PlayerItem> itemTask)
         {
             PlayerItem item = await itemTask;
-            nowPlaying_title.Text = item.title;
-            string imageString = item.fanart;
-            Debug.WriteLine(imageString);
-            string response = await FileRPC.prepareDownloadFile(imageString);
-            //TODO
-            /*var bmp = new WriteableBitmap(320, 240);
-            using (var stream = bmp.PixelBuffer.AsStream())
+            if(item != null)
             {
-                stream.Write(imageStream, 0, imageStream.Length);
-                nowPlaying_image.Source = bmp;
-            }*/
+                nowPlaying_title.Text = item.title;
+                string imageString = item.fanart;
+                Debug.WriteLine(imageString);
+                string response = await FileRPC.prepareDownloadFile(imageString);
+                //TODO
+                /*var bmp = new WriteableBitmap(320, 240);
+                using (var stream = bmp.PixelBuffer.AsStream())
+                {
+                    stream.Write(imageStream, 0, imageStream.Length);
+                    nowPlaying_image.Source = bmp;
+                }*/
+            }
+            else
+            {
+                nowPlaying_title.Text = "Nothing is played";
+            }
+
         }
     }
 }

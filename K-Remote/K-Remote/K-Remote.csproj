@@ -96,6 +96,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ApplicationModels.cs" />
     <Compile Include="Models\NotificationModels.cs" />
     <Compile Include="Models\PlayerModels.cs" />
     <Compile Include="Models\SettingsModels.cs" />
