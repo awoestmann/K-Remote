@@ -1,4 +1,5 @@
-﻿using K_Remote.Wrapper;
+﻿using K_Remote.Utils;
+using K_Remote.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,25 +17,29 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Die Elementvorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
-
 namespace K_Remote.Pages
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
     public sealed partial class Remote : Page
     {
+        /// <summary>
+        /// Determines if the volume slider value was changed by user interaction(true) or by code (false)
+        /// </summary>
+        private bool volumeChangedByUserInteraction;
+
         public Remote()
         {
-            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-            setVolume(ApplicationRPC.getVolume());
             this.InitializeComponent();
+            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
+            volumeChangedByUserInteraction = false;
+            setVolumeSlider(ApplicationRPC.getVolume());            
         }
 
         static void volumeChanged(object sender, NotificationEventArgs args)
         {
-            Debug.WriteLine("New Volume @remote:" + args.playerState.@params.data.volume);
+            Debug.WriteLine("asd");
+            Debug.WriteLine(args.playerState.@params);
+            Debug.WriteLine("asd");
+            Debug.WriteLine("Remote: New Volume :" + args.playerState.@params.data.volume);
         }
 
         static void inputRequested(object sender, NotificationEventArgs args)
@@ -87,15 +92,28 @@ namespace K_Remote.Pages
             GuiRPC.toggleGui();
         }
 
-        private async void setVolume(Task<int> volumeTask)
+        private async void setVolumeSlider(Task<int> volumeTask)
         {
+            volumeChangedByUserInteraction = false;
             int volume = await volumeTask;
-            Debug.WriteLine("Volume: " + volume);            
+            if(remote_volume_slider.Value != volume)
+            {
+                remote_volume_slider.Value = volume;
+            }                      
         }
 
         private void remote_volume_slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue);
+            Debug.WriteLine("Slider value changed");
+            if (volumeChangedByUserInteraction)
+            {
+                ApplicationRPC.setVolume(Convert.ToInt32(e.NewValue));
+            }
+            else
+            {
+                volumeChangedByUserInteraction = true;
+            }
+            
         }
     }
 }

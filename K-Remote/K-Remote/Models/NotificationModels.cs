@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace K_Remote.Models
 {
-
+    
     class InputRequested{
         string jsonrpc;
         string method;
@@ -56,20 +56,21 @@ namespace K_Remote.Models
 
     class VolumeChanged
     {
-        string jsonrpc;
-        string method;
+        public string jsonrpc;
+        public string method;
+        public VolumeChangedParams @params;
 
     }
 
     class VolumeChangedParams
     {
-        VolumeChangedParamsData data;
-        string sender;
+        public VolumeChangedParamsData data;
+        public string sender;
     }
 
     class VolumeChangedParamsData
     {
-        bool muted;
-        float volume;
+        public bool muted;
+        public float volume;
     }
 }

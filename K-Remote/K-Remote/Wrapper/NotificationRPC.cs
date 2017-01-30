@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,7 +33,7 @@ namespace K_Remote.Wrapper
 
         public void processNotification(string notificationString)
         {
-            Debug.WriteLine("Websocket response:");
+            Debug.WriteLine("NotificationRPC: Websocket response:");
             Debug.WriteLine(notificationString + Environment.NewLine);
             Debug.WriteLine("");
             dynamic notificationObject = JObject.Parse(notificationString);
@@ -81,12 +82,5 @@ namespace K_Remote.Wrapper
         {
             VolumeChangedEvent?.Invoke(this, args);
         }
-    }
-
-    class NotificationEventArgs : EventArgs
-    {
-        public InputRequested inputRequested { get; set; }
-        public PlayerStateChanged playerState { get; set; }
-        public VolumeChanged volumeChanged { get; set; }
     }
 }

@@ -155,10 +155,15 @@ namespace K_Remote.Utils
                 {
                     webSocket.Close(1000, "");
                     webSocket.Dispose();
+                    
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
+                }
+                finally
+                {
+                    webSocket = new StreamWebSocket();
                 }
             }
             Uri uri = new Uri("ws://" + hostString + ":" + tcpPortString + "/jsonrpc");
@@ -208,6 +213,8 @@ namespace K_Remote.Utils
             catch(Exception e)
             {
                 Debug.WriteLine("Error in receive: " + e);
+                //try reconnect
+                connectTcp();
             }
         }
         

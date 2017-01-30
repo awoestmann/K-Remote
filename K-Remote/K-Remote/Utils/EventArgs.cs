@@ -1,4 +1,5 @@
-﻿using System;
+﻿using K_Remote.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,4 +41,12 @@ namespace K_Remote.Utils
             this.state = state;
         }
     }
+
+    class NotificationEventArgs : EventArgs
+    {
+        public InputRequested inputRequested { get; set; }
+        public PlayerStateChanged playerState { get; set; }
+        public VolumeChanged volumeChanged { get; set; }
+    }
+
 }
