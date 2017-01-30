@@ -7,6 +7,24 @@ using System.Threading.Tasks;
 namespace K_Remote.Models
 {
 
+    class InputRequested{
+        string jsonrpc;
+        string method;
+        InputRequestedData data;
+    }
+
+    class InputRequestedParams
+    {
+        InputRequestedData data;
+        string sender;
+    }
+
+    class InputRequestedData
+    {
+        string title;
+        string type;
+        string value;
+    }
     /// <summary>
     /// Models Player.OnPlay and Player.OnPause Notifications
     /// </summary>
@@ -36,4 +54,22 @@ namespace K_Remote.Models
         public string sender;
     }
 
+    class VolumeChanged
+    {
+        string jsonrpc;
+        string method;
+
+    }
+
+    class VolumeChangedParams
+    {
+        VolumeChangedParamsData data;
+        string sender;
+    }
+
+    class VolumeChangedParamsData
+    {
+        bool muted;
+        float volume;
+    }
 }

@@ -27,13 +27,18 @@ namespace K_Remote.Pages
         public Remote()
         {
             NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-
+           
             this.InitializeComponent();
         }
 
         static void volumeChanged(object sender, NotificationEventArgs args)
         {
-            Debug.WriteLine("New Volume " + args.playerState.@params.data.volume);
+            Debug.WriteLine("New Volume @remote:" + args.playerState.@params.data.volume);
+        }
+
+        static void inputRequested(object sender, NotificationEventArgs args)
+        {
+            Debug.WriteLine("Input Requested @remote");
         }
 
         private void remote_button_playPause_Click(object sender, RoutedEventArgs e)

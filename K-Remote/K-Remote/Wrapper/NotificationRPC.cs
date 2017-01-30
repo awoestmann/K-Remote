@@ -12,6 +12,7 @@ namespace K_Remote.Wrapper
 {
     class NotificationRPC
     {
+        public event EventHandler<NotificationEventArgs> InputRequiredEvent;
         public event EventHandler<NotificationEventArgs> NotificationEvent;
         public event EventHandler<NotificationEventArgs> PlayerStateChangedEvent;
         public event EventHandler<NotificationEventArgs> VolumeChangedEvent;
@@ -37,20 +38,33 @@ namespace K_Remote.Wrapper
             dynamic notificationObject = JObject.Parse(notificationString);
             string value = notificationObject.method;
             NotificationEventArgs args = new NotificationEventArgs();
-            args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
+            
             switch (value)
             {
-                case "Player.OnPause":                    
+                case "Application.OnVolumeChanged":
+                    args.volumeChanged = JsonConvert.DeserializeObject<VolumeChanged>(notificationString);
+                    OnVolumeChangedEvent(args);
+                    break;
+                case "Input.OnInputRequested":
+                    args.inputRequested = JsonConvert.DeserializeObject<InputRequested>(notificationString);
+                    OnInputRequestetEvent(args);
+                    break;
+                case "Player.OnPause":
+                    args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
                     OnPlayerStateChangedEvent(args);
                     break;
                 case "Player.OnPlay":
+                    args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
                     OnPlayerStateChangedEvent(args);
                     break;
-                case "Application.OnVolumeChanged":
-                    OnVolumeChangedEvent(args);
-                    break;
-                default: Debug.WriteLine("Unknown Response/Notification: " + value); break;
+                
+                default: Debug.WriteLine("Unknown Response/Notification: " + value); return;
             }
+        }
+
+        protected virtual void OnInputRequestetEvent(NotificationEventArgs args)
+        {
+            InputRequiredEvent?.Invoke(this, args);
         }
 
         protected virtual void OnNotificationEvent(NotificationEventArgs args)
@@ -71,6 +85,8 @@ namespace K_Remote.Wrapper
 
     class NotificationEventArgs : EventArgs
     {
+        public InputRequested inputRequested { get; set; }
         public PlayerStateChanged playerState { get; set; }
+        public VolumeChanged volumeChanged { get; set; }
     }
 }
