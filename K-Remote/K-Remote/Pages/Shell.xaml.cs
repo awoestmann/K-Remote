@@ -88,12 +88,12 @@ namespace K_Remote.Pages
 
             if (args.state)
             {
-                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(125, 0, 125, 0));
+                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(255, 0, 125, 0));
                 main_button_connections_text.Text = args.conName;
             }
             else
             {
-                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(125, 125, 0, 0));
+                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(255, 125, 0, 0));
             }
             Debug.WriteLine("Connection-Name: " + args.conName + ", Type: " + args.conType + ", state: " + args.state);
         }

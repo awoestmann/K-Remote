@@ -11,8 +11,8 @@
         <Grid Background="Gray" Height="50" VerticalAlignment="Top">
             <TextBlock x:Name="nowPlaying_page_title" Text="Now Playing" TextAlignment="Left" FontSize="30"/>
         </Grid>
-        <TextBox x:Name="nowPlaying_title" HorizontalAlignment="Left" Margin="0,141,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="26" Width="350"/>
-        <Image x:Name="nowPlaying_image" HorizontalAlignment="Left" Height="240" Width="320" Margin="0,178,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="nowPlaying_title" HorizontalAlignment="Left" Margin="0,55,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="71" Width="350"/>
+        <Image x:Name="nowPlaying_image" HorizontalAlignment="Left" Height="240" Width="320" Margin="0,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.342"/>
 
     </Grid>
 </Page>

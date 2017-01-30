@@ -53,7 +53,7 @@ namespace K_Remote.Wrapper
         /// Sends Player.PlayPause JSON 
         /// </summary>
         /// <returns>true if Kodi is currently playing, false if not</returns>
-        public static async Task<bool> playPause()
+        public static async Task playPause()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();            
             Player[] players = await getActivePlayers();
@@ -61,9 +61,7 @@ namespace K_Remote.Wrapper
             {
                 var responseJson = await handler.sendHttpRequest("{\"jsonrpc\": \"2.0\", \"method\": \"Player.PlayPause\", \"params\": { \"playerid\": " + i.playerId + "}, \"id\": 1}");
                 PlayerState state = JsonConvert.DeserializeObject<PlayerState>(responseJson);
-                return state.playerSpeed != 0;
             }
-            return false;
             
         }
 
