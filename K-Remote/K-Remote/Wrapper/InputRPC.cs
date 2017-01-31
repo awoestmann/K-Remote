@@ -34,6 +34,11 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Down");
         }
 
+        public static async void home()
+        {
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Home");
+        }
+
         public static async void info()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Info");
@@ -54,11 +59,11 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Select", null);
         }
 
-        public static async void sendText(string text, bool done)
+        public static async Task sendText(string text, bool done)
         {
             JObject jsonObject = new JObject(
                 new JProperty("text", text),
-                new JProperty("done", done.ToString())
+                new JProperty("done", done)
             );            
             await ConnectionHandler.getInstance().sendHttpRequest("Input.SendText", jsonObject);
         }
