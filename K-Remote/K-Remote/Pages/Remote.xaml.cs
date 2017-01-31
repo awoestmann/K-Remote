@@ -30,16 +30,12 @@ namespace K_Remote.Pages
         {
             this.InitializeComponent();
             NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-            volumeChangedByUserInteraction = false;
             setVolumeSlider(ApplicationRPC.getVolume());            
         }
 
         static void volumeChanged(object sender, NotificationEventArgs args)
         {
-            Debug.WriteLine("asd");
-            Debug.WriteLine(args.playerState.@params);
-            Debug.WriteLine("asd");
-            Debug.WriteLine("Remote: New Volume :" + args.playerState.@params.data.volume);
+            Debug.WriteLine("Remote: New Volume :" + args.volumeChanged.@params.data.volume);
         }
 
         static void inputRequested(object sender, NotificationEventArgs args)
@@ -104,7 +100,6 @@ namespace K_Remote.Pages
 
         private void remote_volume_slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            Debug.WriteLine("Slider value changed");
             if (volumeChangedByUserInteraction)
             {
                 ApplicationRPC.setVolume(Convert.ToInt32(e.NewValue));
@@ -113,7 +108,7 @@ namespace K_Remote.Pages
             {
                 volumeChangedByUserInteraction = true;
             }
-            
+                       
         }
 
         private void remote_button_context_menu_Click(object sender, RoutedEventArgs e)

@@ -119,6 +119,7 @@
     <Compile Include="Utils\ConnectionHandler.cs" />
     <Compile Include="Utils\EventArgs.cs" />
     <Compile Include="Utils\SettingsManager.cs" />
+    <Compile Include="Utils\Tools.cs" />
     <Compile Include="Wrapper\ApplicationRPC.cs" />
     <Compile Include="Wrapper\FileRPC.cs" />
     <Compile Include="Wrapper\GuiRPC.cs" />

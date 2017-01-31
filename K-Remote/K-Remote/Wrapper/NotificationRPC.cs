@@ -36,30 +36,38 @@ namespace K_Remote.Wrapper
             Debug.WriteLine("NotificationRPC: Websocket response:");
             Debug.WriteLine(notificationString + Environment.NewLine);
             Debug.WriteLine("");
-            dynamic notificationObject = JObject.Parse(notificationString);
-            string value = notificationObject.method;
-            NotificationEventArgs args = new NotificationEventArgs();
-            
-            switch (value)
+            try
             {
-                case "Application.OnVolumeChanged":
-                    args.volumeChanged = JsonConvert.DeserializeObject<VolumeChanged>(notificationString);
-                    OnVolumeChangedEvent(args);
-                    break;
-                case "Input.OnInputRequested":
-                    args.inputRequested = JsonConvert.DeserializeObject<InputRequested>(notificationString);
-                    OnInputRequestetEvent(args);
-                    break;
-                case "Player.OnPause":
-                    args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
-                    OnPlayerStateChangedEvent(args);
-                    break;
-                case "Player.OnPlay":
-                    args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
-                    OnPlayerStateChangedEvent(args);
-                    break;
-                
-                default: Debug.WriteLine("Unknown Response/Notification: " + value); return;
+                dynamic notificationObject = JObject.Parse(notificationString);
+                string value = notificationObject.method;
+                NotificationEventArgs args = new NotificationEventArgs();
+
+                switch (value)
+                {
+                    case "Application.OnVolumeChanged":
+                        args.volumeChanged = JsonConvert.DeserializeObject<VolumeChanged>(notificationString);
+                        OnVolumeChangedEvent(args);
+                        break;
+                    case "Input.OnInputRequested":
+                        args.inputRequested = JsonConvert.DeserializeObject<InputRequested>(notificationString);
+                        OnInputRequestetEvent(args);
+                        break;
+                    case "Player.OnPause":
+                        args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
+                        OnPlayerStateChangedEvent(args);
+                        break;
+                    case "Player.OnPlay":
+                        args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
+                        OnPlayerStateChangedEvent(args);
+                        break;
+
+                    default: Debug.WriteLine("Unknown Response/Notification: " + value); return;
+                }
+            }
+            catch(JsonReaderException jre)
+            {
+                Debug.WriteLine("NotificationRPC: Error on parsing notification json: " + jre);
+                return;
             }
         }
 

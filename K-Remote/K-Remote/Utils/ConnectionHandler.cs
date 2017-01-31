@@ -212,7 +212,7 @@ namespace K_Remote.Utils
                 byte[] readBuffer = new byte[1000];
                 while (true)
                 {
-                    readBuffer = new byte[1000];
+                    readBuffer = new Byte[1000];
                     if (webSocket != sender)
                     {
                         Debug.WriteLine("Socket no longer active");
@@ -221,7 +221,9 @@ namespace K_Remote.Utils
                     int read = await readStream.ReadAsync(readBuffer, 0, readBuffer.Length);
                     if(read > 0)
                     {
-                        NotificationRPC.getInstance().processNotification(System.Text.Encoding.UTF8.GetString(readBuffer));
+                        byte[] message = new byte[read];
+                        Array.Copy(readBuffer, message, read);
+                        NotificationRPC.getInstance().processNotification(System.Text.Encoding.UTF8.GetString(message));
                     }
                 }
             }

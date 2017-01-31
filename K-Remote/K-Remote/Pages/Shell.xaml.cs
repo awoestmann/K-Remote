@@ -32,7 +32,7 @@ namespace K_Remote.Pages
         public Shell(Frame frame)
         {
             this.InitializeComponent();
-            main_menu_splitView.Content = frame; // ShellSplitView is the SplitView we put in Shell.xaml
+            main_menu_splitView.Content = frame;
             (main_menu_splitView.Content as Frame).Navigate(typeof(MainPage));
             this.frame = frame;
 
@@ -51,24 +51,28 @@ namespace K_Remote.Pages
         }
 
         private void main_button_connections_Click(object sender, RoutedEventArgs e)
-        {
-            unfocusButtons();
-            main_button_connections.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
+        {            
+            focusButton(main_button_connections);
             frame.Navigate(typeof(Connections));
         }
 
         private void main_button_remote_Click(object sender, RoutedEventArgs e)
         {
-            unfocusButtons();
-            main_button_remote.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
+            focusButton(main_button_remote);
             frame.Navigate(typeof(Remote));
         }
 
         private void main_button_nowPlaying_Click(object sender, RoutedEventArgs e)
         {
-            unfocusButtons();
-            main_button_nowPlaying.Background = new SolidColorBrush(Color.FromArgb(255, 48, 179, 221));
+            focusButton(main_button_nowPlaying);
             frame.Navigate(typeof(NowPlaying));
+        }
+
+        private void focusButton(Button button)
+        {
+            unfocusButtons();
+            string accentColorHexString = Application.Current.Resources["SystemAccentColor"].ToString();
+            button.Background = Tools.GetSolidColorBrushFromHex(accentColorHexString);
         }
 
         private void unfocusButtons()

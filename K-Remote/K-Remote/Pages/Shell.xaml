@@ -13,24 +13,24 @@
             <StackPanel Background="Gray">
                 <Button x:Name="main_button_menu" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Width="50" Height="50" Background="Transparent" Click="main_button_menu_Click" />
-                <Button x:Name="main_button_connections" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_connections_Click">
+                <Button x:Name="main_button_connections" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_connections_Click" Width="175">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Padding="0,0,0,0">
                         <Grid Background="Blue" x:Name="main_button_connection_icon">
                             <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE8AF;" TextAlignment="Center" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </Grid>
-                        <TextBlock x:Name="main_button_connections_text" Text="Connections" FontSize="18" VerticalAlignment="Center" Visibility="Visible"/>
+                        <TextBlock x:Name="main_button_connections_text" Text="Connections" FontSize="18" VerticalAlignment="Center" Visibility="Visible" Width="125"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="main_button_remote" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_remote_Click">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Padding="0,0,0,0">
+                <Button x:Name="main_button_remote" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_remote_Click" Width="175">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Padding="0,0,0,0" HorizontalAlignment="Left">
                         <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE8EA;" TextAlignment="Center" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        <TextBlock x:Name="main_button_remote_text" Text="Remote" FontSize="18" VerticalAlignment="Center" Visibility="Visible"/>
+                        <TextBlock x:Name="main_button_remote_text" Text="Remote" FontSize="18" VerticalAlignment="Center" Visibility="Visible" Width="125"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="main_button_nowPlaying" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_nowPlaying_Click">
+                <Button x:Name="main_button_nowPlaying" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_nowPlaying_Click" Width="175">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Padding="0,0,0,0">
                         <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE768;" TextAlignment="Center" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        <TextBlock Text="Now Playing" FontSize="18" VerticalAlignment="Center" Visibility="Visible"/>
+                        <TextBlock Text="Now Playing" FontSize="18" VerticalAlignment="Center" Visibility="Visible" Width="125"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

@@ -17,7 +17,7 @@
         <Button x:Name="remote_button_down"  Height="100" Width="100" Content="Down" HorizontalAlignment="Left" Margin="115,320,0,0" VerticalAlignment="Top" Click="remote_button_down_Click"/>
         <Button x:Name="remote_button_back"  Height="100" Width="100" Content="Back" HorizontalAlignment="Left" Margin="10,320,0,0" VerticalAlignment="Top" Click="remote_button_back_Click"/>
         <Button x:Name="remote_button_toggle_gui"  Height="100" Width="100" Content="Toggle GUI" HorizontalAlignment="Left" Margin="221,110,0,0" VerticalAlignment="Top" Click="remote_button_toggle_gui_Click"/>
-        <Slider x:Name="remote_volume_slider" HorizontalAlignment="Left" Margin="80,51,0,0" VerticalAlignment="Top" Width="240" Background="Gray" ValueChanged="remote_volume_slider_ValueChanged"/>
+        <Slider x:Name="remote_volume_slider" HorizontalAlignment="Left" Margin="80,51,0,0" VerticalAlignment="Top" Width="190" Background="Gray" ValueChanged="remote_volume_slider_ValueChanged"/>
         <Button x:Name="remote_mute_button" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" FontSize="24" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.227,0.167" Height="50" Width="50"/>
         <Button x:Name="remote_button_info" Content="Info" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="remote_button_info_Click" />
         <Button x:Name="remote_button_context_menu" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="24" HorizontalAlignment="Left" Margin="220,320,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="remote_button_context_menu_Click" />
