@@ -115,5 +115,15 @@ namespace K_Remote.Pages
             }
             
         }
+
+        private void remote_button_context_menu_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.contextMenu();
+        }
+
+        private void remote_button_info_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.info();
+        }
     }
 }

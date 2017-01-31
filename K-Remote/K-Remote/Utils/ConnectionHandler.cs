@@ -75,7 +75,12 @@ namespace K_Remote.Utils
             App.Current.Resuming += new EventHandler<Object>(resume);
         }
 
-        public async Task<String> sendHttpRequest(string jsonString)
+        /// <summary>
+        /// Sends a json object via http
+        /// </summary>
+        /// <param name="jsonString">JSON to send as a string</param>
+        /// <returns></returns>
+        public async Task<String> sendHttpJson(string jsonString)
         {
             Uri requestUri = new Uri("http://" + hostString + ":" + httpPortString + RELATIVE_PATH);
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri);
@@ -104,14 +109,24 @@ namespace K_Remote.Utils
         }
 
         /// <summary>
-        /// Sends a default request json with method and parameters
+        /// Sends a default request json with method and parameters to jsonrpc uri
         /// </summary>
         /// <param name="method">Method</param>
         /// <param name="param">Parameter if needed</param>
         /// <returns>Response JSON</returns>
         public async Task<string> sendHttpRequest(string method, JObject param)
         {
-            return await this.sendHttpRequest(getRequestJson(method, param).ToString());
+            return await this.sendHttpJson(getRequestJson(method, param).ToString());
+        }
+
+        /// <summary>
+        /// Sends a default request json with method and no parameters to jsonrpc uri
+        /// </summary>
+        /// <param name="method">Method</param>
+        /// <returns></returns>
+        public async Task<string> sendHttpRequest(string method)
+        {
+            return await this.sendHttpRequest(method, null);
         }
 
         public async Task<bool> checkHttpConnection()

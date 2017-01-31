@@ -18,38 +18,45 @@ namespace K_Remote.Wrapper
         /// </summary>
         public static async void back()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();            
-            await handler.sendHttpRequest("Input.Back", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Back", null);
+        }
+
+        /// <summary>
+        /// Sends Input.ContextMenu to show context Menu
+        /// </summary>
+        public static async void contextMenu()
+        {
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.ContextMenu");
         }
 
         public static async void down()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("Input.Down", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Down");
+        }
+
+        public static async void info()
+        {
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Info");
         }
 
         public static async void left()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("Input.Left", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Left", null);
         }
 
         public static async void right()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("Input.Right", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Right", null);
         }
 
         public static async void select()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("Input.Select", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Select", null);
         }
 
         public static async void up()
         {
-            ConnectionHandler handler = ConnectionHandler.getInstance();
-            await handler.sendHttpRequest("Input.Up", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Up", null);
         }
     }
 }
