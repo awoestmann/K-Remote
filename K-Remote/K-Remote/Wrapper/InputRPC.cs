@@ -54,6 +54,15 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Select", null);
         }
 
+        public static async void sendText(string text, bool done)
+        {
+            JObject jsonObject = new JObject(
+                new JProperty("text", text),
+                new JProperty("done", done.ToString())
+            );            
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.SendText", jsonObject);
+        }
+
         public static async void up()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Up", null);

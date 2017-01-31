@@ -26,21 +26,37 @@ namespace K_Remote.Pages
         /// </summary>
         private bool volumeChangedByUserInteraction;
 
+        private static Remote staticInstance;
+
         public Remote()
         {
             this.InitializeComponent();
-            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-            setVolumeSlider(ApplicationRPC.getVolume());            
+            staticInstance = this;
+            if (ConnectionHandler.getInstance().checkTcpConnection())
+            {
+                NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
+                NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
+                setVolumeSlider(ApplicationRPC.getVolume());
+            }
+                     
         }
 
         static void volumeChanged(object sender, NotificationEventArgs args)
         {
             Debug.WriteLine("Remote: New Volume :" + args.volumeChanged.@params.data.volume);
+            if(staticInstance != null)
+            {
+                Remote.staticInstance.setVolumeSlider(args.volumeChanged.@params.data.volume);
+            }            
         }
 
         static void inputRequested(object sender, NotificationEventArgs args)
         {
             Debug.WriteLine("Input Requested @remote");
+            if(staticInstance != null)
+            {
+                Remote.staticInstance.showInputPrompt();
+            }
         }
 
         private void remote_button_playPause_Click(object sender, RoutedEventArgs e)
@@ -90,12 +106,18 @@ namespace K_Remote.Pages
 
         private async void setVolumeSlider(Task<int> volumeTask)
         {
-            volumeChangedByUserInteraction = false;
             int volume = await volumeTask;
-            if(remote_volume_slider.Value != volume)
+            setVolumeSlider(volume);
+        }
+
+        private void setVolumeSlider(float volume)
+        {
+            volumeChangedByUserInteraction = false;
+            
+            if (remote_volume_slider.Value != volume)
             {
                 remote_volume_slider.Value = volume;
-            }                      
+            }
         }
 
         private void remote_volume_slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -119,6 +141,35 @@ namespace K_Remote.Pages
         private void remote_button_info_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.info();
+        }
+
+        private async void showInputPrompt()
+        {
+            Debug.WriteLine("Remote: Input prompt");
+            TextBox inputTextBox = new TextBox();
+            inputTextBox.AcceptsReturn = false;
+            inputTextBox.Height = 32;
+            inputTextBox.Focus(FocusState.Keyboard);
+
+            ContentDialog dialog = new ContentDialog();
+            dialog.Content = inputTextBox;
+            dialog.Title = "Input Dialog";
+            dialog.IsSecondaryButtonEnabled = true;
+            dialog.PrimaryButtonText = "Ok";
+            dialog.SecondaryButtonText = "Cancel";
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                Debug.WriteLine("Remote->InputDialog: Input: " + inputTextBox.Text);
+                InputRPC.sendText(inputTextBox.Text, true);
+            }
+            else{
+                Debug.WriteLine("Remote->InputDialog: Canceled");
+            }
+        }
+
+        private void remote_mute_button_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationRPC.toggleMute();
         }
     }
 }

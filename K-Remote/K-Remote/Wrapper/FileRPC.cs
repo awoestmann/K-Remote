@@ -13,10 +13,17 @@ namespace K_Remote.Wrapper
     {
         public static async Task<string> prepareDownloadFile(string filename)
         {
-            string fileJson = await ConnectionHandler.getInstance().sendHttpRequest("Files.PrepareDownload", new JObject(new JProperty("path", filename)));
+            string pathJson = await ConnectionHandler.getInstance().sendHttpRequest("Files.PrepareDownload", new JObject(new JProperty("path", filename)));
             
-            Debug.WriteLine(fileJson);
-            return fileJson;
+            Debug.WriteLine("FileRPC.prepareDownload: " + pathJson);
+            return pathJson;
+        }
+
+        public static async Task<byte[]> downloadFile(string path)
+        {
+            string file = await ConnectionHandler.getInstance().sendHttpRequest("Files.Download", new JObject(new JProperty("path", path)));
+            Debug.WriteLine("FileRPC.downloadFile: " + file);
+            return null;
         }
     }
 }

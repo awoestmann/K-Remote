@@ -13,7 +13,7 @@ namespace K_Remote.Wrapper
 {
     class NotificationRPC
     {
-        public event EventHandler<NotificationEventArgs> InputRequiredEvent;
+        public event EventHandler<NotificationEventArgs> InputRequestedEvent;
         public event EventHandler<NotificationEventArgs> NotificationEvent;
         public event EventHandler<NotificationEventArgs> PlayerStateChangedEvent;
         public event EventHandler<NotificationEventArgs> VolumeChangedEvent;
@@ -34,8 +34,7 @@ namespace K_Remote.Wrapper
         public void processNotification(string notificationString)
         {
             Debug.WriteLine("NotificationRPC: Websocket response:");
-            Debug.WriteLine(notificationString + Environment.NewLine);
-            Debug.WriteLine("");
+            Debug.WriteLine(notificationString);
             try
             {
                 dynamic notificationObject = JObject.Parse(notificationString);
@@ -73,7 +72,7 @@ namespace K_Remote.Wrapper
 
         protected virtual void OnInputRequestetEvent(NotificationEventArgs args)
         {
-            InputRequiredEvent?.Invoke(this, args);
+            InputRequestedEvent?.Invoke(this, args);
         }
 
         protected virtual void OnNotificationEvent(NotificationEventArgs args)

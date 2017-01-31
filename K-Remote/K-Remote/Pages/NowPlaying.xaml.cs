@@ -40,8 +40,9 @@ namespace K_Remote.Pages
             {
                 nowPlaying_title.Text = item.title;
                 string imageString = item.fanart;
-                Debug.WriteLine(imageString);
+                Debug.WriteLine("NowPlaying.updateItem: imageString of currentItem: " + Environment.NewLine +  imageString);
                 string response = await FileRPC.prepareDownloadFile(imageString);
+                byte[] file = await FileRPC.downloadFile(response);
                 //TODO
                 /*var bmp = new WriteableBitmap(320, 240);
                 using (var stream = bmp.PixelBuffer.AsStream())
