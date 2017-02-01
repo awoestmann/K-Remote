@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace K_Remote.Models
 {
@@ -15,7 +16,39 @@ namespace K_Remote.Models
         public int tcpPort { get; set; }
         public string username { get; set; }
         public string password;
-        public bool active;
+        private bool m_active;
+        public bool active
+        {
+            get
+            {
+                return m_active;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    background = Application.Current.Resources["SystemAccentColor"].ToString();
+                    icon = "\uE8FB";
+                }
+                else
+                {
+                    background = "Transparent";
+                    icon = "";
+                }
+                m_active = value;
+            }
+        }
+
+        public string background { get; set; }
+        public string icon { get; set; }
+
+        /// <summary>
+        /// Creates a dummy connection object
+        /// </summary>
+        public Connection()
+        {
+            this.description = "Dummy";
+        }
 
         public Connection(string description, string host, int httpPort, int tcpPort, string username, string password, bool active)
         {
@@ -26,6 +59,16 @@ namespace K_Remote.Models
             this.password = password;
             this.description = description;
             this.active = active;
+            if (active == true)
+            {
+                background = Application.Current.Resources["SystemAccentColor"].ToString();
+                icon = "\uE8FB";
+            }
+            else
+            {
+                background = "Transparent";
+                icon = "";
+            }
         }
 
         public Connection(string base64String)

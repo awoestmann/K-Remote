@@ -1,6 +1,7 @@
 ﻿using K_Remote.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace K_Remote.Utils
     {
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-        private List<Connection> connections;
+        private ObservableCollection<Connection> connections;
 
         private static SettingsManager instance;
 
@@ -35,7 +36,7 @@ namespace K_Remote.Utils
             //@DEBUG: clear settings
             localSettings.Values["Connections"] = "";
 
-            connections = new List<Connection>();
+            connections = new ObservableCollection<Connection>();
             //try to get connections from settings
             
             if(localSettings.Values["Connections"] != null)
@@ -56,7 +57,7 @@ namespace K_Remote.Utils
             }
         }
 
-        public List<Connection> getConnectionsList()
+        public ObservableCollection<Connection> getConnectionsList()
         {
             return connections;
         }
