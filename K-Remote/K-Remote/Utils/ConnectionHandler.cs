@@ -77,7 +77,7 @@ namespace K_Remote.Utils
             App.Current.Resuming += new EventHandler<Object>(resume);
         }
 
-        public void refreshConnectionData()
+        public async Task refreshConnectionData()
         {
             Connection current = SettingsManager.getInstance().getCurrentConnection();
             if (current == null)
@@ -97,7 +97,7 @@ namespace K_Remote.Utils
             //websocket           
             webSocket = new StreamWebSocket();
             //webSocket.Closed += webSocketClosed;
-            connectTcp();
+            await connectTcp();
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace K_Remote.Utils
             return requestObject;
         }
 
-        public async void connectTcp()
+        public async Task connectTcp()
         {
             Debug.WriteLine("Connecting TCP to " + hostString + ":" + tcpPortString);
             if (tcpConnected)

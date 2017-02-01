@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
 namespace K_Remote
@@ -38,7 +39,7 @@ namespace K_Remote
             SettingsManager.getInstance().setCurrentConnection(activeCon.host);
             ConnectionHandler.getInstance().refreshConnectionData();
             activeCon.active = true;
-            Shell.navigate(typeof(Remote));
+            Shell.navigateToRemote();
         }
     }
 }

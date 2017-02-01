@@ -26,12 +26,15 @@ namespace K_Remote.Pages
     public sealed partial class Shell : Page
     {
         private static Frame frame;
+        private static Shell instance;
+
         private bool tcpConnected = false;
         private bool httpConnected = false;
 
         public Shell(Frame frame)
         {
             this.InitializeComponent();
+            instance = this;
             main_menu_splitView.Content = frame;
             (main_menu_splitView.Content as Frame).Navigate(typeof(MainPage));
             Shell.frame = frame;
@@ -45,9 +48,9 @@ namespace K_Remote.Pages
             ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
         }
 
-        public static void navigate(Type t)
+        public static void navigateToRemote()
         {
-            frame.Navigate(t);
+            instance.main_button_remote_Click(null, null);
         }
 
         private void main_button_menu_Click(object sender, RoutedEventArgs e)
