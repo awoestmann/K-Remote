@@ -9,6 +9,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,12 +19,10 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// Die Elementvorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
-
 namespace K_Remote.Pages
 {
     /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
+    /// A Page containing details of the item that is currently played
     /// </summary>
     public sealed partial class NowPlaying : Page
     {
@@ -39,17 +38,29 @@ namespace K_Remote.Pages
             if(item != null)
             {
                 nowPlaying_title.Text = item.title;
-                string imageString = item.fanart;
+
+                //Get thumbnail
+                string imageString = item.thumbnail;
                 Debug.WriteLine("NowPlaying.updateItem: imageString of currentItem: " + Environment.NewLine +  imageString);
                 string response = await FileRPC.prepareDownloadFile(imageString);
-                byte[] file = await FileRPC.downloadFile(response);
-                //TODO
-                /*var bmp = new WriteableBitmap(320, 240);
-                using (var stream = bmp.PixelBuffer.AsStream())
+                IInputStream imageStream = await FileRPC.downloadFile(response);
+                if (imageStream != null)
                 {
-                    stream.Write(imageStream, 0, imageStream.Length);
-                    nowPlaying_image.Source = bmp;
-                }*/
+                    Debug.WriteLine("NowPlaying.updateItem: downloaded file");
+                    BitmapImage bmp = new BitmapImage();
+                    using (var memStream = new MemoryStream())
+                    {
+                        await imageStream.AsStreamForRead().CopyToAsync(memStream);
+                        memStream.Position = 0;
+                        bmp.SetSource(memStream.AsRandomAccessStream());
+                        nowPlaying_image.Source = bmp;
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("NowPLaying.updateItem: Downloaded buffer is null");
+                }
+                
             }
             else
             {

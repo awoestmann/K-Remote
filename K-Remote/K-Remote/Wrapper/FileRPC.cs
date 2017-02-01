@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 namespace K_Remote.Wrapper
 {
@@ -15,15 +16,20 @@ namespace K_Remote.Wrapper
         {
             string pathJson = await ConnectionHandler.getInstance().sendHttpRequest("Files.PrepareDownload", new JObject(new JProperty("path", filename)));
             
-            Debug.WriteLine("FileRPC.prepareDownload: " + pathJson);
-            return pathJson;
+            Debug.WriteLine("FileRPC.prepareDownload: response" + pathJson);
+            dynamic jsonObject = JObject.Parse(pathJson);
+            return jsonObject.result.details.path;
         }
 
-        public static async Task<byte[]> downloadFile(string path)
+        public static async Task<IInputStream> downloadFile(string path)
         {
-            string file = await ConnectionHandler.getInstance().sendHttpRequest("Files.Download", new JObject(new JProperty("path", path)));
-            Debug.WriteLine("FileRPC.downloadFile: " + file);
-            return null;
+            IInputStream buffer = await ConnectionHandler.getInstance().downloadFile(path);
+            if(buffer == null)
+            {
+                Debug.WriteLine("FileRPC.downloadFile: No Buffer received");
+            }
+            Debug.WriteLine("FileRPC.downloadFile: return Buffer Object");
+            return buffer;
         }
     }
 }

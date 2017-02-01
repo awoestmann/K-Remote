@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 
@@ -73,6 +74,36 @@ namespace K_Remote.Utils
             //webSocket.Closed += webSocketClosed;
 
             App.Current.Resuming += new EventHandler<Object>(resume);
+        }
+
+        /// <summary>
+        /// Downloads file at path via GET request
+        /// </summary>
+        /// <param name="path">relative URI to file</param>
+        /// <returns></returns>
+        public async Task<IInputStream> downloadFile(string path)
+        {
+            Uri requestUri = new Uri("http://" + hostString + ":" + httpPortString + "/" + path);
+            Debug.WriteLine("ConnectionHandler.DownloadFile: Downloading file: " + requestUri);
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            
+            requestMessage.Headers.Authorization = new HttpCredentialsHeaderValue("Basic", loginBase64);
+
+            HttpResponseMessage httpResponse = new HttpResponseMessage();
+            IInputStream httpResponseBody;
+
+            try
+            {
+                httpResponse = await httpClient.SendRequestAsync(requestMessage);
+                httpResponse.EnsureSuccessStatusCode();
+                httpResponseBody = await httpResponse.Content.ReadAsInputStreamAsync();
+                return httpResponseBody;
+            }
+            catch (Exception ex)
+            {
+                Debug.Write("ConnectionHandler.DownloadFile: " + ex);
+                return null;
+            }
         }
 
         /// <summary>
