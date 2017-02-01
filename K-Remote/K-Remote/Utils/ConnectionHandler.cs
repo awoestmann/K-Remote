@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Sockets;
@@ -54,17 +55,17 @@ namespace K_Remote.Utils
 
         public ConnectionHandler()
         {
-            Connection current = SettingsManager.getCurrentConnection();
+            Connection current = SettingsManager.getInstance().getCurrentConnection();
             if(current == null)
             {
-                //TODO handle no conection
+                //TODO handle no connection
             }
             else
             {
                 this.hostString = current.host;
-                this.httpPortString = current.port.ToString();
-                this.loginBase64 = current.loginBase64;
-                this.conName = current.name;
+                this.httpPortString = current.httpPort.ToString();
+                this.loginBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(current.username + ":" + current.password));
+                this.conName = current.description;
             }
             //http
             httpClient = new HttpClient();

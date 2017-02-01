@@ -1,37 +1,104 @@
 ﻿using K_Remote.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace K_Remote.Utils
 {
-    static class SettingsManager
+    /// <summary>
+    /// Singleton, that manages settings read/write operations
+    /// </summary>
+    class SettingsManager
     {
-        private static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-        public static void setCurrentConnection(Connection con)
+        private List<Connection> connections;
+
+        private static SettingsManager instance;
+
+        public static SettingsManager getInstance()
         {
-            Windows.Storage.ApplicationDataCompositeValue composite = new Windows.Storage.ApplicationDataCompositeValue();
-            composite["host"] = con.host;
-            composite["port"] = con.port;
-            composite["name"] = con.name;
-            composite["loginBase64"] = con.loginBase64;
-            localSettings.Values["currentConnection"] = composite;
+            if(instance == null)
+            {
+                instance = new SettingsManager();
+            }
+            return instance;
         }
 
-        public static Connection getCurrentConnection()
+        private SettingsManager()
         {
-            Windows.Storage.ApplicationDataCompositeValue composite = (Windows.Storage.ApplicationDataCompositeValue)localSettings.Values["currentConnection"];
-            if(composite != null)
+            //Get available connections
+
+            //@DEBUG: clear settings
+            localSettings.Values["Connections"] = "";
+
+            connections = new List<Connection>();
+            //try to get connections from settings
+            
+            if(localSettings.Values["Connections"] != null)
             {
-                return new Connection((string)composite["host"], (int)composite["port"], (string)composite["name"], (string)composite["loginBase64"]);
+                //Get all connections as string and decode
+                string settingsString = Encoding.UTF8.GetString(Convert.FromBase64String(localSettings.Values["Connections"].ToString()));
+
+                //Split string into single connections
+                string[] connectionsString = settingsString.Split(';');
+                
+                foreach(string s in connectionsString)
+                {
+                    if(s.Length > 0)
+                    {
+                        connections.Add(new Connection(Convert.ToBase64String(Encoding.UTF8.GetBytes(s))));
+                    }                   
+                }
             }
-            else
+        }
+
+        public List<Connection> getConnectionsList()
+        {
+            return connections;
+        }
+
+        public void addConnection(Connection con)
+        {
+            if(con != null)
             {
-                return null;
+                connections.Add(con);
+                saveConnections();
             }
+            
+        }
+
+        public void saveConnections()
+        {
+            string connectionsListString = "";
+            foreach(Connection c in connections)
+            {
+                connectionsListString += c;
+                connectionsListString += ";";
+            }
+            localSettings.Values["Connections"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionsListString));
+        }
+
+        public void setCurrentConnection(string host)
+        {
+            foreach(Connection con in connections)
+            {
+                if (con.host.Equals(host))
+                {
+                    string base64Connection = con.toBase64String();
+                    localSettings.Values["CurrentConnection"] = base64Connection;
+                }
+            }
+           
+        }
+
+        public Connection getCurrentConnection()
+        {
+            string connectionBase64 = localSettings.Values["CurrentConnection"].ToString();
+            return new Connection(connectionBase64);
         }
     }
 }

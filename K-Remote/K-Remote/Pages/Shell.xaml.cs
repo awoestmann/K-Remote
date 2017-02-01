@@ -37,7 +37,7 @@ namespace K_Remote.Pages
             this.frame = frame;
 
             //Set connection Indicator
-            if (SettingsManager.getCurrentConnection() == null)
+            if (SettingsManager.getInstance().getCurrentConnection() == null)
             {
                 main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             }

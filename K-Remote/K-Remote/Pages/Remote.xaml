@@ -10,7 +10,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button x:Name="remote_button_playPause"  Height="100" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE768;" HorizontalAlignment="Left" Margin="220,425,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click"/>
         <Button x:Name="remote_button_stop"  Height="100" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE71A;" HorizontalAlignment="Left" Margin="10,425,0,0" VerticalAlignment="Top" Click="remote_button_stop_Click"/>
-        <Button x:Name="remote_button_up" Height="100" Width="100" FontFamily="Segoe MDL2 Assets" Content="&#xE74A;" FontSize="24" HorizontalAlignment="Left" Margin="115,110,0,0" VerticalAlignment="Top" Click="remote_button_up_Click"/>
+        <Button x:Name="remote_button_up" Height="100" Width="100" FontFamily="Segoe MDL2 Assets" Content="&#xE74A;" FontSize="24" HorizontalAlignment="Left" Margin="115,110,0,0" VerticalAlignment="Top" Click="remote_button_up_Click" ClickMode="Press"/>
         <Button x:Name="remote_button_left"  Height="100" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE72B;" HorizontalAlignment="Left" Margin="10,215,0,0" VerticalAlignment="Top" Click="remote_button_left_Click"/>
         <Button x:Name="remote_button_enter"  Height="100" Width="100" Content="Enter" HorizontalAlignment="Left" Margin="115,215,0,0" VerticalAlignment="Top" Click="remote_button_enter_Click"/>
         <Button x:Name="remote_button_right"  Height="100" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE72A;" HorizontalAlignment="Left" Margin="221,215,0,0" VerticalAlignment="Top" Click="remote_button_right_Click"/>
@@ -21,7 +21,7 @@
         <Button x:Name="remote_mute_button" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" FontSize="24" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.227,0.167" Height="50" Width="50"/>
         <Button x:Name="remote_button_info" Content="Info" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="remote_button_info_Click" />
         <Button x:Name="remote_button_context_menu" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="24" HorizontalAlignment="Left" Margin="220,320,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="remote_button_context_menu_Click" />
-        <Button x:Name="remote_button_send_text" Content="Send text" HorizontalAlignment="Left" Margin="10,530,0,0" VerticalAlignment="Top" Height="50" Width="100" Click="remote_button_send_text_Click"/>
+        <Button x:Name="remote_button_send_text" FontFamily="Segoe MDL2 Assets" FontSize="48" Content="&#xE765;" HorizontalAlignment="Left" Margin="10,530,0,0" VerticalAlignment="Top" Height="50" Width="100" Click="remote_button_send_text_Click"/>
         <Button x:Name="remote_button_home" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE80F;" HorizontalAlignment="Left" Margin="115,425,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="remote_button_home_Click"/>
 
     </Grid>

@@ -9,6 +9,11 @@ namespace K_Remote.Utils
 {
     class Tools
     {
+        /// <summary>
+        /// Converts a hex format color string to a color
+        /// </summary>
+        /// <param name="hex">Color string, hex formated</param>
+        /// <returns>A new SolidColorBrush for input color</returns>
         public static SolidColorBrush GetSolidColorBrushFromHex(string hex)
         {
             hex = hex.Replace("#", string.Empty);

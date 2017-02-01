@@ -8,7 +8,22 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="title_connections" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Connections" VerticalAlignment="Top"/>
-
+        <Grid Background="Gray" Height="50" VerticalAlignment="Top">
+            <TextBlock x:Name="connections_page_title" Text="Connections" TextAlignment="Left" FontSize="30"/>
+        </Grid>
+        <ListView x:Name="connections_listView" HorizontalAlignment="Left" Height="509" Margin="10,55,0,0" VerticalAlignment="Top" Width="274">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding description}" FontSize="24"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding username}" FontSize="16"/>
+                            <TextBlock Text="@" FontSize="16"/>
+                            <TextBlock Text="{Binding host}" FontSize="16"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>
