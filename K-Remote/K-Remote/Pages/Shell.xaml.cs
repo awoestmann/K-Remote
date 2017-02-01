@@ -25,7 +25,7 @@ namespace K_Remote.Pages
     /// </summary>
     public sealed partial class Shell : Page
     {
-        private Frame frame;
+        private static Frame frame;
         private bool tcpConnected = false;
         private bool httpConnected = false;
 
@@ -34,7 +34,7 @@ namespace K_Remote.Pages
             this.InitializeComponent();
             main_menu_splitView.Content = frame;
             (main_menu_splitView.Content as Frame).Navigate(typeof(MainPage));
-            this.frame = frame;
+            Shell.frame = frame;
 
             //Set connection Indicator
             if (SettingsManager.getInstance().getCurrentConnection() == null)
@@ -43,6 +43,11 @@ namespace K_Remote.Pages
             }
 
             ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
+        }
+
+        public static void navigate(Type t)
+        {
+            frame.Navigate(t);
         }
 
         private void main_button_menu_Click(object sender, RoutedEventArgs e)

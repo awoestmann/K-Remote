@@ -14,7 +14,7 @@
         <ListView x:Name="connections_listView" HorizontalAlignment="Left" Height="509" Margin="0,55,0,0" VerticalAlignment="Top" Width="274" SelectionChanged="connections_listView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Background="{Binding background , Mode=TwoWay}" Width="274" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Background="{Binding background , Mode=OneWay}" Width="274" HorizontalAlignment="Left">
                         <StackPanel>
                             <TextBlock Text="{Binding description , Mode=TwoWay}" FontSize="24"/>
                             <StackPanel Orientation="Horizontal">
@@ -23,7 +23,7 @@
                                 <TextBlock Text="{Binding host , Mode=TwoWay}" FontSize="16"/>                                
                             </StackPanel>
                         </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="48" Text="{Binding icon}" />
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="48" Text="{Binding icon ,Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

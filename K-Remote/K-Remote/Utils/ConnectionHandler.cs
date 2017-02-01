@@ -77,6 +77,29 @@ namespace K_Remote.Utils
             App.Current.Resuming += new EventHandler<Object>(resume);
         }
 
+        public void refreshConnectionData()
+        {
+            Connection current = SettingsManager.getInstance().getCurrentConnection();
+            if (current == null)
+            {
+                //TODO handle no connection
+            }
+            else
+            {
+                this.hostString = current.host;
+                this.httpPortString = current.httpPort.ToString();
+                this.loginBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(current.username + ":" + current.password));
+                this.conName = current.description;
+            }
+            //http
+            httpClient = new HttpClient();
+
+            //websocket           
+            webSocket = new StreamWebSocket();
+            //webSocket.Closed += webSocketClosed;
+            connectTcp();
+        }
+
         /// <summary>
         /// Downloads file at path via GET request
         /// </summary>
@@ -201,7 +224,7 @@ namespace K_Remote.Utils
                 try
                 {
                     webSocket.Close(1000, "");
-                    webSocket.Dispose();
+                    //webSocket.Dispose();
                     
                 }
                 catch (Exception e)

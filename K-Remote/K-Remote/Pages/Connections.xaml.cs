@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Pages;
 using K_Remote.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,12 +12,9 @@ namespace K_Remote
     /// <summary>
     /// A page that shows all available connections
     /// </summary>
-    public sealed partial class Connections : Page, INotifyPropertyChanged
+    public sealed partial class Connections : Page
     {
         ObservableCollection<Connection> connections { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void RaiseProperty(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public Connections()
         {
@@ -35,11 +33,12 @@ namespace K_Remote
             {
                 c.active = false;
             }
-            Connection dummy = new Connection();
-            connections.Add(dummy);
-            connections.Remove(dummy);
+            //Connection dummy = new Connection();
+            //connections.Add(dummy);
+            SettingsManager.getInstance().setCurrentConnection(activeCon.host);
+            ConnectionHandler.getInstance().refreshConnectionData();
             activeCon.active = true;
-            RaiseProperty(nameof(connections));
+            Shell.navigate(typeof(Remote));
         }
     }
 }

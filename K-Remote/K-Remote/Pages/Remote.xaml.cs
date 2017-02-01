@@ -83,33 +83,47 @@ namespace K_Remote.Pages
         /// <summary>
         /// Switch Play/Pause button icon according to current player state
         /// </summary>
-        private async void setPlayPauseIcon()
+        private async Task setPlayPauseIcon()
         {
-            Player[] players = await PlayerRPC.getActivePlayers();
-            if (players != null && players.Length > 0)
+            try
             {
-                Player player = players[0];
-                if (player.speed == 0)
+                Player[] players = await PlayerRPC.getActivePlayers();
+                if (players != null && players.Length > 0)
                 {
-                    //switch to play icon
-                    remote_button_playPause.Content = "\uE768";
+                    Player player = players[0];
+                    if (player.speed == 0)
+                    {
+                        //switch to play icon
+                        remote_button_playPause.Content = "\uE768";
+                    }
+                    else
+                    {
+                        //switch to pause icon
+                        remote_button_playPause.Content = "\uE769";
+                    }
                 }
-                else
-                {
-                    //switch to pause icon
-                    remote_button_playPause.Content = "\uE769";
-                }
+            }            
+            catch(Exception e)
+            {
+                Debug.WriteLine("Remote.setPlayPauseIcon: Error on getting players: " + e);
             }
-
         }
         /// <summary>
         /// Waits for volume task and calls setVolumeSlider(float volume)
         /// </summary>
         /// <param name="volumeTask">Task return volume int value</param>
-        private async void setVolumeSlider(Task<int> volumeTask)
+        private async Task setVolumeSlider(Task<int> volumeTask)
         {
-            int volume = await volumeTask;
-            setVolumeSlider(volume);
+            try
+            {
+                int volume = await volumeTask;
+                setVolumeSlider(volume);
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Remote.setVolumeSlider: Error on getting volume: " + e);
+            }
+            
         }
 
         /// <summary>
