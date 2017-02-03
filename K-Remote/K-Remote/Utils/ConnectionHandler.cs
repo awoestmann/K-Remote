@@ -97,7 +97,15 @@ namespace K_Remote.Utils
             //websocket           
             webSocket = new StreamWebSocket();
             //webSocket.Closed += webSocketClosed;
-            await connectTcp();
+            try
+            {
+                await connectTcp();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect");
+                Debug.WriteLine(ex);
+            }
         }
 
         /// <summary>

@@ -34,7 +34,16 @@ namespace K_Remote
     {
         public MainPage()
         {
-            test();
+            try
+            {
+                test();
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Main: Failure on test()");
+                Debug.WriteLine(e);
+            }
+            
             this.InitializeComponent();
         }
 
@@ -50,7 +59,7 @@ namespace K_Remote
             Player[] active = await PlayerRPC.getActivePlayers();
             PlayerItem now = await PlayerRPC.getItem();
 
-            ConnectionHandler.getInstance().connectTcp();
+            await ConnectionHandler.getInstance().connectTcp();
             bool tcpConnected = ConnectionHandler.getInstance().checkTcpConnection();
             Debug.WriteLine("TCP connection: " + tcpConnected);
 

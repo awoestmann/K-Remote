@@ -299,6 +299,15 @@ namespace K_Remote.Pages
             GuiRPC.toggleGui();
         }
 
+        private void remote_button_next_Click(object sender, RoutedEventArgs e)
+        {
+            PlayerRPC.goTo("next");
+        }
+
+        private void remote_button_previous_Click(object sender, RoutedEventArgs e)
+        {
+            PlayerRPC.goTo("next");
+        }
         #endregion
     }
 }

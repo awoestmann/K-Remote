@@ -49,11 +49,47 @@ namespace K_Remote.Wrapper
             }                      
         }
 
+        public static async void getProperties()
+        {
+            Player[] players = await getActivePlayers();
+            if (players.Length > 0)
+            {
+            }
+            else
+            {
+                Debug.WriteLine("No active player");
+            }
+
+        }
+
+        /// <summary>
+        /// Go to previous, next or specific item in playlist
+        /// </summary>
+        /// <param name="direction">"previous", "next" or item position</param>
+        public static async Task goTo(string direction)
+        {
+            //Get active players
+            ConnectionHandler handler = ConnectionHandler.getInstance();
+            Player[] players = await getActivePlayers();
+            if (players.Length == 0)
+            {
+                return;
+            }
+
+            foreach(Player p in players)
+            {
+                await handler.sendHttpRequest("Player.GoTo", new JObject(
+                    new JProperty("playerid", p.playerId),
+                    new JProperty("to", direction)
+                ));
+            }
+        }
+
         /// <summary>
         /// Sends Player.PlayPause JSON 
         /// </summary>
         /// <returns>true if Kodi is currently playing, false if not</returns>
-        public static async void playPause()
+        public static async Task playPause()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();            
             Player[] players = await getActivePlayers();
@@ -76,19 +112,6 @@ namespace K_Remote.Wrapper
             {
                 var responseJson = await handler.sendHttpRequest("Player.Stop", new JObject(new JProperty("playerid", i.playerId)));
             }
-        }
-
-        public static async void getProperties()
-        {
-            Player[] players = await getActivePlayers();
-            if(players.Length > 0)
-            {
-            }
-            else
-            {
-                Debug.WriteLine("No active player");
-            }
-            
         }
     }
 }

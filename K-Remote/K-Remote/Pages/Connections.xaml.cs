@@ -1,6 +1,7 @@
 ﻿using K_Remote.Models;
 using K_Remote.Pages;
 using K_Remote.Utils;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -37,7 +38,9 @@ namespace K_Remote
             //Connection dummy = new Connection();
             //connections.Add(dummy);
             SettingsManager.getInstance().setCurrentConnection(activeCon.host);
+           
             ConnectionHandler.getInstance().refreshConnectionData();
+          
             activeCon.active = true;
             Shell.navigateToRemote();
         }

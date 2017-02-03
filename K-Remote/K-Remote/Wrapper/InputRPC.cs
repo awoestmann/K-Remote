@@ -16,7 +16,7 @@ namespace K_Remote.Wrapper
         /// <summary>
         /// Sends Input.Back JSON to move cursor up
         /// </summary>
-        public static async void back()
+        public static async Task back()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Back", null);
         }
@@ -24,37 +24,37 @@ namespace K_Remote.Wrapper
         /// <summary>
         /// Sends Input.ContextMenu to show context Menu
         /// </summary>
-        public static async void contextMenu()
+        public static async Task contextMenu()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.ContextMenu");
         }
 
-        public static async void down()
+        public static async Task down()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Down");
         }
 
-        public static async void home()
+        public static async Task home()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Home");
         }
 
-        public static async void info()
+        public static async Task info()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Info");
         }
 
-        public static async void left()
+        public static async Task left()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Left", null);
         }
 
-        public static async void right()
+        public static async Task right()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Right", null);
         }
 
-        public static async void select()
+        public static async Task select()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Select", null);
         }
@@ -68,7 +68,7 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.SendText", jsonObject);
         }
 
-        public static async void up()
+        public static async Task up()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Up", null);
         }
