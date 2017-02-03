@@ -78,10 +78,12 @@ namespace K_Remote.Wrapper
 
             foreach(Player p in players)
             {
-                await handler.sendHttpRequest("Player.GoTo", new JObject(
-                    new JProperty("playerid", p.playerId),
-                    new JProperty("to", direction)
-                ));
+                await handler.sendHttpRequest("Player.GoTo", 
+                    new JObject(
+                        new JProperty("playerid", p.playerId),
+                        new JProperty("to", direction)
+                    )
+                );
             }
         }
 

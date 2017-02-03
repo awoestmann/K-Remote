@@ -13,9 +13,13 @@ namespace K_Remote.Wrapper
 {
     class ApplicationRPC
     {
-        public static async void toggleMute()
+        public static async Task toggleMute()
         {
-            string response = await ConnectionHandler.getInstance().sendHttpRequest("Application.SetMute", new JObject(new JProperty("mute", "toggle")));
+            string response = await ConnectionHandler.getInstance().sendHttpRequest("Application.SetMute", new 
+                JObject(
+                    new JProperty("mute", "toggle")
+                )
+            );
         }
         public static async void setVolume(int volume)
         {

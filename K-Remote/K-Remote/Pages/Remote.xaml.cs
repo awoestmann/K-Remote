@@ -219,10 +219,11 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender">Sending button instance</param>
         /// <param name="e">Event args</param>
-        private void remote_mute_button_Click(object sender, RoutedEventArgs e)
+        private void remote_button_mute_Click(object sender, RoutedEventArgs e)
         {
             ApplicationRPC.toggleMute();
         }
+
         /// <summary>
         /// Click handler for send text button. Opens input prompt
         /// </summary>
@@ -306,7 +307,7 @@ namespace K_Remote.Pages
 
         private void remote_button_previous_Click(object sender, RoutedEventArgs e)
         {
-            PlayerRPC.goTo("next");
+            PlayerRPC.goTo("previous");
         }
         #endregion
     }
