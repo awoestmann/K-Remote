@@ -50,7 +50,8 @@ namespace K_Remote.Pages
 
         public static void navigateToRemote()
         {
-            frame.Navigate(typeof(Remote));
+            //frame.Navigate(typeof(Remote));
+            instance.main_button_remote_Click(null, null);
         }
 
         public static void navigateToConnections()

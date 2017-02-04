@@ -36,7 +36,20 @@ namespace K_Remote.Pages
 
         private void buttom_ok_Click(object sender, RoutedEventArgs e)
         {
-            Connection con = new Connection(description_textbox.Text, host_textbox.Text, int.Parse(port_textbox.Text), 9090, username_textbox.Text, password_textbox.Text, false);
+            string description = description_textbox.Text;
+            string host = host_textbox.Text;
+            int port = int.Parse(port_textbox.Text);
+            string username = username_textbox.Text;
+            string password = password_textbox.Text;
+            if(username == null)
+            {
+                username = "";
+            }
+            if(password == null)
+            {
+                password = "";
+            }
+            Connection con = new Connection(description, host, port, 9090, username, password, false);
             SettingsManager.getInstance().addConnection(con);
             Shell.navigateToConnections();
         }

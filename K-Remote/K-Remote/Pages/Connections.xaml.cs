@@ -38,20 +38,37 @@ namespace K_Remote
 
         private void connections_listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Connection activeCon = e.AddedItems[0] as Connection;
-            Debug.WriteLine("Connection.selectionChanged: Clicked: " + activeCon.description);
-            foreach(Connection c in connections)
+            Connection chosenCon;
+            try
             {
-                c.active = false;
+                chosenCon = e.AddedItems[0] as Connection;
             }
-            //Connection dummy = new Connection();
-            //connections.Add(dummy);
-            SettingsManager.getInstance().setCurrentConnection(activeCon.host);
-           
-            ConnectionHandler.getInstance().refreshConnectionData();
-          
-            activeCon.active = true;
-            Shell.navigateToRemote();
+            catch(Exception ex)
+            {
+                Debug.WriteLine("Connection: Error getting clicked item: " + ex);
+                return;
+            }
+            Debug.WriteLine("Connection.selectionChanged: Clicked: " + chosenCon.description);
+            if (!deleteMode)
+            {
+                foreach (Connection c in connections)
+                {
+                    c.active = false;
+                }
+                //Connection dummy = new Connection();
+                //connections.Add(dummy);
+                SettingsManager.getInstance().setCurrentConnection(chosenCon.host);
+
+                ConnectionHandler.getInstance().refreshConnectionData();
+
+                chosenCon.active = true;
+                Shell.navigateToRemote();
+            }
+            else
+            {
+                openDeleteDialog(chosenCon);
+            }
+            
         }
 
         private void onAddClicked(object sender, RoutedEventArgs e)
@@ -61,7 +78,33 @@ namespace K_Remote
 
         private void onDeleteCicked(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Delete clicked");
+            deleteMode = !deleteMode;
+            Debug.WriteLine("Connections: Delete clicked: " + deleteMode);
+        }
+
+        private async void openDeleteDialog(Connection toDelete)
+        {
+            ContentDialog dialog = new ContentDialog();
+            TextBlock questionText = new TextBlock();
+
+            questionText.Text = "Are you sure you want to delete Connection to: " + toDelete.description
+                + "(" + toDelete.host + ")";
+            dialog.Content = questionText;
+            dialog.Title = "Confirm action";
+            dialog.IsSecondaryButtonEnabled = true;
+            dialog.PrimaryButtonText = "Ok";
+            dialog.SecondaryButtonText = "Cancel";
+
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                //connections.Remove(toDelete);
+                SettingsManager.getInstance().removeConnection(toDelete);
+                Debug.WriteLine("Connections: Removed connection: " + toDelete.description);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

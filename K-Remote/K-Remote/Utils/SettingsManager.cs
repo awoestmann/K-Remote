@@ -85,6 +85,11 @@ namespace K_Remote.Utils
 
         public void setCurrentConnection(string host)
         {
+            if(host == null)
+            {
+                localSettings.Values["CurrentConnection"] = "";
+            }
+
             foreach(Connection con in connections)
             {
                 if (con.host.Equals(host))
@@ -92,8 +97,24 @@ namespace K_Remote.Utils
                     string base64Connection = con.toBase64String();
                     localSettings.Values["CurrentConnection"] = base64Connection;
                 }
+            }           
+        }
+
+        public void removeConnection(Connection toDelete)
+        {
+            connections.Remove(toDelete);
+        }
+
+        public void removeConnection(string host)
+        {
+            foreach (Connection con in connections)
+            {
+                if (con.host.Equals(host))
+                {
+                    connections.Remove(con);
+                    saveConnections();
+                }
             }
-           
         }
 
         public Connection getCurrentConnection()

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <CommandBar Margin="50,0,0,0">
+    <CommandBar Margin="0,0,0,0">
         <CommandBar.Content>
             <TextBlock x:Name="main_page_title" Margin="15 0 0 0"  Text="Main" TextAlignment="Left" FontSize="30"/>
         </CommandBar.Content>
