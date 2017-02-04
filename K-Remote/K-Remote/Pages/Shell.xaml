@@ -10,7 +10,7 @@
     <SplitView x:Name="main_menu_splitView" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
               CompactPaneLength="50" OpenPaneLength="175">
         <SplitView.Pane>
-            <StackPanel Background="Gray">
+            <StackPanel Margin="0 0 0 0">
                 <Button x:Name="main_button_menu" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Width="50" Height="50" Background="Transparent" Click="main_button_menu_Click" />
                 <Button x:Name="main_button_connections" Margin="0,0,0,0" Padding="0,0,0,0" Background="Transparent" Click="main_button_connections_Click" Width="175">

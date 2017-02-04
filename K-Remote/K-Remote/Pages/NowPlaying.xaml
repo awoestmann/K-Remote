@@ -8,9 +8,11 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Background="Gray" Height="50" VerticalAlignment="Top">
-            <TextBlock x:Name="nowPlaying_page_title" Text="Now Playing" TextAlignment="Left" FontSize="30"/>
-        </Grid>
+        <CommandBar Margin="0 0 0 0">
+            <CommandBar.Content>
+                <TextBlock x:Name="nowPlaying_page_title" Text="Now Playing" TextAlignment="Left" FontSize="30"/>
+            </CommandBar.Content>
+        </CommandBar>
         <TextBlock x:Name="nowPlaying_title" HorizontalAlignment="Left" Margin="0,55,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="71" Width="350"/>
         <Image x:Name="nowPlaying_image" HorizontalAlignment="Left" Height="360" Width="480" Margin="0,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.342"/>
 

@@ -6,11 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Background="Gray" Height="50" VerticalAlignment="Top">
-            <TextBlock x:Name="connections_page_title" Text="Connections" TextAlignment="Left" FontSize="30"/>
-        </Grid>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0 0 15 0">
+        <CommandBar Margin="0 0 0 0">
+            <CommandBar.Content>
+                <TextBlock x:Name="connections_page_title" Margin="15 0 0 0"  Text="Connections" TextAlignment="Left" FontSize="30"/>
+            </CommandBar.Content>
+            <AppBarButton Icon="Add" Label="Add" Click="onAddClicked"/>
+            <AppBarToggleButton Icon="Delete" Label="Delete" Click="onDeleteCicked"/>
+        </CommandBar>
         <ListView x:Name="connections_listView" HorizontalAlignment="Left" Height="509" Margin="0,55,0,0" VerticalAlignment="Top" Width="274" SelectionChanged="connections_listView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>

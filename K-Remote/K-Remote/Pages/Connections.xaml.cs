@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace K_Remote
@@ -16,12 +17,20 @@ namespace K_Remote
     /// </summary>
     public sealed partial class Connections : Page
     {
+        /// <summary>
+        /// An observable collection of connections objects
+        /// </summary>
         ObservableCollection<Connection> connections { get; set; }
+
+        /// <summary>
+        /// Determines if a click on a list item causes a deletion
+        /// </summary>
+        private bool deleteMode;
 
         public Connections()
         {
             this.InitializeComponent();
-
+            deleteMode = false;
             //Fill list view
             connections = SettingsManager.getInstance().getConnectionsList();
             connections_listView.ItemsSource = connections;
@@ -43,6 +52,16 @@ namespace K_Remote
           
             activeCon.active = true;
             Shell.navigateToRemote();
+        }
+
+        private void onAddClicked(object sender, RoutedEventArgs e)
+        {
+            Shell.navigateToCreateConnection();
+        }
+
+        private void onDeleteCicked(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Delete clicked");
         }
     }
 }

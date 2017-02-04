@@ -8,9 +8,11 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Background="Gray" Height="50" VerticalAlignment="Top">
-            <TextBlock x:Name="remote_page_title" Text="Remote" TextAlignment="Left" FontSize="30"/>
-        </Grid>
+        <CommandBar Margin="0 0 0 0">
+            <CommandBar.Content>
+                <TextBlock x:Name="remote_page_title" Text="Remote" TextAlignment="Left" FontSize="30"/>
+            </CommandBar.Content>
+        </CommandBar>
         <Button x:Name="remote_button_playPause"  Height="49" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE768;" HorizontalAlignment="Left" Margin="220,425,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click" ClickMode="Press">
             <Button.Foreground>
                 <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
