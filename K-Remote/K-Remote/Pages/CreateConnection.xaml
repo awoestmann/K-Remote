@@ -20,5 +20,6 @@
         <TextBox x:Name="password_textbox" HorizontalAlignment="Left" Margin="145,245,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" InputScope="Password" PlaceholderText="Password"/>
         <Button x:Name="buttom_ok" Content="OK" HorizontalAlignment="Left" Margin="10,331,0,0" VerticalAlignment="Top" Click="buttom_ok_Click"/>
         <Button x:Name="button_cancel" Content="Cancel" HorizontalAlignment="Left" Margin="84,331,0,0" VerticalAlignment="Top" Click="button_cancel_Click"/>
+        <TextBox x:Name="error_textbox" FontStyle="Normal"  FontSize="20" Text="Fill all marked fields" Foreground="Red" Visibility="Collapsed" BorderBrush="Red" HorizontalAlignment="Left" Margin="10,403,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="217"/>
     </Grid>
 </Page>

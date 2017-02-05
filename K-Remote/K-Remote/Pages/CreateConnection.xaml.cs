@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -36,22 +37,33 @@ namespace K_Remote.Pages
 
         private void buttom_ok_Click(object sender, RoutedEventArgs e)
         {
-            string description = description_textbox.Text;
-            string host = host_textbox.Text;
-            int port = int.Parse(port_textbox.Text);
-            string username = username_textbox.Text;
-            string password = password_textbox.Text;
-            if(username == null)
+            //Check if neccessary fields are set
+            if (description_textbox.Text != "" && host_textbox.Text != "" && port_textbox.Text != "")
             {
-                username = "";
+                string description = description_textbox.Text;
+                string host = host_textbox.Text;
+                int port = int.Parse(port_textbox.Text);
+                string username = username_textbox.Text;
+                string password = password_textbox.Text;
+                if (username == null)
+                {
+                    username = "";
+                }
+                if (password == null)
+                {
+                    password = "";
+                }
+                Connection con = new Connection(description, host, port, 9090, username, password, false);
+                SettingsManager.getInstance().addConnection(con);
+                Shell.navigateToConnections();
             }
-            if(password == null)
+            else
             {
-                password = "";
+                error_textbox.Visibility = Visibility.Visible;
+                description_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
+                host_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
+                port_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
             }
-            Connection con = new Connection(description, host, port, 9090, username, password, false);
-            SettingsManager.getInstance().addConnection(con);
-            Shell.navigateToConnections();
         }
     }
 }
