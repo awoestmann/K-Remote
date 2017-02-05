@@ -133,8 +133,15 @@ namespace K_Remote.Utils
 
         public Connection getCurrentConnection()
         {
-            string connectionBase64 = localSettings.Values["CurrentConnection"].ToString();
-            return new Connection(connectionBase64);
+            object connectionBase64 = localSettings.Values["CurrentConnection"];
+            if (connectionBase64 != null){
+                return new Connection(connectionBase64.ToString());
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         #endregion
