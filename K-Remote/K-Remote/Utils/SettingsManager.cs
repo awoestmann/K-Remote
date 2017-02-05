@@ -117,6 +117,7 @@ namespace K_Remote.Utils
         public void removeConnection(Connection toDelete)
         {
             connections.Remove(toDelete);
+            saveConnections();
         }
 
         public void removeConnection(string host)
