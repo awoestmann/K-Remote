@@ -37,14 +37,10 @@ namespace K_Remote.Pages
 
         private async void init()
         {
-            if (ConnectionHandler.getInstance().checkTcpConnection())
-            {
-                NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-                NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
-                NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
-                setVolumeSlider(await ApplicationRPC.getVolume());
-                setPlayPauseIcon();
-            }
+            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
+            NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
+            NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
+            refreshGui();
         }
 
         private async void refreshGui()

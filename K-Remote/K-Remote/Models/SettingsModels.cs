@@ -59,16 +59,7 @@ namespace K_Remote.Models
             this.password = password;
             this.description = description;
             this.active = active;
-            if (active == true)
-            {
-                background = Application.Current.Resources["SystemAccentColor"].ToString();
-                icon = "\uE8FB";
-            }
-            else
-            {
-                background = "Transparent";
-                icon = "";
-            }
+            setBackgroundIcon();
         }
 
         public Connection(string base64String)
@@ -84,6 +75,21 @@ namespace K_Remote.Models
                 username = conProperties[4];
                 password = conProperties[5];
                 active = bool.Parse(conProperties[6]);
+            }
+            setBackgroundIcon();
+        }
+
+        public void setBackgroundIcon()
+        {
+            if (active == true)
+            {
+                background = Application.Current.Resources["SystemAccentColor"].ToString();
+                icon = "\uE8FB";
+            }
+            else
+            {
+                background = "Transparent";
+                icon = "";
             }
         }
 

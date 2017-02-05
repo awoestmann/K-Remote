@@ -135,14 +135,13 @@ namespace K_Remote.Utils
         public Connection getCurrentConnection()
         {
             object connectionBase64 = localSettings.Values["CurrentConnection"];
-            if (connectionBase64 != null){
+            if (connectionBase64 != null && connectionBase64.ToString() != ""){
                 return new Connection(connectionBase64.ToString());
             }
             else
             {
                 return null;
-            }
-            
+            }            
         }
 
         #endregion

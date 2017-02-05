@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 
@@ -37,14 +38,14 @@ namespace K_Remote.Utils
 
         public static ConnectionHandler getInstance()
         {
-            if(ConnectionHandler.instance != null)
+            if(instance != null)
             {
-                return ConnectionHandler.instance;
+                return instance;
             }
             else
             {
-                ConnectionHandler.instance = new ConnectionHandler();
-                return ConnectionHandler.instance;
+                instance = new ConnectionHandler();
+                return instance;
             }
         }        
 
@@ -55,57 +56,57 @@ namespace K_Remote.Utils
 
         public ConnectionHandler()
         {
-            Connection current = SettingsManager.getInstance().getCurrentConnection();
-            if(current == null)
-            {
-                //TODO handle no connection
-            }
-            else
-            {
-                this.hostString = current.host;
-                this.httpPortString = current.httpPort.ToString();
-                this.loginBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(current.username + ":" + current.password));
-                this.conName = current.description;
-            }
+            App.Current.Resuming += new EventHandler<Object>(resume);
+        }
+
+        public async Task refreshConnection()
+        {
             //http
             httpClient = new HttpClient();
-            
+
             //websocket           
             webSocket = new StreamWebSocket();
             //webSocket.Closed += webSocketClosed;
 
-            App.Current.Resuming += new EventHandler<Object>(resume);
-            connectTcp();
-        }
-
-        public async Task refreshConnectionData()
-        {
             Connection current = SettingsManager.getInstance().getCurrentConnection();
             if (current == null)
             {
+                tcpConnected = false;                
+
+                hostString = ""; 
+                httpPortString = ""; ;
+                loginBase64 = "";
+                conName = "";
+
+                OnConnectionStateChanged(new connectionStateChangedEventArgs("", 1, false));
                 //TODO handle no connection
             }
             else
             {
-                this.hostString = current.host;
-                this.httpPortString = current.httpPort.ToString();
-                this.loginBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(current.username + ":" + current.password));
-                this.conName = current.description;
-            }
-            //http
-            httpClient = new HttpClient();
+                hostString = current.host;
+                httpPortString = current.httpPort.ToString();
+                loginBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(current.username + ":" + current.password));
+                conName = current.description;
+                try
+                {
+                    if (await checkHttpConnection())
+                    {
+                        await connectTcp();
+                    }
+                    else
+                    {
+                        OnConnectionStateChanged(new connectionStateChangedEventArgs("", 0, false));
+                        showErrorDialog();
+                        return;
+                    }
 
-            //websocket           
-            webSocket = new StreamWebSocket();
-            //webSocket.Closed += webSocketClosed;
-            try
-            {
-                await connectTcp();
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect");
-                Debug.WriteLine(ex);
+                }
+                catch (Exception ex)
+                {
+                    OnConnectionStateChanged(new connectionStateChangedEventArgs("", 1, false));
+                    Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect");
+                    showErrorDialog();
+                }
             }
         }
 
@@ -172,6 +173,11 @@ namespace K_Remote.Utils
 
         }
 
+        private async void showErrorDialog()
+        {
+            await new MessageDialog("Can't establish connection to: " + hostString + ":" + httpPortString, "Information").ShowAsync();
+        }
+
         /// <summary>
         /// Sends a default request json with method and parameters to jsonrpc uri
         /// </summary>
@@ -225,9 +231,9 @@ namespace K_Remote.Utils
             return requestObject;
         }
 
-        public async Task connectTcp()
+        private async Task connectTcp()
         {
-            Debug.WriteLine("Connecting TCP to " + hostString + ":" + tcpPortString);
+            Debug.WriteLine("ConnectionHandler.connectTpc: Connecting TCP to " + hostString + ":" + tcpPortString);
             if (tcpConnected)
             {
                 try
@@ -238,7 +244,7 @@ namespace K_Remote.Utils
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e);
+                    Debug.WriteLine("ConnectionHandler.connectTcp: Error on disposing socket");
                 }
                 finally
                 {
@@ -258,7 +264,8 @@ namespace K_Remote.Utils
             {
                 OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, false));
                 tcpConnected = false;
-                Debug.WriteLine("Connection failed: " + e);
+                Debug.WriteLine("ConnectionHandler.connectTcp: Connection to " + hostString + " failed: ");
+                showErrorDialog();
             }
         }
 
@@ -301,7 +308,6 @@ namespace K_Remote.Utils
         
         private void webSocketClosed(IWebSocket sender, WebSocketClosedEventArgs args)
         {
-            Debug.WriteLine("Close called");
             OnConnectionStateChanged(new connectionStateChangedEventArgs(conName, 1, false));
             this.tcpConnected = false;
         }

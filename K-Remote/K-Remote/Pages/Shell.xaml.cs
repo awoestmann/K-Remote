@@ -34,21 +34,20 @@ namespace K_Remote.Pages
         public Shell(Frame frame)
         {
             this.InitializeComponent();
+
             instance = this;
             main_menu_splitView.Content = frame;
             (main_menu_splitView.Content as Frame).Navigate(typeof(MainPage));
             Shell.frame = frame;
 
+            ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
+
             //Set connection Indicator
             if (SettingsManager.getInstance().getCurrentConnection() == null)
             {
-                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(125, 0, 0, 255));
             }
-            ConnectionHandler.getInstance().connectTcp();
-            ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
-
-            //if a connection is set
-            if (SettingsManager.getInstance().getCurrentConnection() != null)
+            else
             {
                 //Switch to last page;
                 string lastPage = SettingsManager.getInstance().getLastPage();
@@ -136,7 +135,7 @@ namespace K_Remote.Pages
             {
                 main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(255, 125, 0, 0));
             }
-            Debug.WriteLine("Connection-Name: " + args.conName + ", Type: " + args.conType + ", state: " + args.state);
+            Debug.WriteLine("Shell.handleConnectionStateChanged: Connection-Name: " + args.conName + ", Type: " + args.conType + ", state: " + args.state);
         }
 
     }

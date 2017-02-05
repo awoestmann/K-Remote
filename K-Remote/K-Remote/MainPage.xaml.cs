@@ -33,7 +33,9 @@ namespace K_Remote
     public sealed partial class MainPage : Page
     {
         public MainPage()
-        {           
+        {
+
+            ConnectionHandler.getInstance().refreshConnection();
             this.InitializeComponent();
         }
 
@@ -49,7 +51,7 @@ namespace K_Remote
             Player[] active = await PlayerRPC.getActivePlayers();
             PlayerItem now = await PlayerRPC.getItem();
 
-            await ConnectionHandler.getInstance().connectTcp();
+            await ConnectionHandler.getInstance().refreshConnection();
             bool tcpConnected = ConnectionHandler.getInstance().checkTcpConnection();
             Debug.WriteLine("TCP connection: " + tcpConnected);
 

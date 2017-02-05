@@ -29,8 +29,16 @@ namespace K_Remote.Pages
     {
         public NowPlaying()
         {
-            updateItem(PlayerRPC.getItem());
             this.InitializeComponent();
+            if(SettingsManager.getInstance().getCurrentConnection() != null)
+            {
+                updateItem(PlayerRPC.getItem());
+            }
+            else
+            {
+                nowPlaying_title.Text = "Not connected to Kodi. Check connections page";
+            }
+
         }
 
         private async void updateItem(Task<PlayerItem> itemTask)
@@ -40,28 +48,30 @@ namespace K_Remote.Pages
             {
                 nowPlaying_title.Text = item.title;
 
-                //Get thumbnail
-                string imageString = item.thumbnail;
-                Debug.WriteLine("NowPlaying.updateItem: imageString of currentItem: " + Environment.NewLine +  imageString);
-                string response = await FileRPC.prepareDownloadFile(imageString);
-                IInputStream imageStream = await FileRPC.downloadFile(response);
-                if (imageStream != null)
+                //Try to get thumbnail
+                try
                 {
-                    Debug.WriteLine("NowPlaying.updateItem: downloaded file");
-                    BitmapImage bmp = new BitmapImage();
-                    using (var memStream = new MemoryStream())
+                    string imageString = item.thumbnail;
+                    Debug.WriteLine("NowPlaying.updateItem: imageString of currentItem: " + Environment.NewLine + imageString);
+                    string response = await FileRPC.prepareDownloadFile(imageString);
+                    IInputStream imageStream = await FileRPC.downloadFile(response);
+                    if (imageStream != null)
                     {
-                        await imageStream.AsStreamForRead().CopyToAsync(memStream);
-                        memStream.Position = 0;
-                        bmp.SetSource(memStream.AsRandomAccessStream());
-                        nowPlaying_image.Source = bmp;
+                        Debug.WriteLine("NowPlaying.updateItem: downloaded file");
+                        BitmapImage bmp = new BitmapImage();
+                        using (var memStream = new MemoryStream())
+                        {
+                            await imageStream.AsStreamForRead().CopyToAsync(memStream);
+                            memStream.Position = 0;
+                            bmp.SetSource(memStream.AsRandomAccessStream());
+                            nowPlaying_image.Source = bmp;
+                        }
                     }
                 }
-                else
+                catch(Exception e)
                 {
-                    Debug.WriteLine("NowPLaying.updateItem: Downloaded buffer is null");
-                }
-                
+                    Debug.WriteLine("NowPLaying.updateItemL Error on getting thumbnail: " + e);
+                }                
             }
             else
             {

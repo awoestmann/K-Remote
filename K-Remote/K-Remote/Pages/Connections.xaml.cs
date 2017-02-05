@@ -50,20 +50,30 @@ namespace K_Remote
                 return;
             }
             Debug.WriteLine("Connection.selectionChanged: Clicked: " + chosenCon.description);
+
             if (!deleteMode)
             {
-                foreach (Connection c in connections)
+                if (!chosenCon.active)
                 {
-                    c.active = false;
+                    foreach (Connection c in connections)
+                    {
+                        c.active = false;
+                    }
+                    //Connection dummy = new Connection();
+                    //connections.Add(dummy);
+                    SettingsManager.getInstance().setCurrentConnection(chosenCon.host);
+                    chosenCon.active = true;
+                    SettingsManager.getInstance().saveConnections();
                 }
-                //Connection dummy = new Connection();
-                //connections.Add(dummy);
-                SettingsManager.getInstance().setCurrentConnection(chosenCon.host);
+                else
+                {
+                    chosenCon.active = false;
+                    SettingsManager.getInstance().setCurrentConnection(null);
+                    SettingsManager.getInstance().saveConnections();                   
+                }
 
-                ConnectionHandler.getInstance().refreshConnectionData();
-
-                chosenCon.active = true;
-                Shell.navigateToRemote();
+                ConnectionHandler.getInstance().refreshConnection();
+                Shell.navigateToConnections();
             }
             else
             {
