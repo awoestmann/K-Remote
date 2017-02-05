@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace K_Remote
 {
@@ -80,6 +81,11 @@ namespace K_Remote
         {
             deleteMode = !deleteMode;
             Debug.WriteLine("Connections: Delete clicked: " + deleteMode);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SettingsManager.getInstance().setLastPage("connections");
         }
 
         private async void openDeleteDialog(Connection toDelete)

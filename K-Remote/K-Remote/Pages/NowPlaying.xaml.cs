@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Utils;
 using K_Remote.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,11 @@ namespace K_Remote.Pages
             {
                 nowPlaying_title.Text = "Nothing is played";
             }
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SettingsManager.getInstance().setLastPage("nowPlaying");
         }
     }
 }

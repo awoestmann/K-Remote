@@ -93,7 +93,7 @@ namespace K_Remote.Models
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(completeData));
         }
 
-        public string toReadableString()
+        public string toSettingsString()
         {
             return description + ":" + host + ":" + httpPort + ":" + tcpPort + ":" + username + ":" + password + ":" + active;
         }

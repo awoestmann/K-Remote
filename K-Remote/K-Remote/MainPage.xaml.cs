@@ -33,17 +33,7 @@ namespace K_Remote
     public sealed partial class MainPage : Page
     {
         public MainPage()
-        {
-            try
-            {
-                test();
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine("Main: Failure on test()");
-                Debug.WriteLine(e);
-            }
-            
+        {           
             this.InitializeComponent();
         }
 

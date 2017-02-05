@@ -44,19 +44,37 @@ namespace K_Remote.Pages
             {
                 main_button_connection_icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             }
-
+            ConnectionHandler.getInstance().connectTcp();
             ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
+
+            //if a connection is set
+            if (SettingsManager.getInstance().getCurrentConnection() != null)
+            {
+                //Switch to last page;
+                string lastPage = SettingsManager.getInstance().getLastPage();
+                switch (lastPage)
+                {
+                    case "connections": Shell.navigateToConnections(); break;
+                    case "remote": Shell.navigateToRemote(); break;
+                    case "nowPlaying": break;
+                    default: break;
+                }
+            }
         }
 
         public static void navigateToRemote()
         {
-            //frame.Navigate(typeof(Remote));
             instance.main_button_remote_Click(null, null);
         }
 
         public static void navigateToConnections()
         {
-            frame.Navigate(typeof(Connections));
+            instance.main_button_connections_Click(null, null);
+        }
+
+        public static void navigateToNowPlaying()
+        {
+            instance.main_button_nowPlaying_Click(null, null);
         }
 
         public static void navigateToCreateConnection()

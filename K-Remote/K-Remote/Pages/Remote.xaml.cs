@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Navigation;
 
 namespace K_Remote.Pages
 {
@@ -29,17 +30,31 @@ namespace K_Remote.Pages
         {
             this.InitializeComponent();
             staticInstance = this;
+            init();             
+        }
+
+        #region methods
+
+        private async void init()
+        {
             if (ConnectionHandler.getInstance().checkTcpConnection())
             {
                 NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
                 NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
                 NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
-                setVolumeSlider(ApplicationRPC.getVolume());
+                setVolumeSlider(await ApplicationRPC.getVolume());
                 setPlayPauseIcon();
-            }                     
+            }
         }
 
-        #region methods
+        private async void refreshGui()
+        {
+            if (ConnectionHandler.getInstance().checkTcpConnection())
+            {
+                setVolumeSlider(await ApplicationRPC.getVolume());
+                setPlayPauseIcon();
+            }
+        }
 
         /// <summary>
         /// Shows a ContentDialog containing a textbox
@@ -190,6 +205,17 @@ namespace K_Remote.Pages
                 staticInstance.remote_button_playPause.Content = "\uE769";
             }
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SettingsManager.getInstance().setLastPage("remote");
+        }
+
+        private void onPageLoaded(object sender, RoutedEventArgs args)
+        {
+            refreshGui();
+        }
+
         #endregion
 
         #region UI controls handlers

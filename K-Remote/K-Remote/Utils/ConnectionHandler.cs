@@ -75,6 +75,7 @@ namespace K_Remote.Utils
             //webSocket.Closed += webSocketClosed;
 
             App.Current.Resuming += new EventHandler<Object>(resume);
+            connectTcp();
         }
 
         public async Task refreshConnectionData()

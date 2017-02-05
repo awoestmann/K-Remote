@@ -20,6 +20,10 @@ namespace K_Remote.Utils
 
         private static SettingsManager instance;
 
+        private const string CONNECTIONS = "Connections";
+        private const string CURRENT_CONECTION = "CurrentConnection";
+        private const string LAST_PAGE = "LastPage";
+
         public static SettingsManager getInstance()
         {
             if(instance == null)
@@ -34,16 +38,15 @@ namespace K_Remote.Utils
             //Get available connections
 
             //@DEBUG: clear settings
-            localSettings.Values["Connections"] = "";
+            //localSettings.Values["Connections"] = "";
 
             connections = new ObservableCollection<Connection>();
             //try to get connections from settings
             
-            if(localSettings.Values["Connections"] != null)
+            if(localSettings.Values[CONNECTIONS] != null)
             {
                 //Get all connections as string and decode
-                string settingsString = Encoding.UTF8.GetString(Convert.FromBase64String(localSettings.Values["Connections"].ToString()));
-
+                string settingsString = Encoding.UTF8.GetString(Convert.FromBase64String(localSettings.Values[CONNECTIONS].ToString()));
                 //Split string into single connections
                 string[] connectionsString = settingsString.Split(';');
                 
@@ -57,6 +60,17 @@ namespace K_Remote.Utils
             }
         }
 
+        private void setSetting(string key, string value)
+        {
+            localSettings.Values[key] = value;
+        }
+
+        private object getSetting(string key)
+        {
+            return localSettings.Values[key];
+        }
+
+        #region connection settings
         public ObservableCollection<Connection> getConnectionsList()
         {
             return connections;
@@ -77,17 +91,17 @@ namespace K_Remote.Utils
             string connectionsListString = "";
             foreach(Connection c in connections)
             {
-                connectionsListString += c;
+                connectionsListString += c.toSettingsString();
                 connectionsListString += ";";
             }
-            localSettings.Values["Connections"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionsListString));
+            localSettings.Values[CONNECTIONS] = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionsListString));
         }
 
         public void setCurrentConnection(string host)
         {
             if(host == null)
             {
-                localSettings.Values["CurrentConnection"] = "";
+                localSettings.Values[CURRENT_CONECTION] = "";
             }
 
             foreach(Connection con in connections)
@@ -95,7 +109,7 @@ namespace K_Remote.Utils
                 if (con.host.Equals(host))
                 {
                     string base64Connection = con.toBase64String();
-                    localSettings.Values["CurrentConnection"] = base64Connection;
+                    localSettings.Values[CURRENT_CONECTION] = base64Connection;
                 }
             }           
         }
@@ -121,6 +135,18 @@ namespace K_Remote.Utils
         {
             string connectionBase64 = localSettings.Values["CurrentConnection"].ToString();
             return new Connection(connectionBase64);
+        }
+
+        #endregion
+
+        public void setLastPage(string lastPageName)
+        {
+            setSetting(LAST_PAGE, lastPageName);
+        }
+
+        public string getLastPage()
+        {
+            return (string) getSetting(LAST_PAGE);
         }
     }
 }
