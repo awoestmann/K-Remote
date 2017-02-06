@@ -17,7 +17,7 @@
         <TextBox x:Name="host_textbox" HorizontalAlignment="Left" Margin="10,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Hostname/HostIP"/>
         <TextBox x:Name="port_textbox" HorizontalAlignment="Left" Margin="164,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" InputScope="Number" PlaceholderText="Port"/>
         <TextBox x:Name="username_textbox" HorizontalAlignment="Left" Margin="10,245,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Username"/>
-        <TextBox x:Name="password_textbox" HorizontalAlignment="Left" Margin="145,245,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" InputScope="Password" PlaceholderText="Password"/>
+        <PasswordBox x:Name="password_textbox" PlaceholderText="Password" Margin="164,245,0,0" Height="30" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
         <Button x:Name="buttom_ok" Content="OK" HorizontalAlignment="Left" Margin="10,331,0,0" VerticalAlignment="Top" Click="buttom_ok_Click"/>
         <Button x:Name="button_cancel" Content="Cancel" HorizontalAlignment="Left" Margin="84,331,0,0" VerticalAlignment="Top" Click="button_cancel_Click"/>
         <TextBox x:Name="error_textbox" FontStyle="Normal"  FontSize="20" Text="Fill all marked fields" Foreground="Red" Visibility="Collapsed" BorderBrush="Red" HorizontalAlignment="Left" Margin="10,403,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="217"/>

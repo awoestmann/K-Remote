@@ -79,6 +79,18 @@ namespace K_Remote.Models
             setBackgroundIcon();
         }
 
+        public void copyFromConnection(Connection orig)
+        {
+            host = orig.host;
+            httpPort = orig.httpPort;
+            tcpPort = orig.tcpPort;
+            username = orig.username;
+            password = orig.password;
+            description = orig.description;
+            active = orig.active;
+        }
+
+
         public void setBackgroundIcon()
         {
             if (active == true)
@@ -91,6 +103,11 @@ namespace K_Remote.Models
                 background = "Transparent";
                 icon = "";
             }
+        }
+
+        public object[] toArray()
+        {
+            return new object[] {description, host, httpPort, tcpPort, username, password, active};
         }
 
         public string toBase64String()

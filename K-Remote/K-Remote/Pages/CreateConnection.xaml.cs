@@ -2,6 +2,7 @@
 using K_Remote.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,9 +26,12 @@ namespace K_Remote.Pages
     /// </summary>
     public sealed partial class CreateConnection : Page
     {
+        private static Connection toEdit;
+
         public CreateConnection()
         {
             this.InitializeComponent();
+            Debug.WriteLine("CreateConnection.init: Creating page");            
         }
 
         private void button_cancel_Click(object sender, RoutedEventArgs e)
@@ -42,9 +46,22 @@ namespace K_Remote.Pages
             {
                 string description = description_textbox.Text;
                 string host = host_textbox.Text;
-                int port = int.Parse(port_textbox.Text);
+                int port = 0;
+                try
+                {
+                    port = int.Parse(port_textbox.Text);
+                }
+                catch(FormatException formatEx)
+                {
+                    Debug.WriteLine("CreateConnection.button_ok_Click: Parse error on port");
+                    port_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                    error_textbox.Visibility = Visibility.Visible;
+                    error_textbox.Text = "Unable to parse port number";
+                    return;
+                }
+                
                 string username = username_textbox.Text;
-                string password = password_textbox.Text;
+                string password = password_textbox.Password;
                 if (username == null)
                 {
                     username = "";
@@ -53,8 +70,17 @@ namespace K_Remote.Pages
                 {
                     password = "";
                 }
+
                 Connection con = new Connection(description, host, port, 9090, username, password, false);
-                SettingsManager.getInstance().addConnection(con);
+                if (toEdit == null)
+                {                    
+                    SettingsManager.getInstance().addConnection(con);
+                }
+                else
+                {
+                    SettingsManager.getInstance().updateConnection(toEdit, con);
+                }
+
                 Shell.navigateToConnections();
             }
             else
@@ -64,6 +90,27 @@ namespace K_Remote.Pages
                 host_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
                 port_textbox.BorderBrush = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
             }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string conString = e.Parameter as string;
+            if(conString != null)
+            {
+                toEdit = SettingsManager.getInstance().getConnectionFromString(conString);
+                Debug.WriteLine("CreateConnection.OnNavigatedTo: Edit connection: " + toEdit.description);
+
+                if (toEdit != null)
+                {
+                    create_connection_page_title.Text = "Edit Connection";
+                    description_textbox.Text = toEdit.description;
+                    host_textbox.Text = toEdit.host;
+                    port_textbox.Text = toEdit.httpPort.ToString();
+                    username_textbox.Text = toEdit.username;
+                    password_textbox.Password = toEdit.password;
+                }
+            }
+            base.OnNavigatedTo(e);
         }
     }
 }

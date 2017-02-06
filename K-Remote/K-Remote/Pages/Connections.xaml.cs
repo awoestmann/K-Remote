@@ -28,6 +28,8 @@ namespace K_Remote
         /// </summary>
         private bool deleteMode;
 
+        private bool editMode;
+
         public Connections()
         {
             this.InitializeComponent();
@@ -51,7 +53,7 @@ namespace K_Remote
             }
             Debug.WriteLine("Connection.selectionChanged: Clicked: " + chosenCon.description);
 
-            if (!deleteMode)
+            if (!deleteMode && !editMode)
             {
                 if (!chosenCon.active)
                 {
@@ -74,23 +76,37 @@ namespace K_Remote
 
                 ConnectionHandler.getInstance().refreshConnection();
                 Shell.navigateToConnections();
+                return;
             }
-            else
+            if(deleteMode && !editMode)
             {
                 openDeleteDialog(chosenCon);
+            }
+
+            if(!deleteMode && editMode)
+            {
+                Shell.navigateToCreateConnection(chosenCon.toSettingsString());
             }
             
         }
 
         private void onAddClicked(object sender, RoutedEventArgs e)
         {
-            Shell.navigateToCreateConnection();
+            Shell.navigateToCreateConnection(null);
         }
 
         private void onDeleteCicked(object sender, RoutedEventArgs e)
         {
             deleteMode = !deleteMode;
-            Debug.WriteLine("Connections: Delete clicked: " + deleteMode);
+            editMode = false;
+            toggle_button_edit.IsChecked = false;
+        }
+
+        private void onEditClicked(object sender, RoutedEventArgs e)
+        {
+            deleteMode = false;
+            editMode = !editMode;
+            toggle_button_delete.IsChecked = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

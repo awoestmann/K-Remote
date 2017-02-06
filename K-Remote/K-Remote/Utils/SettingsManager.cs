@@ -14,16 +14,43 @@ namespace K_Remote.Utils
     /// </summary>
     class SettingsManager
     {
+
+        /// <summary>
+        /// Local settings
+        /// </summary>
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
+        /// <summary>
+        /// A collection of all connections
+        /// </summary>
         private ObservableCollection<Connection> connections;
 
+        /// <summary>
+        /// Singleton instance
+        /// </summary>
         private static SettingsManager instance;
 
+        #region settings string constants
+        /// <summary>
+        /// Settings key, containing all connections as a concatenated string
+        /// </summary>
         private const string CONNECTIONS = "Connections";
-        private const string CURRENT_CONECTION = "CurrentConnection";
-        private const string LAST_PAGE = "LastPage";
 
+        /// <summary>
+        /// Settings key, containing the current connections as a string
+        /// </summary>
+        private const string CURRENT_CONECTION = "CurrentConnection";
+
+        /// <summary>
+        /// Settings key, containing the name of the last visited page
+        /// </summary>
+        private const string LAST_PAGE = "LastPage";
+        #endregion
+
+        /// <summary>
+        /// Returns current instance, creates new one if needed
+        /// </summary>
+        /// <returns>The SettingsManager instance</returns>
         public static SettingsManager getInstance()
         {
             if(instance == null)
@@ -33,6 +60,9 @@ namespace K_Remote.Utils
             return instance;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         private SettingsManager()
         {
             //Get available connections
@@ -71,6 +101,7 @@ namespace K_Remote.Utils
         }
 
         #region connection settings
+
         public ObservableCollection<Connection> getConnectionsList()
         {
             return connections;
@@ -142,6 +173,31 @@ namespace K_Remote.Utils
             {
                 return null;
             }            
+        }
+
+        public Connection getConnectionFromString(string targetString)
+        {
+            foreach(Connection c in connections)
+            {
+                if (c.toSettingsString() == targetString)
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+        public void updateConnection(Connection old, Connection newCon)
+        {
+            foreach(Connection c in connections)
+            {
+                if(c.toSettingsString() == old.toSettingsString())
+                {
+                    connections[connections.IndexOf(c)].copyFromConnection(newCon);
+                    saveConnections();
+                    return;
+                }
+            }
         }
 
         #endregion

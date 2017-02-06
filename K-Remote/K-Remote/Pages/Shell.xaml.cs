@@ -76,9 +76,9 @@ namespace K_Remote.Pages
             instance.main_button_nowPlaying_Click(null, null);
         }
 
-        public static void navigateToCreateConnection()
+        public static void navigateToCreateConnection(object parameter)
         {
-            frame.Navigate(typeof(CreateConnection));
+            frame.Navigate(typeof(CreateConnection), parameter);
         }
 
         private void main_button_menu_Click(object sender, RoutedEventArgs e)

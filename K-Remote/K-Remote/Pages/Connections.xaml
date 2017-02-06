@@ -12,7 +12,8 @@
                 <TextBlock x:Name="connections_page_title" Margin="15 0 0 0"  Text="Connections" TextAlignment="Left" FontSize="30"/>
             </CommandBar.Content>
             <AppBarButton Icon="Add" Label="Add" Click="onAddClicked"/>
-            <AppBarToggleButton Icon="Delete" Label="Delete" Click="onDeleteCicked"/>
+            <AppBarToggleButton x:Name="toggle_button_delete" Icon="Delete" Label="Delete" Click="onDeleteCicked"/>
+            <AppBarToggleButton x:Name="toggle_button_edit" Icon="Edit" Label="Edit"  Click="onEditClicked" />
         </CommandBar>
         <ListView x:Name="connections_listView" HorizontalAlignment="Left" Height="509" Margin="0,55,0,0" VerticalAlignment="Top" Width="274" SelectionChanged="connections_listView_SelectionChanged">
             <ListView.ItemTemplate>

@@ -19,6 +19,11 @@ namespace K_Remote.Pages
         private bool volumeChangedByUserInteraction;
 
         /// <summary>
+        /// A Dialog for text input
+        /// </summary>
+        private ContentDialog inputDialog;
+
+        /// <summary>
         /// Static remote instance for use in static event handlers
         /// </summary>
         private static Remote staticInstance;
@@ -58,7 +63,21 @@ namespace K_Remote.Pages
         private async void showInputPrompt()
         {
             Debug.WriteLine("Remote: Input prompt");
-            ContentDialog dialog = new ContentDialog();
+            if(inputDialog != null)
+            {
+                inputDialog.Hide();
+                inputDialog = null;
+            }
+            try
+            {
+                inputDialog = new ContentDialog();
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Remote.showInputPrompt: Error on creating input Dialog: " + e.Message);
+                return;
+            }
+            
             TextBox inputTextBox = new TextBox();
 
             inputTextBox.AcceptsReturn = false;
@@ -68,19 +87,19 @@ namespace K_Remote.Pages
                 if (args.Key == Windows.System.VirtualKey.Enter)
                 {
                     await InputRPC.sendText(inputTextBox.Text, true);
-                    dialog.Hide();
+                    inputDialog.Hide();
                 }
             };
             inputTextBox.Height = 32;
             inputTextBox.Focus(FocusState.Keyboard);
 
-            dialog.Content = inputTextBox;
-            dialog.Title = "Input required";
-            dialog.IsSecondaryButtonEnabled = true;
-            dialog.PrimaryButtonText = "Ok";
-            dialog.SecondaryButtonText = "Cancel";
+            inputDialog.Content = inputTextBox;
+            inputDialog.Title = "Input required";
+            inputDialog.IsSecondaryButtonEnabled = true;
+            inputDialog.PrimaryButtonText = "Ok";
+            inputDialog.SecondaryButtonText = "Cancel";
 
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            if (await inputDialog.ShowAsync() == ContentDialogResult.Primary)
             {
                 Debug.WriteLine("Remote->InputDialog: Input: " + inputTextBox.Text);
                 await InputRPC.sendText(inputTextBox.Text, true);
