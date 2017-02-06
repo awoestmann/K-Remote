@@ -99,6 +99,7 @@
     <Compile Include="Models\ApplicationModels.cs" />
     <Compile Include="Models\NotificationModels.cs" />
     <Compile Include="Models\PlayerModels.cs" />
+    <Compile Include="Models\PlaylistModels.cs" />
     <Compile Include="Models\SettingsModels.cs" />
     <Compile Include="Pages\Connections.xaml.cs">
       <DependentUpon>Connections.xaml</DependentUpon>
@@ -111,6 +112,9 @@
     </Compile>
     <Compile Include="Pages\NowPlaying.xaml.cs">
       <DependentUpon>NowPlaying.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Playlist.xaml.cs">
+      <DependentUpon>Playlist.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Remote.xaml.cs">
       <DependentUpon>Remote.xaml</DependentUpon>
@@ -129,6 +133,7 @@
     <Compile Include="Wrapper\InputRPC.cs" />
     <Compile Include="Wrapper\NotificationRPC.cs" />
     <Compile Include="Wrapper\PlayerRPC.cs" />
+    <Compile Include="Wrapper\PlaylistRPC.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -164,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\NowPlaying.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Playlist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

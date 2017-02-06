@@ -36,6 +36,7 @@ namespace K_Remote
         {
 
             ConnectionHandler.getInstance().refreshConnection();
+            
             this.InitializeComponent();
         }
 

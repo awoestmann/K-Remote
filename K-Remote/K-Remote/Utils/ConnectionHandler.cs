@@ -96,6 +96,7 @@ namespace K_Remote.Utils
                     else
                     {
                         OnConnectionStateChanged(new connectionStateChangedEventArgs("", 0, false));
+                        tcpConnected = false;
                         showErrorDialog();
                         return;
                     }
@@ -104,6 +105,7 @@ namespace K_Remote.Utils
                 catch (Exception ex)
                 {
                     OnConnectionStateChanged(new connectionStateChangedEventArgs("", 1, false));
+                    tcpConnected = false;
                     Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect");
                     showErrorDialog();
                 }
@@ -239,7 +241,6 @@ namespace K_Remote.Utils
             {
                 requestObject.Add(new JProperty("params", param));
             }
-            Debug.WriteLine("ConnectionHandler.getRequestJson: request: " + requestObject.ToString());
             return requestObject;
         }
 

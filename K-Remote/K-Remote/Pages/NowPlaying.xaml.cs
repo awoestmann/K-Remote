@@ -27,8 +27,12 @@ namespace K_Remote.Pages
     /// </summary>
     public sealed partial class NowPlaying : Page
     {
+        private static NowPlaying instance;
+
         public NowPlaying()
         {
+            instance = this;
+            NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
             this.InitializeComponent();
             if(SettingsManager.getInstance().getCurrentConnection() != null)
             {
@@ -36,18 +40,31 @@ namespace K_Remote.Pages
             }
             else
             {
-                nowPlaying_title.Text = "Not connected to Kodi. Check connections page";
+                nowPlaying_title.Text = "No connection data set";
             }
 
         }
 
         private async Task updateItem(Task<PlayerItem> itemTask)
         {
+            if(! await ConnectionHandler.getInstance().checkHttpConnection())
+            {
+                nowPlaying_title.Text = "Not connected, check connection data";
+            }
             PlayerItem item = await itemTask;
             if(item != null)
             {
                 nowPlaying_title.Text = item.title;
-
+                Debug.WriteLine("NowPlaying.updateItem: Item type: " + item.type);
+                switch (item.type)
+                {
+                    case "episode": break;
+                    case "movie": break;
+                    case "song":
+                        
+                        nowPlaying_subTitle.Text = item.album + Environment.NewLine + item.artistProperty;
+                        break;
+                }
                 //Try to get thumbnail
                 try
                 {
@@ -77,6 +94,11 @@ namespace K_Remote.Pages
             {
                 nowPlaying_title.Text = "Nothing is played";
             }
+        }
+
+        static void playerStateChanged(object sender, NotificationEventArgs args)
+        {
+            instance.updateItem(PlayerRPC.getItem());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

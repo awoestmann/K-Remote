@@ -35,12 +35,12 @@ namespace K_Remote.Pages
         {
             this.InitializeComponent();
 
+            ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
+
             instance = this;
             main_menu_splitView.Content = frame;
             (main_menu_splitView.Content as Frame).Navigate(typeof(MainPage));
             Shell.frame = frame;
-
-            ConnectionHandler.getInstance().ConnectionStateChanged += handleConnectionStateChanged;
 
             //Set connection Indicator
             if (SettingsManager.getInstance().getCurrentConnection() == null)
@@ -55,7 +55,8 @@ namespace K_Remote.Pages
                 {
                     case "connections": Shell.navigateToConnections(); break;
                     case "remote": Shell.navigateToRemote(); break;
-                    case "nowPlaying": break;
+                    case "nowPlaying": Shell.navigateToNowPlaying(); break;
+                    case "playlist": navigateToPlaylist(); break;
                     default: break;
                 }
             }
@@ -74,6 +75,11 @@ namespace K_Remote.Pages
         public static void navigateToNowPlaying()
         {
             instance.main_button_nowPlaying_Click(null, null);
+        }
+
+        public static void navigateToPlaylist()
+        {
+            instance.main_button_playlist_Click(null, null);
         }
 
         public static void navigateToCreateConnection(object parameter)
@@ -104,6 +110,12 @@ namespace K_Remote.Pages
             frame.Navigate(typeof(NowPlaying));
         }
 
+        private void main_button_playlist_Click(object sender, RoutedEventArgs e)
+        {
+            focusButton(main_button_playlist);
+            frame.Navigate(typeof(Playlist));
+        }
+
         private void focusButton(Button button)
         {
             unfocusButtons();
@@ -115,6 +127,7 @@ namespace K_Remote.Pages
         {
             main_button_connections.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             main_button_nowPlaying.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            main_button_playlist.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             main_button_remote.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }
         private void handleConnectionStateChanged(object sender, connectionStateChangedEventArgs args)

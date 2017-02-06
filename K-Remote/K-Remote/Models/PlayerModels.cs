@@ -54,8 +54,42 @@ namespace K_Remote.Models
 
     class PlayerItem
     {
-        public string album;
-        public string[] artist;
+        public string album { get; set; }
+        public string[] artist { get; set; }
+        /// <summary>
+        /// Read-only property containing all artists in a comma separated string
+        /// </summary>
+        public string artistProperty
+        {   get
+            {
+                if(artist == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return String.Join(", ", artist);
+                }
+            }
+        }
+
+        /// <summary>
+        /// A read-only property containing showtitle, season and episode
+        /// </summary>
+        public string seriesProperty
+        {
+            get
+            {
+                if(type == "episode")
+                {
+                    return showtitle + " S" +  season + "E" + episode;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
         public int episode;
         public string fanart;
         public string file;
@@ -64,7 +98,7 @@ namespace K_Remote.Models
         public int season;
         public string showtitle;
         public string thumbnail;
-        public string title;
+        public string title { get; set; }
         public int tvshowid;
         public int duration;
 

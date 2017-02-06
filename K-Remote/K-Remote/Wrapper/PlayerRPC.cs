@@ -63,7 +63,6 @@ namespace K_Remote.Wrapper
                 default: return null;
             }
             responseJson = await handler.sendHttpRequest("Player.GetItem", param, id);
-            Debug.WriteLine("PlayerRPC.getItem: Response: " + responseJson);
             PlayerItemResponse responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
             return responseItem.result.item;
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace K_Remote.Models
 {
-    
+
     class InputRequested{
         string jsonrpc;
         string method;
