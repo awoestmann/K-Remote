@@ -90,11 +90,21 @@ namespace K_Remote.Utils
             }
         }
 
+        /// <summary>
+        /// Set setting key to value
+        /// </summary>
+        /// <param name="key">Settings key</param>
+        /// <param name="value">Settings value</param>
         private void setSetting(string key, string value)
         {
             localSettings.Values[key] = value;
         }
 
+        /// <summary>
+        /// Returns settings value
+        /// </summary>
+        /// <param name="key">Settings Key</param>
+        /// <returns></returns>
         private object getSetting(string key)
         {
             return localSettings.Values[key];
@@ -102,11 +112,19 @@ namespace K_Remote.Utils
 
         #region connection settings
 
+        /// <summary>
+        /// Returns connection list
+        /// </summary>
+        /// <returns>Connections list</returns>
         public ObservableCollection<Connection> getConnectionsList()
         {
             return connections;
         }
 
+        /// <summary>
+        /// Adds a connections to list and saves list to settings
+        /// </summary>
+        /// <param name="con">Connection to add</param>
         public void addConnection(Connection con)
         {
             if(con != null)
@@ -117,6 +135,9 @@ namespace K_Remote.Utils
             
         }
 
+        /// <summary>
+        /// Saves connection list to settings
+        /// </summary>
         public void saveConnections()
         {
             string connectionsListString = "";
@@ -128,16 +149,20 @@ namespace K_Remote.Utils
             localSettings.Values[CONNECTIONS] = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionsListString));
         }
 
-        public void setCurrentConnection(string host)
+        /// <summary>
+        /// Settings current connection setting 
+        /// </summary>
+        /// <param name="settingsString">Connection as settings string representation</param>
+        public void setCurrentConnection(string settingsString)
         {
-            if(host == null)
+            if(settingsString == null)
             {
                 localSettings.Values[CURRENT_CONECTION] = "";
             }
 
             foreach(Connection con in connections)
             {
-                if (con.host.Equals(host))
+                if (con.toSettingsString().Equals(settingsString))
                 {
                     string base64Connection = con.toBase64String();
                     localSettings.Values[CURRENT_CONECTION] = base64Connection;

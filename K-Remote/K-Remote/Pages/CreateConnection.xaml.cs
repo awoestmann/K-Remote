@@ -17,28 +17,42 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Die Elementvorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
-
 namespace K_Remote.Pages
 {
     /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
+    /// A page to create or edit a connection
     /// </summary>
     public sealed partial class CreateConnection : Page
     {
+        /// <summary>
+        /// Connection to edit
+        /// </summary>
         private static Connection toEdit;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CreateConnection()
         {
             this.InitializeComponent();
             Debug.WriteLine("CreateConnection.init: Creating page");            
         }
 
+        /// <summary>
+        /// Cancels connection creation/editing and navigates back to connection page
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event args</param>
         private void button_cancel_Click(object sender, RoutedEventArgs e)
         {
             Shell.navigateToConnections();
         }
 
+        /// <summary>
+        /// Checks if neccessary fields are set and saves connection
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event args</param>
         private void buttom_ok_Click(object sender, RoutedEventArgs e)
         {
             //Check if neccessary fields are set
@@ -92,6 +106,11 @@ namespace K_Remote.Pages
             }
         }
 
+        /// <summary>
+        /// Handle onNavigation event
+        /// Checks if a connection is passed and fills UI elements with connection data to edit
+        /// </summary>
+        /// <param name="e">Navigation events</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string conString = e.Parameter as string;

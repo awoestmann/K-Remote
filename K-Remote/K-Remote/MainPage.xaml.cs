@@ -42,8 +42,7 @@ namespace K_Remote
         public async void test()
         {
             SettingsManager.getInstance().addConnection(new Connection("Asgard", "Asgard", 44556, 9090, "xbmc", "xbmc", true));
-            SettingsManager.getInstance().addConnection(new Connection("Test", "Test", 12345, 12345, "test", "test", false));
-            SettingsManager.getInstance().setCurrentConnection("Asgard");
+            SettingsManager.getInstance().addConnection(new Connection("Test", "Test", 12345, 12345, "test", "test", false));            
             Debug.WriteLine(SettingsManager.getInstance().getCurrentConnection());
             bool connected = await ConnectionHandler.getInstance().checkHttpConnection();
             Debug.WriteLine("Connected: " + connected);

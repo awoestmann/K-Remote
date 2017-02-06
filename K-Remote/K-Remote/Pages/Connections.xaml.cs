@@ -63,7 +63,7 @@ namespace K_Remote
                     }
                     //Connection dummy = new Connection();
                     //connections.Add(dummy);
-                    SettingsManager.getInstance().setCurrentConnection(chosenCon.host);
+                    SettingsManager.getInstance().setCurrentConnection(chosenCon.toSettingsString());
                     chosenCon.active = true;
                     SettingsManager.getInstance().saveConnections();
                 }

@@ -147,7 +147,17 @@ namespace K_Remote.Utils
         /// <returns></returns>
         public async Task<String> sendHttpJson(string jsonString)
         {
-            Uri requestUri = new Uri("http://" + hostString + ":" + httpPortString + RELATIVE_PATH);
+            Uri requestUri;
+            try
+            {
+                requestUri = new Uri("http://" + hostString + ":" + httpPortString + RELATIVE_PATH);
+            }
+            catch(UriFormatException uriEx)
+            {
+                Debug.WriteLine("ConnectionHandler.sendHttpJson: Bad URI :" + uriEx);
+                return null;
+            }
+            
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri);
 
             requestMessage.Headers.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(MEDIA_TYPE));
