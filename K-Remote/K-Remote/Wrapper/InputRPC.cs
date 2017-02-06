@@ -18,7 +18,7 @@ namespace K_Remote.Wrapper
         /// </summary>
         public static async Task back()
         {
-            await ConnectionHandler.getInstance().sendHttpRequest("Input.Back", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Back");
         }
 
         /// <summary>
@@ -46,17 +46,17 @@ namespace K_Remote.Wrapper
 
         public static async Task left()
         {
-            await ConnectionHandler.getInstance().sendHttpRequest("Input.Left", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Left");
         }
 
         public static async Task right()
         {
-            await ConnectionHandler.getInstance().sendHttpRequest("Input.Right", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Right");
         }
 
         public static async Task select()
         {
-            await ConnectionHandler.getInstance().sendHttpRequest("Input.Select", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Select");
         }
 
         public static async Task sendText(string text, bool done)
@@ -70,7 +70,7 @@ namespace K_Remote.Wrapper
 
         public static async Task up()
         {
-            await ConnectionHandler.getInstance().sendHttpRequest("Input.Up", null);
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.Up");
         }
     }
 }

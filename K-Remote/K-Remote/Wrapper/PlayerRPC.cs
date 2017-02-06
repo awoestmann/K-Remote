@@ -20,7 +20,7 @@ namespace K_Remote.Wrapper
         public static async Task<Player[]> getActivePlayers()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
-            var responseJson = await handler.sendHttpRequest("Player.GetActivePlayers", null);
+            var responseJson = await handler.sendHttpRequest("Player.GetActivePlayers");
             ActivePlayers players = JsonConvert.DeserializeObject<ActivePlayers>(responseJson);        
             return players.result;
         }
@@ -33,20 +33,39 @@ namespace K_Remote.Wrapper
             {
                 return null;
             }
-            string responseJson;            
+
+            string responseJson;
+            JObject param = null;
+            string id = null;
+                       
             switch (players[0].playerId)
             {
                 //Music
-                case 0: return null;
+                case 0:
+                    id = "AudioGetItem";
+                    param = new JObject(
+                        new JProperty("playerid", 0),
+                        new JProperty("properties", new string[]{ "title", "album", "artist",
+                            "duration", "thumbnail", "file", "fanart", "streamdetails"})
+                    );
+                    break;
                 //Video
                 case 1:
-                        responseJson = await handler.sendHttpJson("{ \"jsonrpc\": \"2.0\", \"method\": \"Player.GetItem\", \"params\": { \"properties\": [\"title\", \"album\", \"artist\", \"season\", \"episode\", \"duration\", \"showtitle\", \"tvshowid\", \"thumbnail\", \"file\", \"fanart\", \"streamdetails\"], \"playerid\": 1 }, \"id\": \"VideoGetItem\"}");
-                        PlayerItemResponse responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
-                        return responseItem.result.item;
+                    id = "VideoGetItem";
+                    param = new JObject(
+                        new JProperty("playerid", 1),
+                        new JProperty("properties", new string[] { "title", "album", "artist", "season",
+                            "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails" })
+                    );
+                    break;
                 //Pictures
                 case 2: return null;
                 default: return null;
-            }                      
+            }
+            responseJson = await handler.sendHttpRequest("Player.GetItem", param, id);
+            Debug.WriteLine("PlayerRPC.getItem: Response: " + responseJson);
+            PlayerItemResponse responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
+            return responseItem.result.item;
         }
 
         public static async void getProperties()

@@ -41,7 +41,7 @@ namespace K_Remote.Pages
 
         }
 
-        private async void updateItem(Task<PlayerItem> itemTask)
+        private async Task updateItem(Task<PlayerItem> itemTask)
         {
             PlayerItem item = await itemTask;
             if(item != null)

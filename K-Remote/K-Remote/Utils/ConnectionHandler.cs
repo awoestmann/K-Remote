@@ -194,9 +194,9 @@ namespace K_Remote.Utils
         /// <param name="method">Method</param>
         /// <param name="param">Parameter if needed</param>
         /// <returns>Response JSON</returns>
-        public async Task<string> sendHttpRequest(string method, JObject param)
+        public async Task<string> sendHttpRequest(string method, JObject param, string id = "1")
         {
-            return await this.sendHttpJson(getRequestJson(method, param).ToString());
+            return await this.sendHttpJson(getRequestJson(method, param, id).ToString());
         }
 
         /// <summary>
@@ -204,9 +204,9 @@ namespace K_Remote.Utils
         /// </summary>
         /// <param name="method">Method</param>
         /// <returns></returns>
-        public async Task<string> sendHttpRequest(string method)
+        public async Task<string> sendHttpRequest(string method, string id = "1")
         {
-            return await this.sendHttpRequest(method, null);
+            return await this.sendHttpRequest(method, null, id);
         }
 
         public async Task<bool> checkHttpConnection()
@@ -223,7 +223,7 @@ namespace K_Remote.Utils
             }
         }
 
-        public JObject getRequestJson(string method, JObject param)
+        public JObject getRequestJson(string method, JObject param, string id = "1")
         {
             if(method == null)
             {
@@ -232,12 +232,14 @@ namespace K_Remote.Utils
             JObject requestObject = new JObject(
                 new JProperty("jsonrpc", "2.0"),
                 new JProperty("method", method),
-                new JProperty("id", 1)
-            );
+                new JProperty("id", id)
+            );            
+
             if (param != null)
             {
                 requestObject.Add(new JProperty("params", param));
             }
+            Debug.WriteLine("ConnectionHandler.getRequestJson: request: " + requestObject.ToString());
             return requestObject;
         }
 
