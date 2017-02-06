@@ -58,12 +58,9 @@ namespace K_Remote.Pages
                 Debug.WriteLine("NowPlaying.updateItem: Item type: " + item.type);
                 switch (item.type)
                 {
-                    case "episode": break;
+                    case "episode": nowPlaying_subTitle.Text = item.seriesProperty; break;
                     case "movie": break;
-                    case "song":
-                        
-                        nowPlaying_subTitle.Text = item.album + Environment.NewLine + item.artistProperty;
-                        break;
+                    case "song": nowPlaying_subTitle.Text = item.album + Environment.NewLine + item.artistProperty; break;
                 }
                 //Try to get thumbnail
                 try
