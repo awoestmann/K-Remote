@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,8 +55,10 @@ namespace K_Remote.Models
 
     class PlayerItem
     {
+        //propeties
         public string album { get; set; }
         public string[] artist { get; set; }
+
         /// <summary>
         /// Read-only property containing all artists in a comma separated string
         /// </summary>
@@ -90,6 +93,12 @@ namespace K_Remote.Models
                 }
             }
         }
+
+        public string background { get; set; }
+
+        public string title { get; set; }
+        
+        //fields
         public int episode;
         public string fanart;
         public string file;
@@ -98,12 +107,39 @@ namespace K_Remote.Models
         public int season;
         public string showtitle;
         public string thumbnail;
-        public string title { get; set; }
         public int tvshowid;
         public int duration;
 
+        public string uniqueid;
         public string type;
         public StreamDetails streamdetails;
+
+        public override bool Equals(object obj)
+        {
+            Debug.WriteLine(this + " == " + obj);
+            
+            if(obj == null || obj.GetType() != typeof(PlayerItem))
+            {
+                Debug.WriteLine("PlayerItem.equals: invalid object");
+                return false;
+            }
+            PlayerItem item = obj as PlayerItem;
+            Debug.WriteLine(this.uniqueid + " == " + item.uniqueid);
+            switch (type)
+            {
+                case "episode":
+                    return title == item.title && episode == item.episode && season == item.season && showtitle == item.showtitle;
+                case "movie":
+                    return title == item.title;
+                case "song":
+                    return title == item.title && album == item.album && artistProperty == item.artistProperty;
+                default: return title == item.title;
+            }
+        }
+        public override string ToString()
+        {
+            return type + ": " + title;
+        }
     }
 
     class StreamDetails

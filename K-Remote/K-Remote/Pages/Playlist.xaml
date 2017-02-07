@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Margin="0 0 15 0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Margin="0 0 0 0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <CommandBar Margin="0 0 0 0">
             <CommandBar.Content>
                 <TextBlock x:Name="playlist_page_title" Text="Playlist" TextAlignment="Left" FontSize="30"/>
@@ -16,7 +16,7 @@
         <ListView x:Name="playlist_video_listview" HorizontalAlignment="Left" Height="366" Margin="-10,53,0,0" VerticalAlignment="Top" Width="360">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Width="274" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Width="274" HorizontalAlignment="Left" Background="{Binding background}">
                         <StackPanel>
                             <TextBlock Text="{Binding title , Mode=TwoWay}" FontSize="24"/>
                              <TextBlock Text="{Binding seriesProperty , Mode=TwoWay}" FontSize="16"/>

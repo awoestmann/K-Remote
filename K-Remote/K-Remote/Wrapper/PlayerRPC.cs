@@ -21,10 +21,24 @@ namespace K_Remote.Wrapper
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
             var responseJson = await handler.sendHttpRequest("Player.GetActivePlayers");
-            ActivePlayers players = JsonConvert.DeserializeObject<ActivePlayers>(responseJson);        
+            ActivePlayers players = null;
+
+            try
+            {
+               players  = JsonConvert.DeserializeObject<ActivePlayers>(responseJson);
+            }
+            catch (ArgumentNullException)
+            {
+                Debug.WriteLine("PlayerRPC.getActivePLayers: No response received");
+                return null;
+            }      
             return players.result;
         }
 
+        /// <summary>
+        /// Get currently played item
+        /// </summary>
+        /// <returns>Currently played PlayerItem </returns>
         public static async Task<PlayerItem> getItem()
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
@@ -46,7 +60,7 @@ namespace K_Remote.Wrapper
                     param = new JObject(
                         new JProperty("playerid", 0),
                         new JProperty("properties", new string[]{ "title", "album", "artist",
-                            "duration", "thumbnail", "file", "fanart", "streamdetails"})
+                            "duration", "thumbnail", "file", "fanart", "streamdetails", "uniqueid"})
                     );
                     break;
                 //Video
@@ -55,7 +69,7 @@ namespace K_Remote.Wrapper
                     param = new JObject(
                         new JProperty("playerid", 1),
                         new JProperty("properties", new string[] { "title", "album", "artist", "season",
-                            "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails" })
+                            "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails", "uniqueid" })
                     );
                     break;
                 //Pictures

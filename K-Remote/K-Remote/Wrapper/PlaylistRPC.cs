@@ -28,14 +28,14 @@ namespace K_Remote.Wrapper
                 case 0:
                     response = await ConnectionHandler.getInstance().sendHttpRequest("Playlist.GetItems", new JObject(
                         new JProperty("playlistid", 0),
-                        new JProperty("properties", new string[] { "title", "album", "artist", "duration" })
+                        new JProperty("properties", new string[] { "title", "album", "artist", "duration", "uniqueid" })
                     ));
                     Debug.WriteLine("PlaylistRPC. getPlaylistItems: playlist audio: " + response);
                     break;
                 case 1:
                     response = await ConnectionHandler.getInstance().sendHttpRequest("Playlist.GetItems", new JObject(
                        new JProperty("playlistid", 1),
-                       new JProperty("properties", new string[] { "title", "episode", "season", "showtitle" })
+                       new JProperty("properties", new string[] { "title", "episode", "season", "showtitle", "uniqueid" })
                    ));
                     break;
                 default: Debug.WriteLine("PlaylistRPC.getPlaylistItems: Unknown Player/Playlist type: " + id);

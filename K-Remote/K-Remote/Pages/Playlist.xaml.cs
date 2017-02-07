@@ -41,22 +41,62 @@ namespace K_Remote.Pages
         {
             Player[] players = await PlayerRPC.getActivePlayers();
             int playerId = players[0].playerId;
-            
+            PlayerItem current = await PlayerRPC.getItem();
+
+
             switch (playerId)
             {
                 //Audio playlist
                 case 0:
                     playlist_music_listview.Visibility = Visibility.Visible;
                     playlist_video_listview.Visibility = Visibility.Collapsed;
-                    musicItems = await PlaylistRPC.getPlaylistItems();                    
-                    playlist_music_listview.ItemsSource = musicItems;                    
+
+                    playlist_music_listview.ItemsSource = null;
+                    musicItems = await PlaylistRPC.getPlaylistItems();
+
+                    Debug.WriteLine("Playlist.refresh: Items:");
+                    Debug.WriteLine("Currently played: " + current);
+                    Debug.WriteLine("list: ");
+                    if(musicItems != null)
+                    {
+                        foreach(PlayerItem p in musicItems)
+                        {
+                            Debug.WriteLine(p);
+                            p.background = "Transparent";
+                            if(current != null && current.Equals(p))
+                            {
+                                Debug.WriteLine("is played");
+                                p.background = Application.Current.Resources["SystemAccentColor"].ToString();
+                            }
+                        }
+                        playlist_music_listview.ItemsSource = musicItems;
+                    }                    
                     break;
                 //Video playlist
                 case 1:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
+
                     videoItems = await PlaylistRPC.getPlaylistItems();
                     playlist_video_listview.ItemsSource = videoItems;
+
+                    Debug.WriteLine("Playlist.refresh: Items:");
+                    Debug.WriteLine("Currently played: " + current);
+                    Debug.WriteLine("list: ");
+                    if (videoItems != null)
+                    {
+                        foreach (PlayerItem p in videoItems)
+                        {
+                            Debug.WriteLine(p);
+                            p.background = "Transparent";
+                            if (current != null && current.Equals(p))
+                            {
+                                Debug.WriteLine("is played");
+                                p.background = Application.Current.Resources["SystemAccentColor"].ToString();
+                            }
+                        }
+                        playlist_music_listview.ItemsSource = musicItems;
+                    }
                     break;
             }
         }

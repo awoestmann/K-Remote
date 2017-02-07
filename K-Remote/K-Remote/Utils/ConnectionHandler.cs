@@ -106,7 +106,7 @@ namespace K_Remote.Utils
                 {
                     OnConnectionStateChanged(new connectionStateChangedEventArgs("", 1, false));
                     tcpConnected = false;
-                    Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect");
+                    Debug.WriteLine("ConnectionHandler.refreshConnectionData: Error on connect: " + ex);
                     showErrorDialog();
                 }
             }
