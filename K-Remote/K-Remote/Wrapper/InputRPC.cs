@@ -44,6 +44,15 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Info");
         }
 
+        public static async Task inputExecuteAction(string action)
+        {
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.ExecuteAction",
+                new JObject(
+                    new JProperty("action", action)
+                )
+             );
+        }
+
         public static async Task left()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Left");
@@ -68,6 +77,37 @@ namespace K_Remote.Wrapper
             await ConnectionHandler.getInstance().sendHttpRequest("Input.SendText", jsonObject);
         }
 
+        /// <summary>
+        /// Toggle osd
+        /// </summary>
+        /// <returns>Task</returns>
+        public static async Task showOSD()
+        {
+            await ConnectionHandler.getInstance().sendHttpRequest("Input.ShowOSD");
+        }
+
+        /// <summary>
+        /// Skips in direction if player is in foreground
+        /// </summary>
+        /// <param name="direction">Direction string: stepforward, stepback, bigstepforward, bigstepback</param>
+        /// <returns></returns>
+        public static async Task skipIfinPlayer(string direction)
+        {
+            if(direction != null && direction != "")
+            {
+                GuiCurrentWindow window = await GuiRPC.getCurrentWindow();
+                if(window.id == GuiRPC.CURRENT_WINDOW_FULLSCREEN_VIDEO
+                    || window.id == GuiRPC.CURRENT_WINDOW_FULLSCREEN_VIDEO_INFO)
+                {
+                    await inputExecuteAction(direction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Move cursor up
+        /// </summary>
+        /// <returns>Tasl</returns>
         public static async Task up()
         {
             await ConnectionHandler.getInstance().sendHttpRequest("Input.Up");

@@ -42,6 +42,7 @@ namespace K_Remote.Pages
 
         private async void init()
         {
+            ConnectionHandler.getInstance().ConnectionStateChanged += onConnectionStateChanged;
             NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
             NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
             NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
@@ -50,8 +51,9 @@ namespace K_Remote.Pages
 
         private async void refreshGui()
         {
-            if (ConnectionHandler.getInstance().checkTcpConnection())
+            if (await ConnectionHandler.getInstance().checkHttpConnection())
             {
+                Debug.WriteLine("Remote.refreshGui: refreshing");
                 setVolumeSlider(await ApplicationRPC.getVolume());
                 setPlayPauseIcon();
             }
@@ -123,6 +125,7 @@ namespace K_Remote.Pages
                     Player player = players[0];
                     if (player.speed == 0)
                     {
+                        Debug.WriteLine("Remote.setPlayPauseIcon: new icon value is play");
                         //switch to play icon
                         remote_button_playPause.Content = "\uE768";
                     }
@@ -172,6 +175,14 @@ namespace K_Remote.Pages
         #endregion
 
         #region event handler
+
+        static void onConnectionStateChanged(object sender, connectionStateChangedEventArgs args)
+        {
+            if (args.state)
+            {
+                staticInstance.refreshGui();
+            }
+        }
 
         /// <summary>
         /// Event handler for volume changed events
@@ -293,6 +304,7 @@ namespace K_Remote.Pages
         private void remote_button_info_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.info();
+            GuiRPC.getCurrentWindow();
         }
 
 
@@ -309,11 +321,13 @@ namespace K_Remote.Pages
         private void remote_button_left_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.left();
+            InputRPC.skipIfinPlayer("stepback");
         }
 
         private void remote_button_right_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.right();
+            InputRPC.skipIfinPlayer("stepforward");
         }
 
         private void remote_button_enter_Click(object sender, RoutedEventArgs e)
@@ -324,11 +338,13 @@ namespace K_Remote.Pages
         private void remote_button_up_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.up();
+            InputRPC.skipIfinPlayer("bigstepforward");
         }
 
         private void remote_button_down_Click(object sender, RoutedEventArgs e)
         {
             InputRPC.down();
+            InputRPC.skipIfinPlayer("bigstepback");
         }
 
         private void remote_button_back_Click(object sender, RoutedEventArgs e)
@@ -349,6 +365,11 @@ namespace K_Remote.Pages
         private void remote_button_previous_Click(object sender, RoutedEventArgs e)
         {
             PlayerRPC.goTo("previous");
+        }
+
+        private void remote_button_showOSD_Click(object sender, RoutedEventArgs e)
+        {
+            InputRPC.showOSD();
         }
         #endregion
     }

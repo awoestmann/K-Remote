@@ -22,7 +22,7 @@ namespace K_Remote.Wrapper
             ConnectionHandler handler = ConnectionHandler.getInstance();
             var responseJson = await handler.sendHttpRequest("Player.GetActivePlayers");
             ActivePlayers players = null;
-
+            Debug.WriteLine("Active players:" + responseJson);
             try
             {
                players  = JsonConvert.DeserializeObject<ActivePlayers>(responseJson);

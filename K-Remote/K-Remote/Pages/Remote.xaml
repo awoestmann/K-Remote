@@ -14,7 +14,7 @@
                 <TextBlock x:Name="remote_page_title" Text="Remote" TextAlignment="Left" FontSize="30"/>
             </CommandBar.Content>
         </CommandBar>
-        <Button x:Name="remote_button_playPause"  Height="49" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE768;" HorizontalAlignment="Left" Margin="220,425,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click" ClickMode="Press">
+        <Button x:Name="remote_button_playPause"  Height="49" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="" HorizontalAlignment="Left" Margin="220,425,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click" ClickMode="Press">
             <Button.Foreground>
                 <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
             </Button.Foreground>
@@ -39,6 +39,7 @@
         <Button x:Name="remote_button_home" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE80F;" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Left" Margin="115,425,0,0" VerticalAlignment="Top" Height="49" Width="100" Click="remote_button_home_Click" ClickMode="Press"/>
         <Button x:Name="remote_button_previous" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE892;" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Left" Margin="10,479,0,0" VerticalAlignment="Top" Width="100" Height="50" Click="remote_button_previous_Click" ClickMode="Press"/>
         <Button x:Name="remote_button_next" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE893;" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Left" Margin="221,479,0,0" VerticalAlignment="Top" Height="50" Width="100" Click="remote_button_next_Click" ClickMode="Press"/>
+        <Button x:Name="remote_button_showOSD" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE90E;" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" ClickMode="Press" HorizontalAlignment="Left" Margin="115,479,0,0" VerticalAlignment="Top" Height="50" Width="100" Click="remote_button_showOSD_Click"/>
 
     </Grid>
 </Page>
