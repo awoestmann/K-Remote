@@ -1,9 +1,11 @@
-﻿using System;
+﻿using K_Remote.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace K_Remote.Models
 {
@@ -55,9 +57,50 @@ namespace K_Remote.Models
 
     class PlayerItem
     {
-        //propeties
+        //properties
+
+        /// <summary>
+        /// Album name
+        /// </summary>
         public string album { get; set; }
+
+        /// <summary>
+        /// Artists
+        /// </summary>
         public string[] artist { get; set; }
+
+        /// <summary>
+        /// Read-only property holding a color string
+        /// </summary>
+        public string background { get; private set; }
+
+
+        /// <summary>
+        /// Private field holding currentlyPlayed value
+        /// </summary>
+        private bool m_currentlyPlayed = false;
+
+        /// <summary>
+        /// Determines if the item is currently played
+        /// </summary>
+        public bool currentlyPlayed
+        {
+            get
+            {
+                return m_currentlyPlayed;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    background = Application.Current.Resources["SystemAccentColor"].ToString();
+                }
+                else
+                {
+                    background = "transparent";
+                }
+            }
+        }
 
         /// <summary>
         /// Read-only property containing all artists in a comma separated string
@@ -94,10 +137,11 @@ namespace K_Remote.Models
             }
         }
 
-        public string background { get; set; }
-
+        /// <summary>
+        /// Title name
+        /// </summary>
         public string title { get; set; }
-        
+
         //fields
         public int episode;
         public string fanart;
@@ -114,9 +158,13 @@ namespace K_Remote.Models
         public string type;
         public StreamDetails streamdetails;
 
+        /// <summary>
+        /// Checks if two PlayerItems are equal
+        /// </summary>
+        /// <param name="obj">The object to be checked</param>
+        /// <returns>true if obj is an instance of PlayerItem and represents the same media item</returns>
         public override bool Equals(object obj)
         {
-            Debug.WriteLine(this + " == " + obj);
             
             if(obj == null || obj.GetType() != typeof(PlayerItem))
             {
@@ -124,7 +172,7 @@ namespace K_Remote.Models
                 return false;
             }
             PlayerItem item = obj as PlayerItem;
-            Debug.WriteLine(this.uniqueid + " == " + item.uniqueid);
+            
             switch (type)
             {
                 case "episode":
@@ -133,9 +181,15 @@ namespace K_Remote.Models
                     return title == item.title;
                 case "song":
                     return title == item.title && album == item.album && artistProperty == item.artistProperty;
-                default: return title == item.title;
+                default:
+                    return Tools.StripTagsAndParantheses(title) == Tools.StripTagsAndParantheses(item.title);
             }
         }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>Mediatype and title</returns>
         public override string ToString()
         {
             return type + ": " + title;

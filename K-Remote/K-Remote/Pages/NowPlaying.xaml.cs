@@ -1,6 +1,7 @@
 ﻿using K_Remote.Models;
 using K_Remote.Utils;
 using K_Remote.Wrapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,11 +64,16 @@ namespace K_Remote.Pages
                     case "song": nowPlaying_subTitle.Text = item.album + Environment.NewLine + item.artistProperty; break;
                 }
                 //Try to get thumbnail
+                string response = "";
                 try
                 {
                     string imageString = item.thumbnail;
+                    if(imageString == null || imageString == "")
+                    {
+                        return;
+                    }
                     Debug.WriteLine("NowPlaying.updateItem: imageString of currentItem: " + Environment.NewLine + imageString);
-                    string response = await FileRPC.prepareDownloadFile(imageString);
+                    response = await FileRPC.prepareDownloadFile(imageString);
                     IInputStream imageStream = await FileRPC.downloadFile(response);
                     if (imageStream != null)
                     {
@@ -81,6 +87,10 @@ namespace K_Remote.Pages
                             nowPlaying_image.Source = bmp;
                         }
                     }
+                }
+                catch(JsonReaderException readerEx)
+                {
+                    Debug.WriteLine("NowPlaying.updateItem: Error on parsing prepareDownload response: " + response);
                 }
                 catch(Exception e)
                 {

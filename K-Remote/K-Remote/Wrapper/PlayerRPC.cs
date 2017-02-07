@@ -60,7 +60,7 @@ namespace K_Remote.Wrapper
                     param = new JObject(
                         new JProperty("playerid", 0),
                         new JProperty("properties", new string[]{ "title", "album", "artist",
-                            "duration", "thumbnail", "file", "fanart", "streamdetails", "uniqueid"})
+                            "duration", "thumbnail", "file", "fanart", "streamdetails"})
                     );
                     break;
                 //Video
@@ -69,7 +69,7 @@ namespace K_Remote.Wrapper
                     param = new JObject(
                         new JProperty("playerid", 1),
                         new JProperty("properties", new string[] { "title", "album", "artist", "season",
-                            "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails", "uniqueid" })
+                            "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails"})
                     );
                     break;
                 //Pictures
@@ -77,7 +77,15 @@ namespace K_Remote.Wrapper
                 default: return null;
             }
             responseJson = await handler.sendHttpRequest("Player.GetItem", param, id);
-            PlayerItemResponse responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
+            PlayerItemResponse responseItem = null;
+            try
+            {
+                responseItem = JsonConvert.DeserializeObject<PlayerItemResponse>(responseJson);
+            }
+            catch(JsonReaderException)
+            {
+                Debug.WriteLine("PlayerRPC.getItem: Error on parsing getItem response: " + responseJson);
+            }
             return responseItem.result.item;
         }
 

@@ -28,27 +28,28 @@ namespace K_Remote.Wrapper
                 case 0:
                     response = await ConnectionHandler.getInstance().sendHttpRequest("Playlist.GetItems", new JObject(
                         new JProperty("playlistid", 0),
-                        new JProperty("properties", new string[] { "title", "album", "artist", "duration", "uniqueid" })
+                        new JProperty("properties", new string[] { "title", "album", "artist", "duration"})
                     ));
                     Debug.WriteLine("PlaylistRPC. getPlaylistItems: playlist audio: " + response);
                     break;
                 case 1:
                     response = await ConnectionHandler.getInstance().sendHttpRequest("Playlist.GetItems", new JObject(
                        new JProperty("playlistid", 1),
-                       new JProperty("properties", new string[] { "title", "episode", "season", "showtitle", "uniqueid" })
-                   ));
+                       new JProperty("properties", new string[] { "title", "episode", "season", "showtitle"})
+                    ));
+                    Debug.WriteLine("PlaylistRPC. getPlaylistItems: playlist video: " + response);
                     break;
                 default: Debug.WriteLine("PlaylistRPC.getPlaylistItems: Unknown Player/Playlist type: " + id);
                     return null;
             }
             try
             {
-                PlayerItem[] items = JsonConvert.DeserializeObject<PlaylistGetItemsResponse>(response).result.items;
-                return new ObservableCollection<PlayerItem>(items);
+                PlaylistGetItemsResponse responseObject = JsonConvert.DeserializeObject<PlaylistGetItemsResponse>(response);
+                return new ObservableCollection<PlayerItem>(responseObject.result.items);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                Debug.WriteLine("PlaylistRPC.getPlaylistItems: Error on parsing response: " + ex);
+                Debug.WriteLine("PlaylistRPC.getPlaylistItems: Error on parsing response: " + response);
                 return null;
             }
         }

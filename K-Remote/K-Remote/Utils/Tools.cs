@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
 
@@ -23,6 +24,35 @@ namespace K_Remote.Utils
             byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
             SolidColorBrush myBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
             return myBrush;
+        }
+
+        /// <summary>
+        /// Removes tags and parantheses of a string
+        /// Removed tags are: <>, </>, [], [/]
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string StripTagsAndParantheses(string input)
+        {
+            string returnString =  Regex.Replace(input, "<.*?>", string.Empty);
+            returnString = Regex.Replace(returnString, "\\[.*?\\]", string.Empty);
+            returnString = Regex.Replace(returnString, "\\(.*?\\)", string.Empty);
+            returnString = returnString.Trim();
+            return returnString;
+        }
+
+        /// <summary>
+        /// Removes tags of a string
+        /// Removed tags are: <>, </>, [], [/]
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string StripTags(string input)
+        {
+            string returnString = Regex.Replace(input, "<.*?>", string.Empty);
+            returnString = Regex.Replace(input, "\\[.*?\\]", String.Empty);
+            returnString = returnString.Trim();
+            return returnString;
         }
     }
 }

@@ -14,7 +14,11 @@ namespace K_Remote.Wrapper
     {
         public static async Task<string> prepareDownloadFile(string filename)
         {
-            string pathJson = await ConnectionHandler.getInstance().sendHttpRequest("Files.PrepareDownload", new JObject(new JProperty("path", filename)));
+            string pathJson = await ConnectionHandler.getInstance().sendHttpRequest("Files.PrepareDownload", 
+                new JObject(
+                    new JProperty("path", filename)
+                )
+            );
             
             Debug.WriteLine("FileRPC.prepareDownload: response" + pathJson);
             dynamic jsonObject = JObject.Parse(pathJson);

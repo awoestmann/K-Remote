@@ -19,12 +19,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Die Elementvorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
-
 namespace K_Remote.Pages
 {
     /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
+    /// A page, displaying the current playlist
     /// </summary>
     public sealed partial class Playlist : Page
     {
@@ -33,10 +31,16 @@ namespace K_Remote.Pages
 
         public Playlist()
         {
+            musicItems = new ObservableCollection<PlayerItem>();
+            videoItems = new ObservableCollection<PlayerItem>();
             refreshLists();            
             this.InitializeComponent();
-        }
-        
+        }        
+
+        /// <summary>
+        /// Refreshes list views according to the active playlist
+        /// </summary>
+        /// <returns></returns>
         private async Task refreshLists()
         {
             Player[] players = await PlayerRPC.getActivePlayers();
@@ -51,51 +55,70 @@ namespace K_Remote.Pages
                     playlist_music_listview.Visibility = Visibility.Visible;
                     playlist_video_listview.Visibility = Visibility.Collapsed;
 
-                    playlist_music_listview.ItemsSource = null;
-                    musicItems = await PlaylistRPC.getPlaylistItems();
-
-                    Debug.WriteLine("Playlist.refresh: Items:");
-                    Debug.WriteLine("Currently played: " + current);
-                    Debug.WriteLine("list: ");
-                    if(musicItems != null)
+                    musicItems.Clear();
+                    ObservableCollection<PlayerItem> newMusicItems = await PlaylistRPC.getPlaylistItems();
+                    if (newMusicItems != null && newMusicItems.Count > 0)
                     {
-                        foreach(PlayerItem p in musicItems)
+                        playlist_notification_textblock.Visibility = Visibility.Collapsed;
+                        musicItems = newMusicItems;
+                        Debug.WriteLine("Playlist.refresh: Items:");
+                        Debug.WriteLine("Currently played: " + current);
+                        Debug.WriteLine("list: ");
+
+                        foreach (PlayerItem p in musicItems)
                         {
                             Debug.WriteLine(p);
-                            p.background = "Transparent";
-                            if(current != null && current.Equals(p))
+                            p.currentlyPlayed = false;
+                            p.title = Tools.StripTags(p.title);
+
+                            if (current != null && current.Equals(p))
                             {
                                 Debug.WriteLine("is played");
-                                p.background = Application.Current.Resources["SystemAccentColor"].ToString();
+                                p.currentlyPlayed = true;
                             }
                         }
                         playlist_music_listview.ItemsSource = musicItems;
-                    }                    
+                    }
+                    else
+                    {
+                        playlist_notification_textblock.Visibility = Visibility.Visible;
+                        Debug.WriteLine("No items in audio playlist");
+                    }
                     break;
                 //Video playlist
                 case 1:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
 
-                    videoItems = await PlaylistRPC.getPlaylistItems();
-                    playlist_video_listview.ItemsSource = videoItems;
-
-                    Debug.WriteLine("Playlist.refresh: Items:");
-                    Debug.WriteLine("Currently played: " + current);
-                    Debug.WriteLine("list: ");
-                    if (videoItems != null)
+                    videoItems.Clear();
+                    ObservableCollection<PlayerItem> newVideoItems = await PlaylistRPC.getPlaylistItems();
+                    if (newVideoItems != null && newVideoItems.Count >0)
                     {
+                        playlist_notification_textblock.Visibility = Visibility.Collapsed;
+                        videoItems = newVideoItems;
+                        playlist_video_listview.ItemsSource = videoItems;
+
+                        Debug.WriteLine("Playlist.refresh: Items:");
+                        Debug.WriteLine("Currently played: " + current);
+                        Debug.WriteLine("list: ");
+                    
                         foreach (PlayerItem p in videoItems)
                         {
                             Debug.WriteLine(p);
-                            p.background = "Transparent";
+                            p.currentlyPlayed = false;
+                            p.title = Tools.StripTags(p.title);
                             if (current != null && current.Equals(p))
                             {
                                 Debug.WriteLine("is played");
-                                p.background = Application.Current.Resources["SystemAccentColor"].ToString();
+                                p.currentlyPlayed = true;
                             }
                         }
                         playlist_music_listview.ItemsSource = musicItems;
+                    }
+                    else
+                    {
+                        playlist_notification_textblock.Visibility = Visibility.Visible;
+                        Debug.WriteLine("Playlist.refreshList: No items in video playlist");
                     }
                     break;
             }
@@ -105,6 +128,20 @@ namespace K_Remote.Pages
         {
             SettingsManager.getInstance().setLastPage("playlist");
             base.OnNavigatedTo(e);
+        }
+
+        private void playlist_music_listview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PlayerItem pickedItem = e.AddedItems[0] as PlayerItem;
+            if(pickedItem != null)
+            {
+
+            }
+        }
+
+        private void playlist_video_listview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
