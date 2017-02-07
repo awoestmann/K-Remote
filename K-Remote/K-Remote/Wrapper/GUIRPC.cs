@@ -17,13 +17,6 @@ namespace K_Remote.Wrapper
     static class GuiRPC
     {
         /// <summary>
-        /// ID of current window if video playback is in foreground
-        /// </summary>
-        public const int CURRENT_WINDOW_FULLSCREEN_VIDEO = 12005;
-
-        public const int CURRENT_WINDOW_FULLSCREEN_VIDEO_INFO = 10142;
-
-        /// <summary>
         /// Toggle menu
         /// </summary>
         public static async void toggleGui()

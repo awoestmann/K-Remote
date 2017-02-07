@@ -37,9 +37,16 @@ namespace K_Remote.Models
         public int speed;
     }
 
+    class PlayerPropertiesResponse
+    {
+        public string id;
+        public string jsonrpc;
+        public PlayerProperties result;
+    }
+
     class PlayerProperties
     {
-
+        public int speed;
     }
 
     class PlayerItemResponse
@@ -184,6 +191,11 @@ namespace K_Remote.Models
                 default:
                     return Tools.StripTagsAndParantheses(title) == Tools.StripTagsAndParantheses(item.title);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         /// <summary>

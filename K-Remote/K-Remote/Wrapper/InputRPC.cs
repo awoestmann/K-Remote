@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Resources;
 using K_Remote.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -96,8 +97,8 @@ namespace K_Remote.Wrapper
             if(direction != null && direction != "")
             {
                 GuiCurrentWindow window = await GuiRPC.getCurrentWindow();
-                if(window.id == GuiRPC.CURRENT_WINDOW_FULLSCREEN_VIDEO
-                    || window.id == GuiRPC.CURRENT_WINDOW_FULLSCREEN_VIDEO_INFO)
+                if(window.id == Constants.CURRENT_WINDOW_FULLSCREEN_VIDEO
+                    || window.id == Constants.CURRENT_WINDOW_FULLSCREEN_VIDEO_INFO)
                 {
                     await inputExecuteAction(direction);
                 }

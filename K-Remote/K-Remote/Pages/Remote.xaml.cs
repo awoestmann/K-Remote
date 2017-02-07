@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Resources;
 using K_Remote.Utils;
 using K_Remote.Wrapper;
 using System;
@@ -51,12 +52,9 @@ namespace K_Remote.Pages
 
         private async void refreshGui()
         {
-            if (await ConnectionHandler.getInstance().checkHttpConnection())
-            {
-                Debug.WriteLine("Remote.refreshGui: refreshing");
-                setVolumeSlider(await ApplicationRPC.getVolume());
-                setPlayPauseIcon();
-            }
+             Debug.WriteLine("Remote.refreshGui: refreshing");
+             setVolumeSlider(await ApplicationRPC.getVolume());
+            setPlayPauseIcon();
         }
 
         /// <summary>
@@ -116,24 +114,26 @@ namespace K_Remote.Pages
         /// Switch Play/Pause button icon according to current player state
         /// </summary>
         private async Task setPlayPauseIcon()
-        {
+        {            
             try
             {
-                Player[] players = await PlayerRPC.getActivePlayers();
-                if (players != null && players.Length > 0)
+                int playerspeed = await PlayerRPC.getPlayerSpeed();
+                switch (playerspeed)
                 {
-                    Player player = players[0];
-                    if (player.speed == 0)
-                    {
-                        Debug.WriteLine("Remote.setPlayPauseIcon: new icon value is play");
-                        //switch to play icon
-                        remote_button_playPause.Content = "\uE768";
-                    }
-                    else
-                    {
-                        //switch to pause icon
-                        remote_button_playPause.Content = "\uE769";
-                    }
+                    case -1: break;
+                    case 0: break;
+                    case 1: break;
+                    default: break;
+                }
+                if (playerspeed == 0)
+                {
+                    //switch to play icon
+                    remote_button_playPause.Content = Constants.ICON_PLAY;
+                }
+                else
+                {
+                    //switch to pause icon
+                    remote_button_playPause.Content = Constants.ICON_PAUSE;
                 }
             }            
             catch(Exception e)

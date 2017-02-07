@@ -89,15 +89,42 @@ namespace K_Remote.Wrapper
             return responseItem.result.item;
         }
 
-        public static async void getProperties()
+        public async static Task<int> getPlayerSpeed()
         {
-            Player[] players = await getActivePlayers();
-            if (players.Length > 0)
+            PlayerProperties props = await getProperties(new String[] { "speed" });
+            if(props != null)
             {
+                return props.speed;
             }
             else
             {
-                Debug.WriteLine("No active player");
+                return -1;
+            }   
+        }
+
+        public static async Task<PlayerProperties> getProperties(string[] props)
+        {
+            ConnectionHandler handler = ConnectionHandler.getInstance();
+            Player[] players = await getActivePlayers();
+            if (players.Length == 0)
+            {
+                return null;
+            }
+            string response = await ConnectionHandler.getInstance().sendHttpRequest("Player.getProperties",
+                new JObject(
+                    new JProperty("playerid", players[0].playerId),
+                    new JProperty("properties", props)
+                )
+            );
+            try
+            {
+                PlayerPropertiesResponse propertiesResponse = JsonConvert.DeserializeObject<PlayerPropertiesResponse>(response);
+                return propertiesResponse.result;
+            }
+            catch (JsonReaderException)
+            {
+                Debug.WriteLine("PlayerRPC.getPlayerspeed: Error parsing speed response: " + response);
+                return null;
             }
 
         }
