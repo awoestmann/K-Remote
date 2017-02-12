@@ -1,4 +1,5 @@
 ﻿using K_Remote.Models;
+using K_Remote.Resources;
 using K_Remote.Utils;
 using K_Remote.Wrapper;
 using System;
@@ -48,7 +49,7 @@ namespace K_Remote.Pages
         /// <summary>
         /// Refreshes list views according to the active playlist
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task</returns>
         private async Task refreshLists()
         {
             Player[] players = await PlayerRPC.getActivePlayers();
@@ -58,8 +59,7 @@ namespace K_Remote.Pages
 
             switch (playerId)
             {
-                //Audio playlist
-                case 0:
+                case Constants.KODI_AUDIO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Visible;
                     playlist_video_listview.Visibility = Visibility.Collapsed;
 
@@ -98,8 +98,7 @@ namespace K_Remote.Pages
                         Debug.WriteLine("No items in audio playlist");
                     }
                     break;
-                //Video playlist
-                case 1:
+                case Constants.KODI_VIDEO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
 
@@ -109,19 +108,13 @@ namespace K_Remote.Pages
                     {
                         playlist_notification_textblock.Visibility = Visibility.Collapsed;
                         videoItems = newVideoItems;
-
-                        Debug.WriteLine("Playlist.refresh: Items:");
-                        Debug.WriteLine("Currently played: " + current);
-                        Debug.WriteLine("list: ");
                     
                         foreach (PlayerItem p in videoItems)
                         {
-                            Debug.WriteLine(p);
                             p.currentlyPlayed = false;
                             p.title = Tools.StripTags(p.title);
                             if (current != null && current.Equals(p))
                             {
-                                Debug.WriteLine("is played");
                                 p.currentlyPlayed = true;
                                 activeItem = p;
                             }
@@ -141,26 +134,51 @@ namespace K_Remote.Pages
             }
         }
 
+        /// <summary>
+        /// Handles onNavigatedTo event
+        /// </summary>
+        /// <param name="e">Event args</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             SettingsManager.getInstance().setLastPage("playlist");
             base.OnNavigatedTo(e);
         }
 
+        /// <summary>
+        /// Invoked if a music list item is clicked. Sends goto message to play selected item
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args containing picked item</param>
         private void playlist_music_listview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PlayerItem pickedItem = e.AddedItems[0] as PlayerItem;
-            if(pickedItem != null)
+            //There should be only one picked item
+            if (e.AddedItems.Count == 1)
             {
-
+                PlayerItem picked = e.AddedItems[0] as PlayerItem;
+                PlayerRPC.goTo(position: musicItems.IndexOf(picked));
             }
         }
 
+        /// <summary>
+        /// Invoked if a video list item is clicked. Sends goto message to play selected item
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args containing picked item</param>
         private void playlist_video_listview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //There should be only one picked item
+            if(e.AddedItems.Count == 1)
+            {
+                PlayerItem picked = e.AddedItems[0] as PlayerItem;
+                PlayerRPC.goTo(position: videoItems.IndexOf(picked));
+            }
         }
 
+        /// <summary>
+        /// Handles playlist changes. RefreshesLists
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="args">Event args</param>
         static void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
         {
            instance.refreshLists();

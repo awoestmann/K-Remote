@@ -130,11 +130,19 @@ namespace K_Remote.Wrapper
         }
 
         /// <summary>
-        /// Go to previous, next or specific item in playlist
+        /// Go to previous, next or specific item in playlist. Only one parameter may be passed
         /// </summary>
-        /// <param name="direction">"previous", "next" or item position</param>
-        public static async Task goTo(string direction)
+        /// <param name="direction">"previous", "next"</param>
+        /// <param name="position">Item position</param>
+        public static async Task goTo(string direction = "", int position=-1)
         {
+            //Check if none or both parameters are passed   
+            if((direction == "" && position == -1) || (direction != "" && position != -1))
+            {
+                Debug.WriteLine("PlayerRPC.goto: No direction or both given");
+                throw new ArgumentException("PlayerRPC.goTo: No or too many Arguments given");
+            }
+                   
             //Get active players
             ConnectionHandler handler = ConnectionHandler.getInstance();
             Player[] players = await getActivePlayers();
@@ -143,14 +151,23 @@ namespace K_Remote.Wrapper
                 return;
             }
 
-            foreach(Player p in players)
+            Debug.WriteLine("PlayerRPC.goto: GoTo: " + direction);
+            foreach (Player p in players)
             {
-                await handler.sendHttpRequest("Player.GoTo", 
-                    new JObject(
-                        new JProperty("playerid", p.playerId),
-                        new JProperty("to", direction)
-                    )
+                JObject param = new JObject(
+                        new JProperty("playerid", p.playerId)
                 );
+                if(position != -1)
+                {
+                    param.Add(new JProperty("to", position));
+                }
+                else
+                {
+                    param.Add(new JProperty("to", direction));
+                }
+                        
+                string response = await handler.sendHttpRequest("Player.GoTo", param);
+                Debug.WriteLine("PlayerRPC.goto: response: " + response);
             }
         }
 
