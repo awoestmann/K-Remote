@@ -28,7 +28,7 @@
         <ListView x:Name="playlist_music_listview" HorizontalAlignment="Left" Height="366" Margin="0,53,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_music_listview_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Width="274" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Width="274" HorizontalAlignment="Left" Background="{Binding background}">
                             <StackPanel>
                                 <TextBlock Text="{Binding title , Mode=TwoWay}" FontSize="24"/>
                                 <StackPanel Orientation="Horizontal">

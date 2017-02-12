@@ -13,6 +13,7 @@ namespace K_Remote.Wrapper
 {
     class NotificationRPC
     {
+        public event EventHandler<NotificationEventArgs> AudioLibraryOnUpdateEvent;
         public event EventHandler<NotificationEventArgs> InputRequestedEvent;
         public event EventHandler<NotificationEventArgs> NotificationEvent;
         public event EventHandler<NotificationEventArgs> PlayerStateChangedEvent;
@@ -47,6 +48,9 @@ namespace K_Remote.Wrapper
                         args.volumeChanged = JsonConvert.DeserializeObject<VolumeChanged>(notificationString);
                         OnVolumeChangedEvent(args);
                         break;
+                    case "AudioLibrary.OnUpdate":
+                        OnAudioLibraryOnUpdate(args);
+                        break;
                     case "Input.OnInputRequested":
                         args.inputRequested = JsonConvert.DeserializeObject<InputRequested>(notificationString);
                         OnInputRequestetEvent(args);
@@ -68,6 +72,11 @@ namespace K_Remote.Wrapper
                 Debug.WriteLine("NotificationRPC: Error on parsing notification json: " + jre);
                 return;
             }
+        }
+
+        protected virtual void OnAudioLibraryOnUpdate(NotificationEventArgs args)
+        {
+            AudioLibraryOnUpdateEvent?.Invoke(this, args);
         }
 
         protected virtual void OnInputRequestetEvent(NotificationEventArgs args)

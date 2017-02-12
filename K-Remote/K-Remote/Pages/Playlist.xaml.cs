@@ -29,10 +29,18 @@ namespace K_Remote.Pages
         private ObservableCollection<PlayerItem> musicItems;
         private ObservableCollection<PlayerItem> videoItems;
 
+        //Static instance for event handler
+        private static Playlist instance;
+
         public Playlist()
         {
+            instance = this;
             musicItems = new ObservableCollection<PlayerItem>();
             videoItems = new ObservableCollection<PlayerItem>();
+
+            NotificationRPC.getInstance().AudioLibraryOnUpdateEvent += handleAudioLibraryUpdate;
+            NotificationRPC.getInstance().PlayerStateChangedEvent += handleAudioLibraryUpdate;
+
             refreshLists();            
             this.InitializeComponent();
         }        
@@ -46,7 +54,7 @@ namespace K_Remote.Pages
             Player[] players = await PlayerRPC.getActivePlayers();
             int playerId = players[0].playerId;
             PlayerItem current = await PlayerRPC.getItem();
-
+            PlayerItem activeItem = null;
 
             switch (playerId)
             {
@@ -75,9 +83,14 @@ namespace K_Remote.Pages
                             {
                                 Debug.WriteLine("is played");
                                 p.currentlyPlayed = true;
+                                activeItem = p;
                             }
                         }
                         playlist_music_listview.ItemsSource = musicItems;
+                        if(activeItem != null)
+                        {
+                            playlist_music_listview.ScrollIntoView(activeItem);
+                        }
                     }
                     else
                     {
@@ -96,7 +109,6 @@ namespace K_Remote.Pages
                     {
                         playlist_notification_textblock.Visibility = Visibility.Collapsed;
                         videoItems = newVideoItems;
-                        playlist_video_listview.ItemsSource = videoItems;
 
                         Debug.WriteLine("Playlist.refresh: Items:");
                         Debug.WriteLine("Currently played: " + current);
@@ -111,9 +123,14 @@ namespace K_Remote.Pages
                             {
                                 Debug.WriteLine("is played");
                                 p.currentlyPlayed = true;
+                                activeItem = p;
                             }
                         }
-                        playlist_music_listview.ItemsSource = musicItems;
+                        playlist_video_listview.ItemsSource = videoItems;
+                        if(activeItem != null)
+                        {
+                            playlist_video_listview.ScrollIntoView(activeItem);
+                        }
                     }
                     else
                     {
@@ -142,6 +159,11 @@ namespace K_Remote.Pages
         private void playlist_video_listview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        static void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
+        {
+           instance.refreshLists();
         }
     }
 }

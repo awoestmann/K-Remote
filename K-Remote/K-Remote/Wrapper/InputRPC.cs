@@ -91,7 +91,7 @@ namespace K_Remote.Wrapper
         /// Skips in direction if player is in foreground
         /// </summary>
         /// <param name="direction">Direction string: stepforward, stepback, bigstepforward, bigstepback</param>
-        /// <returns></returns>
+        /// <returns>Task</returns>
         public static async Task skipIfinPlayer(string direction)
         {
             if(direction != null && direction != "")
