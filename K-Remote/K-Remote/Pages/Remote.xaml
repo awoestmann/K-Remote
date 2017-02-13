@@ -13,6 +13,28 @@
             <CommandBar.Content>
                 <TextBlock x:Name="remote_page_title" Text="Remote" TextAlignment="Left" FontSize="30"/>
             </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="remote_subtitles_button" Icon="ClosedCaption" Label="Subtitles">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <StackPanel Orientation="Vertical" x:Name="remote_subtitle_stackpanel">
+                                <RadioButton Content="1" IsChecked="True"></RadioButton>
+                                <RadioButton Content="2"></RadioButton>
+                            </StackPanel>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="remote_language_button" Icon="Message" Label="Languages">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <StackPanel Orientation="Vertical" x:Name="remote_language_stackpanel">
+                                <RadioButton Content="1" IsChecked="True"></RadioButton>
+                                <RadioButton Content="2"></RadioButton>
+                            </StackPanel>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
         </CommandBar>
         <Button x:Name="remote_button_playPause"  Height="49" Width="100" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="" HorizontalAlignment="Left" Margin="220,425,0,0" VerticalAlignment="Top" Click="remote_button_playPause_Click" ClickMode="Press">
             <Button.Foreground>

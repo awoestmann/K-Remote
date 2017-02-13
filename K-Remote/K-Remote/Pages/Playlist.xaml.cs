@@ -39,20 +39,27 @@ namespace K_Remote.Pages
             musicItems = new ObservableCollection<PlayerItem>();
             videoItems = new ObservableCollection<PlayerItem>();
 
+            //Register for events, fired if a new item is played
             NotificationRPC.getInstance().AudioLibraryOnUpdateEvent += handleAudioLibraryUpdate;
-            NotificationRPC.getInstance().PlayerStateChangedEvent += handleAudioLibraryUpdate;
+            NotificationRPC.getInstance().PlayerStateChangedEvent += handlePlayerStateChanged;
+            NotificationRPC.getInstance().VideoLibraryOnUpdateEvent += handleVideoLibraryUpdate;
 
             refreshLists();            
-            this.InitializeComponent();
+            InitializeComponent();
         }        
 
         /// <summary>
-        /// Refreshes list views according to the active playlist
+        /// Refreshes list views according to the active playlist. Receives a new item collection instance
         /// </summary>
         /// <returns>Task</returns>
         private async Task refreshLists()
         {
             Player[] players = await PlayerRPC.getActivePlayers();
+            if(players.Length == 0)
+            {
+                playlist_notification_textblock.Text = "No items in playlist";
+                return;
+            }
             int playerId = players[0].playerId;
             PlayerItem current = await PlayerRPC.getItem();
             PlayerItem activeItem = null;
@@ -62,26 +69,21 @@ namespace K_Remote.Pages
                 case Constants.KODI_AUDIO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Visible;
                     playlist_video_listview.Visibility = Visibility.Collapsed;
+                    playlist_notification_textblock.Text = "Audio";
 
                     musicItems.Clear();
                     ObservableCollection<PlayerItem> newMusicItems = await PlaylistRPC.getPlaylistItems();
                     if (newMusicItems != null && newMusicItems.Count > 0)
                     {
-                        playlist_notification_textblock.Visibility = Visibility.Collapsed;
                         musicItems = newMusicItems;
-                        Debug.WriteLine("Playlist.refresh: Items:");
-                        Debug.WriteLine("Currently played: " + current);
-                        Debug.WriteLine("list: ");
 
                         foreach (PlayerItem p in musicItems)
                         {
-                            Debug.WriteLine(p);
                             p.currentlyPlayed = false;
                             p.title = Tools.StripTags(p.title);
 
                             if (current != null && current.Equals(p))
                             {
-                                Debug.WriteLine("is played");
                                 p.currentlyPlayed = true;
                                 activeItem = p;
                             }
@@ -94,19 +96,19 @@ namespace K_Remote.Pages
                     }
                     else
                     {
-                        playlist_notification_textblock.Visibility = Visibility.Visible;
+                        playlist_notification_textblock.Text = "No items in playlist";
                         Debug.WriteLine("No items in audio playlist");
                     }
                     break;
                 case Constants.KODI_VIDEO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
+                    playlist_notification_textblock.Text = "Video";
 
                     videoItems.Clear();
                     ObservableCollection<PlayerItem> newVideoItems = await PlaylistRPC.getPlaylistItems();
                     if (newVideoItems != null && newVideoItems.Count >0)
                     {
-                        playlist_notification_textblock.Visibility = Visibility.Collapsed;
                         videoItems = newVideoItems;
                     
                         foreach (PlayerItem p in videoItems)
@@ -127,7 +129,7 @@ namespace K_Remote.Pages
                     }
                     else
                     {
-                        playlist_notification_textblock.Visibility = Visibility.Visible;
+                        playlist_notification_textblock.Text = "No items in playlist";
                         Debug.WriteLine("Playlist.refreshList: No items in video playlist");
                     }
                     break;
@@ -179,9 +181,19 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="args">Event args</param>
-        static void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
+        static void handlePlayerStateChanged(object sender, NotificationEventArgs args)
         {
            instance.refreshLists();
+        }
+
+        static void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
+        {
+            instance.refreshLists();
+        }
+
+        static void handleVideoLibraryUpdate(object sender, NotificationEventArgs args)
+        {
+            instance.refreshLists();
         }
     }
 }

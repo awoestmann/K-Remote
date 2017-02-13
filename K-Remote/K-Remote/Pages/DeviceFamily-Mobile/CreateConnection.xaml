@@ -6,16 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <CommandBar Margin="0 0 0 0">
-            <CommandBar.Content>
-                <TextBlock x:Name="create_connection_page_title" Text="Create connection" TextAlignment="Left" FontSize="30"/>
-            </CommandBar.Content>
+    <Page.BottomAppBar>
+        <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Accept" Label="OK" Click="button_ok_Click"/>
                 <AppBarButton Icon="Cancel" Label="Cancel" Click="button_cancel_Click"/>
             </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <CommandBar Margin="0 0 0 0">
+            <CommandBar.Content>
+                <TextBlock x:Name="create_connection_page_title" Text="Create connection - Mobile" TextAlignment="Left" FontSize="30"/>
+            </CommandBar.Content>
         </CommandBar>
         <TextBox x:Name="description_textbox" HorizontalAlignment="Left" Margin="10,114,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218" PlaceholderText="Description"/>
         <TextBox x:Name="host_textbox" HorizontalAlignment="Left" Margin="10,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Hostname/HostIP"/>

@@ -53,7 +53,7 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Event args</param>
-        private void buttom_ok_Click(object sender, RoutedEventArgs e)
+        private void button_ok_Click(object sender, RoutedEventArgs e)
         {
             //Check if neccessary fields are set
             if (description_textbox.Text != "" && host_textbox.Text != "" && port_textbox.Text != "")

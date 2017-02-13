@@ -13,10 +13,12 @@ namespace K_Remote.Wrapper
 {
     class NotificationRPC
     {
+        //Event handler
         public event EventHandler<NotificationEventArgs> AudioLibraryOnUpdateEvent;
         public event EventHandler<NotificationEventArgs> InputRequestedEvent;
         public event EventHandler<NotificationEventArgs> NotificationEvent;
         public event EventHandler<NotificationEventArgs> PlayerStateChangedEvent;
+        public event EventHandler<NotificationEventArgs> VideoLibraryOnUpdateEvent;
         public event EventHandler<NotificationEventArgs> VolumeChangedEvent;
 
         private static NotificationRPC instance;
@@ -39,10 +41,10 @@ namespace K_Remote.Wrapper
             try
             {
                 dynamic notificationObject = JObject.Parse(notificationString);
-                string value = notificationObject.method;
+                string method = notificationObject.method;
                 NotificationEventArgs args = new NotificationEventArgs();
 
-                switch (value)
+                switch (method)
                 {
                     case "Application.OnVolumeChanged":
                         args.volumeChanged = JsonConvert.DeserializeObject<VolumeChanged>(notificationString);
@@ -63,8 +65,14 @@ namespace K_Remote.Wrapper
                         args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
                         OnPlayerStateChangedEvent(args);
                         break;
-
-                    default: Debug.WriteLine("Unknown Response/Notification: " + value); return;
+                    case "Playlist.OnAdd":
+                        Debug.WriteLine("NotificationRPC.processNotification: Received Playlist.OnAdd");
+                        Debug.WriteLine(notificationString);
+                        break;
+                    case "VideoLibrary.OnUpdate":
+                        OnVideoLibraryOnUpdateEvent(args);
+                        break;
+                    default: Debug.WriteLine("Unknown Response/Notification: " + method); return;
                 }
             }
             catch(JsonReaderException jre)
@@ -92,6 +100,11 @@ namespace K_Remote.Wrapper
         protected virtual void OnPlayerStateChangedEvent(NotificationEventArgs args)
         {
             PlayerStateChangedEvent?.Invoke(this, args);
+        }
+
+        protected virtual void OnVideoLibraryOnUpdateEvent(NotificationEventArgs args)
+        {
+            VideoLibraryOnUpdateEvent?.Invoke(this, args);
         }
 
         protected virtual void OnVolumeChangedEvent(NotificationEventArgs args)
