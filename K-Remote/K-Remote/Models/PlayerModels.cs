@@ -161,7 +161,10 @@ namespace K_Remote.Models
             set
             {
                 m_title = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("title"));
+                if(PropertyChanged != null)
+                {
+                    OnPropertyChanged(new PropertyChangedEventArgs("title"));
+                }
             }
         }
 
@@ -183,7 +186,7 @@ namespace K_Remote.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(PropertyChangedEventArgs args)
+        protected void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             Debug.WriteLine("PlayerItem.OnPropertyChanged");
             PropertyChanged?.Invoke(this, args);
