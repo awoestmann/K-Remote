@@ -18,6 +18,11 @@ namespace K_Remote.Resources
         /// Id of current window if video playback is in foreground with info overlay opened
         /// </summary>
         public const int CURRENT_WINDOW_FULLSCREEN_VIDEO_INFO = 10142;
+
+        /// <summary>
+        /// Current window id of main menu
+        /// </summary>
+        public const int CURRENT_WINDOW_MAIN_MENU = 10000;
         #endregion
 
         #region kodi constants

@@ -46,6 +46,7 @@ namespace K_Remote.Utils
     {
         public InputRequested inputRequested { get; set; }
         public PlayerStateChanged playerState { get; set; }
+        public PlaylistChanged playlistChanged { get; set; }
         public VolumeChanged volumeChanged { get; set; }
     }
 

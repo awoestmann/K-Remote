@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace K_Remote.Models
 {
 
+    /// <summary>
+    /// Models input requested notifications
+    /// </summary>
     class InputRequested{
         string jsonrpc;
         string method;
@@ -54,6 +57,32 @@ namespace K_Remote.Models
         public string sender;
     }
 
+    /// <summary>
+    /// Models playlist OnAdd, OnClear and OnRemove notifications
+    /// </summary>
+    class PlaylistChanged
+    {
+        public string jsonrpc;
+        public string method;
+        public PlaylistChangedParams @params;
+    }
+
+    class PlaylistChangedParams
+    {
+        public string sender;
+        public PlaylistChangedParamsData data;
+    }
+
+    class PlaylistChangedParamsData
+    {
+        public PlayerItem item;
+        public int playlistid;
+        public int position;
+    }
+
+    /// <summary>
+    /// Models volume changed notifications
+    /// </summary>
     class VolumeChanged
     {
         public string jsonrpc;

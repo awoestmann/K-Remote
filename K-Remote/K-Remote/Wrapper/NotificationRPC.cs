@@ -18,6 +18,7 @@ namespace K_Remote.Wrapper
         public event EventHandler<NotificationEventArgs> InputRequestedEvent;
         public event EventHandler<NotificationEventArgs> NotificationEvent;
         public event EventHandler<NotificationEventArgs> PlayerStateChangedEvent;
+        public event EventHandler<NotificationEventArgs> PlaylistChangedEvent;
         public event EventHandler<NotificationEventArgs> VideoLibraryOnUpdateEvent;
         public event EventHandler<NotificationEventArgs> VolumeChangedEvent;
 
@@ -32,6 +33,11 @@ namespace K_Remote.Wrapper
                 instance = new NotificationRPC();
             }
             return instance;
+        }
+
+        ~NotificationRPC()
+        {
+            Debug.WriteLine("NotificationRPC.~NotificationRPC()");
         }
 
         public void processNotification(string notificationString)
@@ -58,16 +64,15 @@ namespace K_Remote.Wrapper
                         OnInputRequestetEvent(args);
                         break;
                     case "Player.OnPause":
-                        args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
-                        OnPlayerStateChangedEvent(args);
-                        break;
                     case "Player.OnPlay":
                         args.playerState = JsonConvert.DeserializeObject<PlayerStateChanged>(notificationString);
                         OnPlayerStateChangedEvent(args);
                         break;
                     case "Playlist.OnAdd":
-                        Debug.WriteLine("NotificationRPC.processNotification: Received Playlist.OnAdd");
-                        Debug.WriteLine(notificationString);
+                    case "Playlist.OnClear":
+                    case "Playlist.OnRemove":
+                        args.playlistChanged = JsonConvert.DeserializeObject<PlaylistChanged>(notificationString);
+                        OnPlaylistChanged(args);
                         break;
                     case "VideoLibrary.OnUpdate":
                         OnVideoLibraryOnUpdateEvent(args);
@@ -81,7 +86,7 @@ namespace K_Remote.Wrapper
                 return;
             }
         }
-
+        #region events
         protected virtual void OnAudioLibraryOnUpdate(NotificationEventArgs args)
         {
             AudioLibraryOnUpdateEvent?.Invoke(this, args);
@@ -102,6 +107,11 @@ namespace K_Remote.Wrapper
             PlayerStateChangedEvent?.Invoke(this, args);
         }
 
+        protected virtual void OnPlaylistChanged(NotificationEventArgs args)
+        {
+            PlaylistChangedEvent?.Invoke(this, args);
+        }
+
         protected virtual void OnVideoLibraryOnUpdateEvent(NotificationEventArgs args)
         {
             VideoLibraryOnUpdateEvent?.Invoke(this, args);
@@ -111,5 +121,6 @@ namespace K_Remote.Wrapper
         {
             VolumeChangedEvent?.Invoke(this, args);
         }
+        #endregion
     }
 }

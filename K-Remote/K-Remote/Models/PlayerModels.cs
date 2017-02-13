@@ -1,6 +1,7 @@
 ﻿using K_Remote.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -62,7 +63,7 @@ namespace K_Remote.Models
 
     }
 
-    class PlayerItem
+    class PlayerItem : INotifyPropertyChanged
     {
         //properties
 
@@ -145,9 +146,24 @@ namespace K_Remote.Models
         }
 
         /// <summary>
-        /// Title name
+        /// Private field holding item title
         /// </summary>
-        public string title { get; set; }
+        private string m_title;
+        /// <summary>
+        /// Title property
+        /// </summary>
+        public string title
+        {
+            get
+            {
+                return m_title;
+            }
+            set
+            {
+                m_title = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("title"));
+            }
+        }
 
         //fields
         public int episode;
@@ -164,6 +180,14 @@ namespace K_Remote.Models
         public string uniqueid;
         public string type;
         public StreamDetails streamdetails;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            Debug.WriteLine("PlayerItem.OnPropertyChanged");
+            PropertyChanged?.Invoke(this, args);
+        }
 
         /// <summary>
         /// Checks if two PlayerItems are equal
@@ -190,6 +214,23 @@ namespace K_Remote.Models
                     return title == item.title && album == item.album && artistProperty == item.artistProperty;
                 default:
                     return Tools.StripTagsAndParantheses(title) == Tools.StripTagsAndParantheses(item.title);
+            }
+        }
+
+        /// <summary>
+        /// Copy properties from second playeritem to this
+        /// </summary>
+        /// <param name="item">Second item</param>
+        public void copyProperties(PlayerItem item)
+        {
+            if(item != null)
+            {
+                title = item.title;
+                episode = item.episode;
+                season = item.season;
+                showtitle = item.showtitle;
+                artist = item.artist;
+                album = album;
             }
         }
 

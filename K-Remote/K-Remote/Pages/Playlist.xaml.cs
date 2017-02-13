@@ -29,30 +29,76 @@ namespace K_Remote.Pages
     {
         private ObservableCollection<PlayerItem> musicItems;
         private ObservableCollection<PlayerItem> videoItems;
-
-        //Static instance for event handler
-        private static Playlist instance;
-
+        
         public Playlist()
         {
-            instance = this;
             musicItems = new ObservableCollection<PlayerItem>();
-            videoItems = new ObservableCollection<PlayerItem>();
+            videoItems = new PropertyObservingCollection<PlayerItem>();
 
             //Register for events, fired if a new item is played
             NotificationRPC.getInstance().AudioLibraryOnUpdateEvent += handleAudioLibraryUpdate;
             NotificationRPC.getInstance().PlayerStateChangedEvent += handlePlayerStateChanged;
+            NotificationRPC.getInstance().PlaylistChangedEvent += handlePlaylistChanged;
             NotificationRPC.getInstance().VideoLibraryOnUpdateEvent += handleVideoLibraryUpdate;
 
-            refreshLists();            
+            createLists();            
             InitializeComponent();
-        }        
+        }
+
+        /// <summary>
+        /// Destructor
+        /// </summary>
+        ~Playlist()
+        {
+            Debug.WriteLine("Playlist.~Playlist()");
+            //Unregister events
+            NotificationRPC.getInstance().AudioLibraryOnUpdateEvent -= handleAudioLibraryUpdate;
+            NotificationRPC.getInstance().PlayerStateChangedEvent -= handlePlayerStateChanged;
+            NotificationRPC.getInstance().VideoLibraryOnUpdateEvent -= handleVideoLibraryUpdate;
+        }
+
+        #region Methods
+
+        /// <summary>
+        /// Adds item to playlist on speficic position and sets item properties
+        /// </summary>
+        /// <param name="item">Item to add</param>
+        /// <param name="playlistId">Playlist to which the item should be added</param>
+        /// <param name="position">Position of the item</param>
+        /// <returns></returns>
+        private void addItem(PlayerItem item, int playlistId, int position)
+        {
+            
+            Debug.WriteLine("Playlist.Add: Adding item :" + item.id + " - " + item.title + " on position " + position + " to playlist " + playlistId);
+            if(playlistId == Constants.KODI_AUDIO_PLAYLIST_ID)
+            {
+                musicItems.Insert(position, item);
+            }
+            if(playlistId == Constants.KODI_VIDEO_PLAYLIST_ID)
+            {
+                videoItems.Insert(position, item);
+            }
+            Task.Run(() => PlaylistRPC.getItemProperties(item));
+
+        }
+
+        private async void clearPlaylist(int playlistId)
+        {
+            if(playlistId == Constants.KODI_AUDIO_PLAYLIST_ID)
+            {
+                musicItems.Clear();
+            }
+            if(playlistId == Constants.KODI_VIDEO_PLAYLIST_ID)
+            {
+                videoItems.Clear();
+            }
+        }
 
         /// <summary>
         /// Refreshes list views according to the active playlist. Receives a new item collection instance
         /// </summary>
         /// <returns>Task</returns>
-        private async Task refreshLists()
+        private async Task createLists()
         {
             Player[] players = await PlayerRPC.getActivePlayers();
             if(players.Length == 0)
@@ -72,10 +118,9 @@ namespace K_Remote.Pages
                     playlist_notification_textblock.Text = "Audio";
 
                     musicItems.Clear();
-                    ObservableCollection<PlayerItem> newMusicItems = await PlaylistRPC.getPlaylistItems();
-                    if (newMusicItems != null && newMusicItems.Count > 0)
+                    musicItems = await PlaylistRPC.getPlaylistItems();
+                    if (musicItems != null && musicItems.Count > 0)
                     {
-                        musicItems = newMusicItems;
 
                         foreach (PlayerItem p in musicItems)
                         {
@@ -99,18 +144,16 @@ namespace K_Remote.Pages
                         playlist_notification_textblock.Text = "No items in playlist";
                         Debug.WriteLine("No items in audio playlist");
                     }
-                    break;
+                break;
                 case Constants.KODI_VIDEO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
                     playlist_notification_textblock.Text = "Video";
 
                     videoItems.Clear();
-                    ObservableCollection<PlayerItem> newVideoItems = await PlaylistRPC.getPlaylistItems();
-                    if (newVideoItems != null && newVideoItems.Count >0)
+                    videoItems = await PlaylistRPC.getPlaylistItems();
+                    if (videoItems != null && videoItems.Count >0)
                     {
-                        videoItems = newVideoItems;
-                    
                         foreach (PlayerItem p in videoItems)
                         {
                             p.currentlyPlayed = false;
@@ -132,20 +175,12 @@ namespace K_Remote.Pages
                         playlist_notification_textblock.Text = "No items in playlist";
                         Debug.WriteLine("Playlist.refreshList: No items in video playlist");
                     }
-                    break;
+                break;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Handles onNavigatedTo event
-        /// </summary>
-        /// <param name="e">Event args</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            SettingsManager.getInstance().setLastPage("playlist");
-            base.OnNavigatedTo(e);
-        }
-
+        #region UI event handler
         /// <summary>
         /// Invoked if a music list item is clicked. Sends goto message to play selected item
         /// </summary>
@@ -175,25 +210,54 @@ namespace K_Remote.Pages
                 PlayerRPC.goTo(position: videoItems.IndexOf(picked));
             }
         }
+        #endregion
 
+        #region event handler
         /// <summary>
         /// Handles playlist changes. RefreshesLists
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="args">Event args</param>
-        static void handlePlayerStateChanged(object sender, NotificationEventArgs args)
+        void handlePlayerStateChanged(object sender, NotificationEventArgs args)
         {
-           instance.refreshLists();
         }
 
-        static void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
+        void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
         {
-            instance.refreshLists();
         }
 
-        static void handleVideoLibraryUpdate(object sender, NotificationEventArgs args)
+        void handleVideoLibraryUpdate(object sender, NotificationEventArgs args)
         {
-            instance.refreshLists();
         }
+
+        void handlePlaylistChanged(object sender, NotificationEventArgs args)
+        {
+            switch (args.playlistChanged.method)
+            {
+                case "Playlist.OnAdd":
+                    addItem(args.playlistChanged.@params.data.item,
+                        args.playlistChanged.@params.data.playlistid,
+                        args.playlistChanged.@params.data.position);
+                   
+                    break;
+                case "Playlist.OnClear":
+                    clearPlaylist(args.playlistChanged.@params.data.playlistid);
+                    break;
+                case "Playlist.OnRemove":
+                    break;
+                default: Debug.WriteLine("Playlist.handlePlaylistChanged: Invalid Method: " + args.playlistChanged.method); break;
+            }
+        }
+
+        /// <summary>
+        /// Handles onNavigatedTo event
+        /// </summary>
+        /// <param name="e">Event args</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SettingsManager.getInstance().setLastPage("playlist");
+            base.OnNavigatedTo(e);
+        }
+        #endregion
     }
 }
