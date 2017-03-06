@@ -31,7 +31,6 @@ namespace K_Remote.Utils
 
         private void RaisePropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            Debug.WriteLine("Collection: property changed: " + args.PropertyName);
             OnPropertyChanged(args);
         }
 

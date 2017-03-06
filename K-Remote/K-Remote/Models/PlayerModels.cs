@@ -1,4 +1,5 @@
-﻿using K_Remote.Utils;
+﻿using K_Remote.Resources;
+using K_Remote.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -118,10 +119,12 @@ namespace K_Remote.Models
                 if (value == true)
                 {
                     background = Application.Current.Resources["SystemAccentColor"].ToString();
+                    playIndicator = Constants.ICON_NOW_PLAYED;
                 }
                 else
                 {
                     background = "transparent";
+                    playIndicator = "";
                 }
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(background)));
             }
@@ -165,35 +168,49 @@ namespace K_Remote.Models
         /// <summary>
         /// Private field, holding value of pickedInListViewString and pickedInListViewBool
         /// </summary>
-        private string m_pickedInListViewString = "Collapsed";
+        private string m_addButtonsVisibility = "Collapsed";
 
         /// <summary>
         /// Determines if the item is picked in playlist ListViews
         /// </summary>
-        public string pickedInListViewString
+        public string addButtonsVisibility
         {
             get
             {
-                return m_pickedInListViewString;
+                return m_addButtonsVisibility;
             }
             set
             {
-                if(value == "Collapsed" || value == "Visible")
+                if(value == "Visible"|| value == "Collapsed")
                 {
-                    m_pickedInListViewString = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(pickedInListViewString)));
+                    m_addButtonsVisibility = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(addButtonsVisibility)));
                 }
+            }
+        }
+
+        private string m_playIndicator = "";
+
+        public string playIndicator
+        {
+            get
+            {
+                return m_playIndicator;
+            }
+            private set
+            {
+                m_playIndicator = value;
             }
         }
 
         /// <summary>
         /// Determines if the item is picked in playlist ListViews
         /// </summary>
-        public bool pickedInListViewBool
+        public bool pickedInListView
         {
             get
             {
-                if(m_pickedInListViewString == "Visible")
+                if (addButtonsVisibility == "Visible")
                 {
                     return true;
                 }
@@ -204,15 +221,14 @@ namespace K_Remote.Models
             }
             set
             {
-                if(value == true)
+                if (value == true)
                 {
-                    m_pickedInListViewString = "Visible";
+                    addButtonsVisibility = "Visible";
                 }
                 else
                 {
-                    m_pickedInListViewString = "Collapsed";
+                    addButtonsVisibility = "Collapsed";
                 }
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(pickedInListViewString)));
             }
         }
 

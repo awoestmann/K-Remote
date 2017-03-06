@@ -44,7 +44,7 @@ namespace K_Remote.Pages
             NotificationRPC.getInstance().PlaylistChangedEvent += handlePlaylistChanged;
             NotificationRPC.getInstance().VideoLibraryOnUpdateEvent += handleVideoLibraryUpdate;
 
-            Task.Run(() => createLists());            
+            createLists();            
             InitializeComponent();
         }
 
@@ -193,11 +193,11 @@ namespace K_Remote.Pages
                     {
                         if(iItem.id == item.id)
                         {
-                            iItem.pickedInListViewBool = true;
+                            iItem.pickedInListView = true;
                         }
                         else
                         {
-                            iItem.pickedInListViewBool = false;
+                            iItem.pickedInListView = false;
                         }
                     }
                     break;
@@ -259,10 +259,11 @@ namespace K_Remote.Pages
         private void playlist_video_listView_play_item_button_clicked(object sender, RoutedEventArgs args)
         {
             Debug.WriteLine("Playlist.videoItemItemDetailsButtonClicked: Should show details of: " + pickedVideoItem.title);
+            PlayerRPC.goTo(position: videoItems.IndexOf(pickedVideoItem));
         }
 
         /// <summary>
-        /// Invoked if a video list item is clicked. Sends goto message to play selected item
+        /// Invoked if a video list item is clicked
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="e">Event args containing picked item</param>
@@ -273,8 +274,6 @@ namespace K_Remote.Pages
             {
                 pickedVideoItem = e.AddedItems[0] as PlayerItem;
                 setPickedItem(pickedVideoItem, Constants.KODI_VIDEO_PLAYLIST_ID);
-
-                //PlayerRPC.goTo(position: videoItems.IndexOf(pickedVideoItem));
             }
         }
         #endregion

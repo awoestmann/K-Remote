@@ -55,8 +55,8 @@ namespace K_Remote.Pages
             Debug.WriteLine("Remote.refreshGui: refreshing");
             try
             {
-                Task.Run(async () => setVolumeSlider(await ApplicationRPC.getVolume()));
-                Task.Run(() => setPlayPauseIcon());
+                setVolumeSlider(await ApplicationRPC.getVolume());
+                setPlayPauseIcon();
             }
             catch (Exception e)
             {
