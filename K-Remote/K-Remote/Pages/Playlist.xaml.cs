@@ -33,7 +33,7 @@ namespace K_Remote.Pages
         public Playlist()
         {
             musicItems = new ObservableCollection<PlayerItem>();
-            videoItems = new PropertyObservingCollection<PlayerItem>();
+            videoItems = new ObservableCollection<PlayerItem>();
 
             //Register for events, fired if a new item is played
             NotificationRPC.getInstance().AudioLibraryOnUpdateEvent += handleAudioLibraryUpdate;
@@ -78,7 +78,9 @@ namespace K_Remote.Pages
             {
                 videoItems.Insert(position, item);
             }
-            Task.Run(() => PlaylistRPC.getItemProperties(item));
+            //TODO: Fix ugly workaround
+            Task.WaitAll(Task.Run(() => PlaylistRPC.getItemProperties(item)));
+            Debug.WriteLine("Playlist.additem: New item title: " + videoItems[position].title);
 
         }
 
