@@ -52,9 +52,16 @@ namespace K_Remote.Pages
 
         private async void refreshGui()
         {
-             Debug.WriteLine("Remote.refreshGui: refreshing");
-             setVolumeSlider(await ApplicationRPC.getVolume());
-            setPlayPauseIcon();
+            Debug.WriteLine("Remote.refreshGui: refreshing");
+            try
+            {
+                Task.Run(async () => setVolumeSlider(await ApplicationRPC.getVolume()));
+                Task.Run(() => setPlayPauseIcon());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Remote.refreshGui: failed refreshing GUI: " + e);
+            }
         }
 
         /// <summary>

@@ -73,9 +73,25 @@ namespace K_Remote.Models
         public string album { get; set; }
 
         /// <summary>
+        /// A private field holding artist property value
+        /// </summary>
+        private string[] m_artist;
+
+        /// <summary>
         /// Artists
         /// </summary>
-        public string[] artist { get; set; }
+        public string[] artist
+        {
+            get
+            {
+                return m_artist;
+            }
+            set
+            {
+                m_artist = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(artistProperty)));
+            }
+        }
 
         /// <summary>
         /// Read-only property holding a color string
@@ -107,6 +123,7 @@ namespace K_Remote.Models
                 {
                     background = "transparent";
                 }
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(background)));
             }
         }
 
@@ -146,6 +163,60 @@ namespace K_Remote.Models
         }
 
         /// <summary>
+        /// Private field, holding value of pickedInListViewString and pickedInListViewBool
+        /// </summary>
+        private string m_pickedInListViewString = "Collapsed";
+
+        /// <summary>
+        /// Determines if the item is picked in playlist ListViews
+        /// </summary>
+        public string pickedInListViewString
+        {
+            get
+            {
+                return m_pickedInListViewString;
+            }
+            set
+            {
+                if(value == "Collapsed" || value == "Visible")
+                {
+                    m_pickedInListViewString = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(pickedInListViewString)));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determines if the item is picked in playlist ListViews
+        /// </summary>
+        public bool pickedInListViewBool
+        {
+            get
+            {
+                if(m_pickedInListViewString == "Visible")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if(value == true)
+                {
+                    m_pickedInListViewString = "Visible";
+                }
+                else
+                {
+                    m_pickedInListViewString = "Collapsed";
+                }
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(pickedInListViewString)));
+            }
+        }
+
+        /// <summary>
         /// Private field holding item title
         /// </summary>
         private string m_title;
@@ -161,10 +232,7 @@ namespace K_Remote.Models
             set
             {
                 m_title = value;
-                if(PropertyChanged != null)
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(title)));
-                }
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(title)));
             }
         }
 
@@ -188,9 +256,7 @@ namespace K_Remote.Models
 
         protected void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            Debug.WriteLine("PlayerItem.OnPropertyChanged");
-            Debug.WriteLine("Listeners: " + PropertyChanged.GetInvocationList().Length);
-            //PropertyChanged?.Invoke(this, args);
+            PropertyChanged?.Invoke(this, args);
         }
 
         /// <summary>

@@ -29,6 +29,9 @@ namespace K_Remote.Pages
     {
         private ObservableCollection<PlayerItem> musicItems;
         private ObservableCollection<PlayerItem> videoItems;
+
+        private PlayerItem pickedVideoItem;
+        private PlayerItem pickedAudioItem;
         
         public Playlist()
         {
@@ -41,7 +44,7 @@ namespace K_Remote.Pages
             NotificationRPC.getInstance().PlaylistChangedEvent += handlePlaylistChanged;
             NotificationRPC.getInstance().VideoLibraryOnUpdateEvent += handleVideoLibraryUpdate;
 
-            createLists();            
+            Task.Run(() => createLists());            
             InitializeComponent();
         }
 
@@ -180,6 +183,56 @@ namespace K_Remote.Pages
                 break;
             }
         }
+
+        private void setPickedItem(PlayerItem item, int playlistId)
+        {
+            switch (playlistId)
+            {
+                case Constants.KODI_VIDEO_PLAYLIST_ID:
+                    foreach(PlayerItem iItem in videoItems)
+                    {
+                        if(iItem.id == item.id)
+                        {
+                            iItem.pickedInListViewBool = true;
+                        }
+                        else
+                        {
+                            iItem.pickedInListViewBool = false;
+                        }
+                    }
+                    break;
+                case Constants.KODI_AUDIO_PLAYLIST_ID: break;
+                default: Debug.WriteLine("Playlist.setPickedItem: Unknown playlistid: " + playlistId); break;
+            }
+        }
+
+        /// <summary>
+        /// Changes currentlyPlayed property of all items in specified playlist to false, except for the item with given id.
+        /// </summary>
+        /// <param name="id">Item id which is now active</param>
+        /// <param name="playerid">Id of Affected player</param>
+        private void setPlayedItem(string id, int playerid)
+        {
+            switch (playerid)
+            {
+                case Constants.KODI_AUDIO_PLAYER_ID: break;
+                case Constants.KODI_VIDEO_PLAYER_ID:
+                    foreach(PlayerItem item in videoItems)
+                    {
+                        if(item.id == id)
+                        {
+                            item.currentlyPlayed = true;
+                        }
+                        else
+                        {
+                            item.currentlyPlayed = false;
+                        }
+                    }
+                    break;
+                default: Debug.WriteLine("Playlist.setActiveItem: playerid"); break;
+            }
+        }
+
         #endregion
 
         #region UI event handler
@@ -198,6 +251,16 @@ namespace K_Remote.Pages
             }
         }
 
+        private void playlist_video_listView_item_details_button_clicked(object sender, RoutedEventArgs args)
+        {
+            Debug.WriteLine("Playlist.videoItemPlayButtonClicked: Should play: " + pickedVideoItem.title);
+        }
+
+        private void playlist_video_listView_play_item_button_clicked(object sender, RoutedEventArgs args)
+        {
+            Debug.WriteLine("Playlist.videoItemItemDetailsButtonClicked: Should show details of: " + pickedVideoItem.title);
+        }
+
         /// <summary>
         /// Invoked if a video list item is clicked. Sends goto message to play selected item
         /// </summary>
@@ -208,8 +271,10 @@ namespace K_Remote.Pages
             //There should be only one picked item
             if(e.AddedItems.Count == 1)
             {
-                PlayerItem picked = e.AddedItems[0] as PlayerItem;
-                PlayerRPC.goTo(position: videoItems.IndexOf(picked));
+                pickedVideoItem = e.AddedItems[0] as PlayerItem;
+                setPickedItem(pickedVideoItem, Constants.KODI_VIDEO_PLAYLIST_ID);
+
+                //PlayerRPC.goTo(position: videoItems.IndexOf(pickedVideoItem));
             }
         }
         #endregion
@@ -222,10 +287,16 @@ namespace K_Remote.Pages
         /// <param name="args">Event args</param>
         void handlePlayerStateChanged(object sender, NotificationEventArgs args)
         {
+            if(args.playerState.method == "Player.OnPlay")
+            {
+                Debug.WriteLine("Playlist.handlePlayerStateChanged: New item played, id: " + args.playerState.@params.data.item.id);
+                setPlayedItem(args.playerState.@params.data.item.id, args.playerState.@params.data.player.playerId);
+            }
         }
 
         void handleAudioLibraryUpdate(object sender, NotificationEventArgs args)
         {
+
         }
 
         void handleVideoLibraryUpdate(object sender, NotificationEventArgs args)

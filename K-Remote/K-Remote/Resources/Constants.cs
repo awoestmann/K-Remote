@@ -46,6 +46,10 @@ namespace K_Remote.Resources
         #endregion
 
         #region iconStrings
+        public const string ICON_NOW_PLAYED = "\uEA37";
+
+        public const string ICON_ITEM_DETAILS = "\uE712";
+
         /// <summary>
         /// String representation of play icon in segoe font
         /// </summary>
@@ -55,6 +59,11 @@ namespace K_Remote.Resources
         /// String representation of pause icon in segoe font
         /// </summary>
         public const string ICON_PAUSE = "\uE769";
-        #endregion        
+
+        /// <summary>
+        /// String representation of stop icon in segoe font
+        /// </summary>
+        public const string ICON_STOP = "\uE71A";
+        #endregion
     }
 }

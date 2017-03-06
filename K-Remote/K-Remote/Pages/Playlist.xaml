@@ -16,10 +16,14 @@
         <ListView x:Name="playlist_video_listview" HorizontalAlignment="Left" Height="456" Margin="-10,95,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_video_listview_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Width="274" HorizontalAlignment="Left" Background="{Binding background}">
+                    <StackPanel Orientation="Horizontal" Width="350" HorizontalAlignment="Left" Background="{Binding background}">
                         <StackPanel>
                             <TextBlock Text="{Binding title , Mode=TwoWay}" FontSize="24"/>
                             <TextBlock Text="{Binding seriesProperty , Mode=TwoWay}" FontSize="16"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding pickedInListViewString}">
+                            <Button Height="50" Width="50" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE768;" Margin="5 5 5 5"  Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Visibility="Collapsed" Click="playlist_video_listView_play_item_button_clicked"/>
+                            <Button Height="50" Width="50" FontFamily="Segoe MDL2 Assets" FontSize="24" Content="&#xE712;" Margin="5 5 5 5" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Visibility="Collapsed" Click="playlist_video_listView_item_details_button_clicked"/>
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
