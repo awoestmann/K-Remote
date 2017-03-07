@@ -200,6 +200,7 @@ namespace K_Remote.Models
             private set
             {
                 m_playIndicator = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(playIndicator)));
             }
         }
 
@@ -338,13 +339,14 @@ namespace K_Remote.Models
     class StreamDetails
     {
         public StreamDetailItem[] audio;
-        public StreamDetailItem[] subtitles;
+        public StreamDetailItem[] subtitle;
         public StreamDetailItem[] video;
     }
 
     class StreamDetailItem
     {
         public float aspect;
+        public string channels;
         public string codec;
         public int duration;
         public int height;

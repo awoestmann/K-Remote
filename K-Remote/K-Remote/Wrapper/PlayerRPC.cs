@@ -125,7 +125,19 @@ namespace K_Remote.Wrapper
                 Debug.WriteLine("PlayerRPC.getPlayerspeed: Error parsing speed response: " + response);
                 return null;
             }
+        }
 
+        public static async Task<StreamDetails> getStreamDetails()
+        {
+            PlayerItem current = await getItem();
+            if(current == null)
+            {
+                return null;
+            }
+            else
+            {
+                return current.streamdetails;
+            }
         }
 
         /// <summary>
@@ -183,6 +195,48 @@ namespace K_Remote.Wrapper
                 var responseJson = await handler.sendHttpRequest("Player.PlayPause", new JObject(new JProperty("playerid", i.playerId)));
 
             }             
+        }
+
+        /// <summary>
+        /// Sets audio stream by index
+        /// </summary>
+        /// <param name="streamIndex">Audio stream index</param>
+        /// <returns></returns>
+        public static async Task setAudioStream(int streamIndex)
+        {
+            ConnectionHandler handler = ConnectionHandler.getInstance();
+            Player[] players = await getActivePlayers();
+            var responseJson = await handler.sendHttpRequest("Player.SetAudioStream", 
+                new JObject(
+                    new JProperty("playerid", players[0].playerId),
+                    new JProperty("stream", streamIndex)
+                )
+            );
+        }
+
+        /// <summary>
+        /// Sets subtitle by index or disables them
+        /// </summary>
+        /// <param name="subtitleIndex">Subtitle index, -1 disables subtitles</param>
+        /// <returns></returns>
+        public static async Task setSubtitle(int subtitleIndex)
+        {
+            ConnectionHandler handler = ConnectionHandler.getInstance();
+            Player[] players = await getActivePlayers();
+            bool enabled = true;
+            if(subtitleIndex == -1)
+            {
+                enabled = false;
+                subtitleIndex = 0;
+            }
+
+            var responseJson = await handler.sendHttpRequest("Player.SetSubtitle",
+                new JObject(
+                    new JProperty("playerid", players[0].playerId),
+                    new JProperty("subtitle", subtitleIndex),
+                    new JProperty("enable", enabled)
+                )
+            );
         }
 
         public static async void stop()

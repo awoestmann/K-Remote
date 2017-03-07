@@ -13,7 +13,7 @@
                 <TextBlock x:Name="playlist_page_title" Text="Playlist" TextAlignment="Left" FontSize="30"/>
             </CommandBar.Content>
         </CommandBar>
-        <ListView x:Name="playlist_video_listview" HorizontalAlignment="Left" Height="456" Margin="-10,95,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_video_listview_SelectionChanged">
+        <ListView x:Name="playlist_video_listview" HorizontalAlignment="Left" Height="456" Margin="0,95,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_video_listview_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Width="360" HorizontalAlignment="Left" Background="{Binding background}">

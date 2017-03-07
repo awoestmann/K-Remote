@@ -33,10 +33,13 @@ namespace K_Remote.Pages
         private PlayerItem pickedVideoItem;
         private PlayerItem pickedAudioItem;
         
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Playlist()
         {
-            musicItems = new ObservableCollection<PlayerItem>();
-            videoItems = new ObservableCollection<PlayerItem>();
+            musicItems = new PropertyObservingCollection<PlayerItem>();
+            videoItems = new PropertyObservingCollection<PlayerItem>();
 
             //Register for events, fired if a new item is played
             NotificationRPC.getInstance().AudioLibraryOnUpdateEvent += handleAudioLibraryUpdate;
@@ -87,6 +90,10 @@ namespace K_Remote.Pages
 
         }
 
+        /// <summary>
+        /// Clears the given playlist
+        /// </summary>
+        /// <param name="playlistId">Id of playlist to clear</param>
         private async void clearPlaylist(int playlistId)
         {
             if(playlistId == Constants.KODI_AUDIO_PLAYLIST_ID)
@@ -184,6 +191,11 @@ namespace K_Remote.Pages
             }
         }
 
+        /// <summary>
+        /// Marks an item as picked in a playlist
+        /// </summary>
+        /// <param name="item">The picked item</param>
+        /// <param name="playlistId">Id of the playlist, containing the item</param>
         private void setPickedItem(PlayerItem item, int playlistId)
         {
             switch (playlistId)
@@ -302,6 +314,11 @@ namespace K_Remote.Pages
         {
         }
 
+        /// <summary>
+        /// Handles playlist changes like add and remove an item or clear the list
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="args">Notification content, containing method and playlistid</param>
         void handlePlaylistChanged(object sender, NotificationEventArgs args)
         {
             switch (args.playlistChanged.method)

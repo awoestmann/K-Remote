@@ -30,9 +30,20 @@ namespace K_Remote.Pages
         private static Remote staticInstance;
 
         /// <summary>
-        /// Default constructor
+        /// A RadioButton subclass, holding the index of an audiostream or subtitle
         /// </summary>
-        public Remote()
+        private class IndexedRadioButton : RadioButton
+        {
+            /// <summary>
+            /// Audiostream/subtitle index
+            /// </summary>
+            public int Index { get; set; }
+        }
+
+            /// <summary>
+            /// Default constructor
+            /// </summary>
+            public Remote()
         {
             this.InitializeComponent();
             staticInstance = this;
@@ -44,19 +55,19 @@ namespace K_Remote.Pages
         private async void init()
         {
             ConnectionHandler.getInstance().ConnectionStateChanged += onConnectionStateChanged;
-            NotificationRPC.getInstance().VolumeChangedEvent += volumeChanged;
-            NotificationRPC.getInstance().InputRequestedEvent += inputRequested;
-            NotificationRPC.getInstance().PlayerStateChangedEvent += playerStateChanged;
-            refreshGui();
+            NotificationRPC.getInstance().VolumeChangedEvent += onVolumeChanged;
+            NotificationRPC.getInstance().InputRequestedEvent += onInputRequested;
+            NotificationRPC.getInstance().PlayerStateChangedEvent += onPlayerStateChanged;
+            //refreshGui();
         }
 
         private async void refreshGui()
         {
-            Debug.WriteLine("Remote.refreshGui: refreshing");
             try
             {
                 setVolumeSlider(await ApplicationRPC.getVolume());
                 setPlayPauseIcon();
+                setStreamDetails();
             }
             catch (Exception e)
             {
@@ -115,6 +126,84 @@ namespace K_Remote.Pages
             {
                 Debug.WriteLine("Remote->InputDialog: Canceled or None");
             }
+        }
+
+        /// <summary>
+        /// Gets audio streams and subtitles of currently played item and sets items in appbar menus accordingly
+        /// </summary>
+        /// <returns>Task</returns>
+        private async Task setStreamDetails()
+        {
+            StreamDetails details = await PlayerRPC.getStreamDetails();
+
+            //Handle audio streams
+            remote_language_stackpanel.Children.Clear();
+            bool first = true;
+            if(details.audio != null) {
+                for(int i = 0; i<details.audio.Length; i++)
+                {
+                    StreamDetailItem audioItem = details.audio[i];
+                    IndexedRadioButton newButton = new IndexedRadioButton();
+                    if (first)
+                    {
+                        newButton.IsChecked = true;
+                        first = false;
+                    }
+                    else
+                    {
+                        newButton.IsChecked = false;
+                    }
+                    newButton.Content = audioItem.codec + "@" + audioItem.channels + " Channels(" + audioItem.language + ")";
+                    newButton.Index = i;
+                    newButton.Checked += remote_language_radio_button_checked;
+                    remote_language_stackpanel.Children.Add(newButton);
+                }
+            }
+            else
+            {
+                IndexedRadioButton invalid = new IndexedRadioButton();
+                invalid.Content = "No valid Audio stream received";
+                invalid.Index = -1;
+                invalid.IsChecked = true;
+                remote_language_stackpanel.Children.Add(invalid);
+            }
+
+            //Handle subtitles
+            remote_subtitle_stackpanel.Children.Clear();
+
+            //Add button for deactivated subtitles
+            IndexedRadioButton subtitleButton = new IndexedRadioButton();
+            subtitleButton.Content = "None";
+            subtitleButton.Index = -1;
+            
+            //Check it if no other subtitles are given
+            if(details.subtitle == null || details.subtitle.Length == 0)
+            {
+                subtitleButton.IsChecked = true;
+                subtitleButton.Checked += remote_subtitle_radio_button_checked;
+                remote_subtitle_stackpanel.Children.Add(subtitleButton);
+            }
+            else
+            {
+                remote_subtitle_stackpanel.Children.Add(subtitleButton);
+                subtitleButton.Checked += remote_subtitle_radio_button_checked;
+                first = true;
+                for (int j = 0; j<details.subtitle.Length; j++)
+                {
+                    Debug.WriteLine("Subtitle: ");
+                    StreamDetailItem subtitleItem = details.subtitle[j];                    
+                    subtitleButton = new IndexedRadioButton();
+                    subtitleButton.Content = subtitleItem.language;
+                    if (first)
+                    {
+                        subtitleButton.IsChecked = true;
+                        first = false;
+                    }
+                    subtitleButton.Checked += remote_subtitle_radio_button_checked;
+                    remote_subtitle_stackpanel.Children.Add(subtitleButton);
+                }
+            }
+                   
         }
 
         /// <summary>
@@ -183,25 +272,16 @@ namespace K_Remote.Pages
 
         #region event handler
 
-        static void onConnectionStateChanged(object sender, connectionStateChangedEventArgs args)
-        {
-            if (args.state)
-            {
-                staticInstance.refreshGui();
-            }
-        }
-
         /// <summary>
-        /// Event handler for volume changed events
+        /// Event handler for connection state changes, refreshes gui if connection is active
         /// </summary>
         /// <param name="sender">Sending instance</param>
         /// <param name="args">Event args</param>
-        static void volumeChanged(object sender, NotificationEventArgs args)
+        private void onConnectionStateChanged(object sender, connectionStateChangedEventArgs args)
         {
-            Debug.WriteLine("Remote: New Volume :" + args.volumeChanged.@params.data.volume);
-            if (staticInstance != null)
+            if (args.state)
             {
-                Remote.staticInstance.setVolumeSlider(args.volumeChanged.@params.data.volume);
+                refreshGui();
             }
         }
 
@@ -210,7 +290,7 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender">Sender instance</param>
         /// <param name="args">Event args</param>
-        static void inputRequested(object sender, NotificationEventArgs args)
+        static void onInputRequested(object sender, NotificationEventArgs args)
         {
             Debug.WriteLine("Input Requested @remote");
             if (staticInstance != null)
@@ -225,17 +305,35 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender"> Sending instance</param>
         /// <param name="args">Event arguments</param>
-        static void playerStateChanged(Object sender, NotificationEventArgs args)
+        void onPlayerStateChanged(Object sender, NotificationEventArgs args)
         {
             if (args.playerState.@params.data.player.speed == 0)
             {
                 //Switch to play icon
-                staticInstance.remote_button_playPause.Content = "\uE768";
+                remote_button_playPause.Content = "\uE768";
             }
             else
             {
                 //Switch to pause icon
-                staticInstance.remote_button_playPause.Content = "\uE769";
+                remote_button_playPause.Content = "\uE769";
+            }
+            if (args.playerState.method == "Player.OnPlay")
+            {
+                setStreamDetails();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for volume changed events
+        /// </summary>
+        /// <param name="sender">Sending instance</param>
+        /// <param name="args">Event args</param>
+        private void onVolumeChanged(object sender, NotificationEventArgs args)
+        {
+            Debug.WriteLine("Remote: New Volume :" + args.volumeChanged.@params.data.volume);
+            if (staticInstance != null)
+            {
+                Remote.staticInstance.setVolumeSlider(args.volumeChanged.@params.data.volume);
             }
         }
 
@@ -252,6 +350,28 @@ namespace K_Remote.Pages
         #endregion
 
         #region UI controls handlers
+
+        /// <summary>
+        /// Fired if a audio stream radio button is checked
+        /// </summary>
+        /// <param name="sender">Sending button</param>
+        /// <param name="args">Event args</param>
+        private void remote_language_radio_button_checked(object sender, RoutedEventArgs args)
+        {
+            IndexedRadioButton sendingButton = sender as IndexedRadioButton;
+            PlayerRPC.setAudioStream(sendingButton.Index);
+        }
+
+        /// <summary>
+        /// Fired if a subtitle radio button is checked
+        /// </summary>
+        /// <param name="sender">Sending button</param>
+        /// <param name="args">Event args</param>
+        private void remote_subtitle_radio_button_checked(object sender, RoutedEventArgs args)
+        {
+            IndexedRadioButton sendingButton = sender as IndexedRadioButton;
+            PlayerRPC.setSubtitle(sendingButton.Index);
+        }
 
         /// <summary>
         /// Event handler for volume slider changed events

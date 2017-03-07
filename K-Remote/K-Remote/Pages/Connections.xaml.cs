@@ -28,6 +28,9 @@ namespace K_Remote
         /// </summary>
         private bool deleteMode;
 
+        /// <summary>
+        /// Determines if click on a list item shows edit connection page
+        /// </summary>
         private bool editMode;
 
         public Connections()
@@ -85,6 +88,7 @@ namespace K_Remote
 
             if(!deleteMode && editMode)
             {
+                editMode = false;
                 Shell.navigateToCreateConnection(chosenCon.toSettingsString());
             }
             

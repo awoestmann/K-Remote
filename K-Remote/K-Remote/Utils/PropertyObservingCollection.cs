@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace K_Remote.Utils
 {
+    /// <summary>
+    /// A Collection forwarding PropertyChangedEvents to listen for property changes at collections content
+    /// </summary>
+    /// <typeparam name="T">Content type, needs to implement INotifyPropertyChanged</typeparam>
     class PropertyObservingCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
     {
         public PropertyObservingCollection() : base() { }

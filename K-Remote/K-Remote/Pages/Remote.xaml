@@ -18,8 +18,6 @@
                     <AppBarButton.Flyout>
                         <Flyout>
                             <StackPanel Orientation="Vertical" x:Name="remote_subtitle_stackpanel">
-                                <RadioButton Content="1" IsChecked="True"></RadioButton>
-                                <RadioButton Content="2"></RadioButton>
                             </StackPanel>
                         </Flyout>
                     </AppBarButton.Flyout>
@@ -28,8 +26,6 @@
                     <AppBarButton.Flyout>
                         <Flyout>
                             <StackPanel Orientation="Vertical" x:Name="remote_language_stackpanel">
-                                <RadioButton Content="1" IsChecked="True"></RadioButton>
-                                <RadioButton Content="2"></RadioButton>
                             </StackPanel>
                         </Flyout>
                     </AppBarButton.Flyout>

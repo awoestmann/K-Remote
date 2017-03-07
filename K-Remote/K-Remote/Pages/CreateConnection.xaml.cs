@@ -45,6 +45,7 @@ namespace K_Remote.Pages
         /// <param name="e">Event args</param>
         private void button_cancel_Click(object sender, RoutedEventArgs e)
         {
+            toEdit = null;
             Shell.navigateToConnections();
         }
 
@@ -95,6 +96,7 @@ namespace K_Remote.Pages
                     SettingsManager.getInstance().updateConnection(toEdit, con);
                 }
 
+                toEdit = null;
                 Shell.navigateToConnections();
             }
             else
