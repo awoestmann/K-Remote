@@ -20,6 +20,10 @@ namespace K_Remote.Utils
         /// <returns>String representation of channel count.</returns>
         public static string getChannelStringByChannelCount(string channelCount)
         {
+            if(channelCount == null || channelCount == "")
+            {
+                return "";
+            }
             switch (channelCount)
             {
                 case "2": return "2.0";

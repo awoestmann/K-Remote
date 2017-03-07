@@ -30,7 +30,6 @@ namespace K_Remote.Wrapper
         {
             string response = await ConnectionHandler.getInstance().sendHttpRequest("Application.GetProperties",
                 new JObject(new JProperty("properties", new String[1] { "volume" })));
-            Debug.WriteLine(response);
             return JsonConvert.DeserializeObject<ApplicationProperties>(response).result.volume;
         }
     }

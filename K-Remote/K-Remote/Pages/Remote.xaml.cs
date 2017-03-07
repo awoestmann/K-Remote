@@ -38,12 +38,29 @@ namespace K_Remote.Pages
             /// Audiostream/subtitle index
             /// </summary>
             public int Index { get; set; }
+
+            /// <summary>
+            /// Default Constructor
+            /// </summary>
+            public IndexedRadioButton() : base() { }
+
+            /// <summary>
+            /// Constructor with given button content and check property
+            /// </summary>
+            /// <param name="Content">Button content</param>
+            /// <param name="IsChecked">Checked property</param>
+            public IndexedRadioButton(string Content, bool IsChecked) : base()
+            {
+                Index = -1;
+                this.Content = Content;
+                this.IsChecked = IsChecked;
+            }
         }
 
             /// <summary>
             /// Default constructor
             /// </summary>
-            public Remote()
+        public Remote()
         {
             this.InitializeComponent();
             staticInstance = this;
@@ -136,9 +153,18 @@ namespace K_Remote.Pages
         {
             StreamDetails details = await PlayerRPC.getStreamDetails();
 
-            //Handle audio streams
             remote_language_stackpanel.Children.Clear();
-            if(details.audio != null) {
+            remote_subtitle_stackpanel.Children.Clear();
+
+            if (details == null)
+            {
+                remote_language_stackpanel.Children.Add(new IndexedRadioButton("No Audiostream", true));
+                remote_subtitle_stackpanel.Children.Add(new IndexedRadioButton("None", true));
+                return;
+            }
+            //Handle audio streams
+            
+            if(details.audio != null && details.audio.Length > 0) {
                 for(int i = 0; i<details.audio.Length; i++)
                 {
                     StreamDetailItem audioItem = details.audio[i];
@@ -156,15 +182,13 @@ namespace K_Remote.Pages
             else
             {
                 IndexedRadioButton invalid = new IndexedRadioButton();
-                invalid.Content = "No valid Audio stream received";
+                invalid.Content = "Unknown";
                 invalid.Index = -1;
                 invalid.IsChecked = true;
                 remote_language_stackpanel.Children.Add(invalid);
             }
 
             //Handle subtitles
-            remote_subtitle_stackpanel.Children.Clear();
-
             //Add button for deactivated subtitles
             IndexedRadioButton subtitleButton = new IndexedRadioButton();
             subtitleButton.Content = "None";
@@ -277,12 +301,12 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender">Sender instance</param>
         /// <param name="args">Event args</param>
-        static void onInputRequested(object sender, NotificationEventArgs args)
+        private void onInputRequested(object sender, NotificationEventArgs args)
         {
             Debug.WriteLine("Input Requested @remote");
             if (staticInstance != null)
             {
-                Remote.staticInstance.showInputPrompt();
+                showInputPrompt();
             }
         }
 
@@ -292,7 +316,7 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="sender"> Sending instance</param>
         /// <param name="args">Event arguments</param>
-        void onPlayerStateChanged(Object sender, NotificationEventArgs args)
+        private void onPlayerStateChanged(Object sender, NotificationEventArgs args)
         {
             if (args.playerState.@params.data.player.speed == 0)
             {
@@ -320,7 +344,7 @@ namespace K_Remote.Pages
             Debug.WriteLine("Remote: New Volume :" + args.volumeChanged.@params.data.volume);
             if (staticInstance != null)
             {
-                Remote.staticInstance.setVolumeSlider(args.volumeChanged.@params.data.volume);
+                setVolumeSlider(args.volumeChanged.@params.data.volume);
             }
         }
 
