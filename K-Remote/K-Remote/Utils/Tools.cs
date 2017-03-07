@@ -8,8 +8,58 @@ using Windows.UI.Xaml.Media;
 
 namespace K_Remote.Utils
 {
-    class Tools
+    /// <summary>
+    /// Static class containting utility Methods
+    /// </summary>
+    static class Tools
     {
+        /// <summary>
+        /// Returns a string representation of a channel number. E.g. "5.1" is 6 is passed.
+        /// </summary>
+        /// <param name="channelCount">Audio channel count.</param>
+        /// <returns>String representation of channel count.</returns>
+        public static string getChannelStringByChannelCount(string channelCount)
+        {
+            switch (channelCount)
+            {
+                case "2": return "2.0";
+                case "6": return "5.1";
+                case "8": return "7.1";
+                default: return channelCount.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Returns a language string representation of an abbreviation. E.g. "English" if "en" is passed.
+        /// </summary>
+        /// <param name="abb">Abbreviated language string</param>
+        /// <returns>Language string</returns>
+        public static string getLanguageStringByabbreviation(string abb)
+        {
+            if(abb == null || abb == "")
+            {
+                return "Unknown";
+            }
+            switch (abb)
+            {
+                case "en":
+                case "EN":
+                case "eng":
+                case "ENG":
+                    return "English";
+
+                case "de":
+                case "DE":
+                case "deu":
+                case "DEU":
+                case "ger":
+                case "GER":
+                    return "German";
+
+                default: return abb;
+            }
+        }
+
         /// <summary>
         /// Converts a hex format color string to a color
         /// </summary>

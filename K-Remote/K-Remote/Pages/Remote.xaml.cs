@@ -138,26 +138,20 @@ namespace K_Remote.Pages
 
             //Handle audio streams
             remote_language_stackpanel.Children.Clear();
-            bool first = true;
             if(details.audio != null) {
                 for(int i = 0; i<details.audio.Length; i++)
                 {
                     StreamDetailItem audioItem = details.audio[i];
                     IndexedRadioButton newButton = new IndexedRadioButton();
-                    if (first)
-                    {
-                        newButton.IsChecked = true;
-                        first = false;
-                    }
-                    else
-                    {
-                        newButton.IsChecked = false;
-                    }
-                    newButton.Content = audioItem.codec + "@" + audioItem.channels + " Channels(" + audioItem.language + ")";
+
+                    newButton.Content = Tools.getLanguageStringByabbreviation(audioItem.language) 
+                        + " @ " + Tools.getChannelStringByChannelCount(audioItem.channels);
                     newButton.Index = i;
                     newButton.Checked += remote_language_radio_button_checked;
                     remote_language_stackpanel.Children.Add(newButton);
                 }
+                IndexedRadioButton audioButton = remote_language_stackpanel.Children[0] as IndexedRadioButton;
+                audioButton.IsChecked = true;
             }
             else
             {
@@ -179,7 +173,6 @@ namespace K_Remote.Pages
             //Check it if no other subtitles are given
             if(details.subtitle == null || details.subtitle.Length == 0)
             {
-                subtitleButton.IsChecked = true;
                 subtitleButton.Checked += remote_subtitle_radio_button_checked;
                 remote_subtitle_stackpanel.Children.Add(subtitleButton);
             }
@@ -187,23 +180,17 @@ namespace K_Remote.Pages
             {
                 remote_subtitle_stackpanel.Children.Add(subtitleButton);
                 subtitleButton.Checked += remote_subtitle_radio_button_checked;
-                first = true;
                 for (int j = 0; j<details.subtitle.Length; j++)
                 {
-                    Debug.WriteLine("Subtitle: ");
                     StreamDetailItem subtitleItem = details.subtitle[j];                    
                     subtitleButton = new IndexedRadioButton();
-                    subtitleButton.Content = subtitleItem.language;
-                    if (first)
-                    {
-                        subtitleButton.IsChecked = true;
-                        first = false;
-                    }
+                    subtitleButton.Content = Tools.getLanguageStringByabbreviation(subtitleItem.language);
                     subtitleButton.Checked += remote_subtitle_radio_button_checked;
                     remote_subtitle_stackpanel.Children.Add(subtitleButton);
                 }
             }
-                   
+            IndexedRadioButton button = remote_subtitle_stackpanel.Children[0] as IndexedRadioButton;
+            button.IsChecked = true;
         }
 
         /// <summary>
