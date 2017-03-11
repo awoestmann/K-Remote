@@ -111,6 +111,9 @@
     <Compile Include="Pages\CreateConnection.xaml.cs">
       <DependentUpon>CreateConnection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ItemDetails.xaml.cs">
+      <DependentUpon>ItemDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\NowPlaying.xaml.cs">
       <DependentUpon>NowPlaying.xaml</DependentUpon>
     </Compile>
@@ -182,6 +185,10 @@
     <Page Include="Pages\DeviceFamily-Mobile\Remote.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ItemDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\NowPlaying.xaml">
       <SubType>Designer</SubType>

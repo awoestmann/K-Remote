@@ -173,11 +173,15 @@ namespace K_Remote.Pages
                     newButton.Content = Tools.getLanguageStringByabbreviation(audioItem.language) 
                         + " @ " + Tools.getChannelStringByChannelCount(audioItem.channels);
                     newButton.Index = i;
+                    //Check first button
+                    if(i == 0)
+                    {
+                        newButton.IsChecked = true;
+                    }
                     newButton.Checked += remote_language_radio_button_checked;
                     remote_language_stackpanel.Children.Add(newButton);
                 }
-                IndexedRadioButton audioButton = remote_language_stackpanel.Children[0] as IndexedRadioButton;
-                audioButton.IsChecked = true;
+                
             }
             else
             {

@@ -5,8 +5,7 @@
     xmlns:local="using:K_Remote.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d">    
     <Grid Margin="0 0 0 0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <CommandBar Margin="0 0 0 0">
             <CommandBar.Content>
@@ -16,18 +15,17 @@
         <ListView x:Name="playlist_video_listview" HorizontalAlignment="Left" Height="456" Margin="0,95,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_video_listview_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Width="360" HorizontalAlignment="Left" Background="{Binding background}">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="16" Text="{Binding playIndicator}" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Width="360" HorizontalAlignment="Left" >
                         <StackPanel Width="200">
-                            <TextBlock Text="{Binding title , Mode=TwoWay}" FontSize="18"/>
-                            <TextBlock Text="{Binding seriesProperty , Mode=TwoWay}" FontSize="14"/>
+                            <TextBlock Text="{Binding title , Mode=TwoWay}" FontSize="18" Foreground="{Binding foreground}"/>
+                            <TextBlock Text="{Binding seriesProperty , Mode=TwoWay}" FontSize="14" Foreground="{Binding foreground}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding addButtonsVisibility}">
-                            <Button Height="30" Width="45" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE768;" Margin="5 5 5 5"  Background="Black" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Click="playlist_video_listView_play_item_button_clicked"/>
-                            <Button Height="30" Width="45" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE712;" Margin="5 5 5 5" Background="Black" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Click="playlist_video_listView_item_details_button_clicked"/>
+                            <Button x:Name="playlist_video_listView_play_item" Height="30" Width="45" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE768;" Margin="5 5 5 5"  Background="Black" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Click="playlist_video_listView_play_item_button_clicked"/>
+                            <Button x:Name="playlist_video_listView_item_details" Height="30" Width="45" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE712;" Margin="5 5 5 5" Background="Black" Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" ClickMode="Press" Click="playlist_video_listView_item_details_button_clicked"/>
                         </StackPanel>
                     </StackPanel>
-                </DataTemplate>
+                </DataTemplate>                
             </ListView.ItemTemplate>
         </ListView>
         <ListView x:Name="playlist_music_listview" HorizontalAlignment="Left" Height="456" Margin="0,95,0,0" VerticalAlignment="Top" Width="360" SelectionChanged="playlist_music_listview_SelectionChanged">

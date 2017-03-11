@@ -94,10 +94,23 @@ namespace K_Remote.Models
             }
         }
 
+        private string m_foreground;
+
         /// <summary>
         /// Read-only property holding a color string
         /// </summary>
-        public string background { get; private set; }
+        public string foreground
+        {
+            get
+            {
+                return m_foreground;
+            }
+            private set
+            {
+                m_foreground = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(foreground)));
+            }
+        }
 
 
         /// <summary>
@@ -118,15 +131,15 @@ namespace K_Remote.Models
             {
                 if (value == true)
                 {
-                    background = Application.Current.Resources["SystemAccentColor"].ToString();
+                    foreground = Application.Current.Resources["SystemAccentColor"].ToString();
                     playIndicator = Constants.ICON_NOW_PLAYED;
                 }
                 else
                 {
-                    background = "transparent";
+                    foreground = Application.Current.Resources["SystemBaseHighColor"].ToString(); 
                     playIndicator = "";
                 }
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(background)));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(foreground)));
             }
         }
 
@@ -142,7 +155,7 @@ namespace K_Remote.Models
                 }
                 else
                 {
-                    return String.Join(", ", artist);
+                    return string.Join(", ", artist);
                 }
             }
         }
@@ -182,9 +195,9 @@ namespace K_Remote.Models
             set
             {
                 if(value == "Visible"|| value == "Collapsed")
-                {
+                {                    
                     m_addButtonsVisibility = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(addButtonsVisibility)));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(addButtonsVisibility)));                    
                 }
             }
         }
@@ -257,7 +270,7 @@ namespace K_Remote.Models
         public int episode;
         public string fanart;
         public string file;
-        public string id;
+        public string id = "";
         public string label;
         public int season;
         public string showtitle;

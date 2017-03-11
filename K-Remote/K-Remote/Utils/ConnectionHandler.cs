@@ -147,7 +147,7 @@ namespace K_Remote.Utils
         /// </summary>
         /// <param name="jsonString">JSON to send as a string</param>
         /// <returns></returns>
-        public async Task<String> sendHttpJson(string jsonString)
+        public async Task<string> sendHttpJson(string jsonString)
         {
             Uri requestUri;
             try
@@ -173,8 +173,12 @@ namespace K_Remote.Utils
             try
             {
                 httpResponse = await httpClient.SendRequestAsync(requestMessage);
-                httpResponse.EnsureSuccessStatusCode();                    
-                httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
+                httpResponse.EnsureSuccessStatusCode();
+                
+                //Read body as Buffer and read as string to prevent wrong encoding
+                IBuffer data = await httpResponse.Content.ReadAsBufferAsync();
+                DataReader dataReader = DataReader.FromBuffer(data);
+                httpResponseBody = dataReader.ReadString(data.Length);
                 return httpResponseBody;
             }
             catch (Exception ex)
@@ -296,7 +300,7 @@ namespace K_Remote.Utils
                 byte[] readBuffer = new byte[1000];
                 while (true)
                 {
-                    readBuffer = new Byte[1000];
+                    readBuffer = new byte[1000];
                     if (webSocket != sender)
                     {
                         Debug.WriteLine("Socket no longer active");

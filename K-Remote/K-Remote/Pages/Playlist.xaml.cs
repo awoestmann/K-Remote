@@ -145,7 +145,7 @@ namespace K_Remote.Pages
                                 activeItem = p;
                             }
                         }
-                        playlist_music_listview.ItemsSource = musicItems;
+                        
                         if(activeItem != null)
                         {
                             playlist_music_listview.ScrollIntoView(activeItem);
@@ -153,13 +153,19 @@ namespace K_Remote.Pages
                     }
                     else
                     {
-                        playlist_notification_textblock.Text = "No items in playlist";
+                        //Set current item as played item
+                        current.currentlyPlayed = true;
+                        musicItems = new PropertyObservingCollection<PlayerItem>();
+                        musicItems.Add(current);
                         Debug.WriteLine("No items in audio playlist");
                     }
-                break;
+                    playlist_music_listview.ItemsSource = musicItems;
+                    break;
+
                 case Constants.KODI_VIDEO_PLAYLIST_ID:
                     playlist_music_listview.Visibility = Visibility.Collapsed;
                     playlist_video_listview.Visibility = Visibility.Visible;
+
                     playlist_notification_textblock.Text = "Video";
 
                     videoItems.Clear();
@@ -176,7 +182,7 @@ namespace K_Remote.Pages
                                 activeItem = p;
                             }
                         }
-                        playlist_video_listview.ItemsSource = videoItems;
+                        
                         if(activeItem != null)
                         {
                             playlist_video_listview.ScrollIntoView(activeItem);
@@ -184,10 +190,14 @@ namespace K_Remote.Pages
                     }
                     else
                     {
-                        playlist_notification_textblock.Text = "No items in playlist";
+                        //Set current item as played item
+                        current.currentlyPlayed = true;
+                        videoItems = new PropertyObservingCollection<PlayerItem>();
+                        videoItems.Add(current);
                         Debug.WriteLine("Playlist.refreshList: No items in video playlist");
                     }
-                break;
+                    playlist_video_listview.ItemsSource = videoItems;
+                    break;
             }
         }
 
@@ -203,14 +213,29 @@ namespace K_Remote.Pages
                 case Constants.KODI_VIDEO_PLAYLIST_ID:
                     foreach(PlayerItem iItem in videoItems)
                     {
-                        if(iItem.id == item.id)
+                        if(item.id != "")
                         {
-                            iItem.pickedInListView = true;
+                            if (iItem.id == item.id)
+                            {
+                                iItem.pickedInListView = true;
+                            }
+                            else
+                            {
+                                iItem.pickedInListView = false;
+                            }
                         }
                         else
                         {
-                            iItem.pickedInListView = false;
+                            if (iItem.title == item.title)
+                            {
+                                iItem.pickedInListView = true;
+                            }
+                            else
+                            {
+                                iItem.pickedInListView = false;
+                            }
                         }
+                        
                     }
                     break;
                 case Constants.KODI_AUDIO_PLAYLIST_ID: break;
@@ -223,21 +248,36 @@ namespace K_Remote.Pages
         /// </summary>
         /// <param name="id">Item id which is now active</param>
         /// <param name="playerid">Id of Affected player</param>
-        private void setPlayedItem(string id, int playerid)
+        /// <param name="title">Item title in case there is no id</param>
+        private void setPlayedItem(string id, int playerid, string title = null)
         {
             switch (playerid)
             {
                 case Constants.KODI_AUDIO_PLAYER_ID: break;
                 case Constants.KODI_VIDEO_PLAYER_ID:
-                    foreach(PlayerItem item in videoItems)
+                    foreach(PlayerItem iItem in videoItems)
                     {
-                        if(item.id == id)
+                        if (id != "")
                         {
-                            item.currentlyPlayed = true;
+                            if (iItem.id == id)
+                            {
+                                iItem.currentlyPlayed = true;
+                            }
+                            else
+                            {
+                                iItem.currentlyPlayed = false;
+                            }
                         }
                         else
                         {
-                            item.currentlyPlayed = false;
+                            if (iItem.title == title)
+                            {
+                                iItem.currentlyPlayed = true;
+                            }
+                            else
+                            {
+                                iItem.currentlyPlayed = false;
+                            }
                         }
                     }
                     break;
@@ -265,12 +305,14 @@ namespace K_Remote.Pages
 
         private void playlist_video_listView_item_details_button_clicked(object sender, RoutedEventArgs args)
         {
-            Debug.WriteLine("Playlist.videoItemPlayButtonClicked: Should play: " + pickedVideoItem.title);
+            Debug.WriteLine("Playlist.videoItemPlayButtonClicked: Should show details: " + pickedVideoItem.title);
+            Button detailButton = sender as Button;
+            
         }
 
         private void playlist_video_listView_play_item_button_clicked(object sender, RoutedEventArgs args)
         {
-            Debug.WriteLine("Playlist.videoItemItemDetailsButtonClicked: Should show details of: " + pickedVideoItem.title);
+            Debug.WriteLine("Playlist.videoItemItemDetailsButtonClicked: Should play: " + pickedVideoItem.title);
             PlayerRPC.goTo(position: videoItems.IndexOf(pickedVideoItem));
         }
 
@@ -301,7 +343,7 @@ namespace K_Remote.Pages
             if(args.playerState.method == "Player.OnPlay")
             {
                 Debug.WriteLine("Playlist.handlePlayerStateChanged: New item played, id: " + args.playerState.@params.data.item.id);
-                setPlayedItem(args.playerState.@params.data.item.id, args.playerState.@params.data.player.playerId);
+                setPlayedItem(args.playerState.@params.data.item.id, args.playerState.@params.data.player.playerId, args.playerState.@params.data.item.title);
             }
         }
 
