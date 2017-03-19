@@ -223,20 +223,21 @@ namespace K_Remote.Wrapper
         {
             ConnectionHandler handler = ConnectionHandler.getInstance();
             Player[] players = await getActivePlayers();
-            bool enabled = true;
-            if(subtitleIndex == -1)
+
+            JObject param = new JObject(new JProperty("playerid", players[0].playerId));
+
+            if (subtitleIndex == -1)
             {
-                enabled = false;
-                subtitleIndex = 0;
+                param.Add(new JProperty("subtitle", "off"));
+                param.Add(new JProperty("enable", false));
+            }
+            else
+            {
+                param.Add(new JProperty("subtitle", subtitleIndex));
+                param.Add(new JProperty("enable", true));
             }
 
-            var responseJson = await handler.sendHttpRequest("Player.SetSubtitle",
-                new JObject(
-                    new JProperty("playerid", players[0].playerId),
-                    new JProperty("subtitle", subtitleIndex),
-                    new JProperty("enable", enabled)
-                )
-            );
+            var responseJson = await handler.sendHttpRequest("Player.SetSubtitle", param);
         }
 
         public static async void stop()
